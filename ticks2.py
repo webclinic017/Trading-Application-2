@@ -10,6 +10,7 @@ trd_portfolio = {779521: "SBIN"}
 
 lastValue = 0;
 quantity = 4000;
+overall_profit = 0
 kws = "";
 kite = "";
 
@@ -89,60 +90,61 @@ def calculate_ohlc_one_minute(company_data):
                 if RENKO[company_data['instrument_token']][1] == 0:  # assigning the first, last price of the tick to open
                     RENKO[company_data['instrument_token']][1] = company_data['last_price']
                 ########################################################
-                if (company_data['last_price'] >= ohlc_final_1min.iloc[-1, 7] + RENKO[company_data['instrument_token']][1]) and RENKO[company_data['instrument_token']][3] == "Signal":
-                    RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] + ohlc_final_1min.iloc[-1, 7]
-                    RENKO[company_data['instrument_token']][3] = "BUY"
-                    RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol","Open", "Close", "Signal", "Position"])
-                    RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                    print(RENKO_Final.tail(3))
-                    RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
+                while RENKO[company_data['instrument_token']][3] == "Signal":
+                    if (company_data['last_price'] >= ohlc_final_1min.iloc[-1, 7] + RENKO[company_data['instrument_token']][1]):
+                        RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] + ohlc_final_1min.iloc[-1, 7]
+                        RENKO[company_data['instrument_token']][3] = "BUY"
+                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol", "Open", "Close", "Signal", "Position"])
+                        RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
+                        print(RENKO_Final.tail(3))
+                        RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
+                    elif (company_data['last_price']<= RENKO[company_data['instrument_token']][1] - ohlc_final_1min.iloc[-1, 7]):
+                        RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] - ohlc_final_1min.iloc[-1, 7]
+                        RENKO[company_data['instrument_token']][3] = "SELL"
+                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol", "Open", "Close", "Signal", "Position"])
+                        RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
+                        print(RENKO_Final.tail(3))
+                        RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
 
-                elif (company_data['last_price'] >= ohlc_final_1min.iloc[-1, 7] + RENKO[company_data['instrument_token']][1]) and RENKO[company_data['instrument_token']][3] == "BUY":
-                    RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] + ohlc_final_1min.iloc[-1, 7]
-                    RENKO[company_data['instrument_token']][3] = "BUY"
-                    RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol","Open", "Close", "Signal", "Position"])
-                    RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                    print(RENKO_Final.tail(3))
-                    RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
-
-                elif (company_data['last_price']<= RENKO[company_data['instrument_token']][1] - ohlc_final_1min.iloc[-1, 7]) and RENKO[company_data['instrument_token']][3] == "Signal":
-                    RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] - ohlc_final_1min.iloc[-1, 7]
-                    RENKO[company_data['instrument_token']][3] = "SELL"
-                    RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol","Open", "Close", "Signal", "Position"])
-                    RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                    print(RENKO_Final.tail(3))
-                    RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
-
-                elif (company_data['last_price']<= RENKO[company_data['instrument_token']][1] - ohlc_final_1min.iloc[-1, 7] ) and RENKO[company_data['instrument_token']][3] == "SELL":
-                    RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] - ohlc_final_1min.iloc[-1, 7]
-                    RENKO[company_data['instrument_token']][3] = "SELL"
-                    RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol","Open", "Close", "Signal", "Position"])
-                    RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                    print(RENKO_Final.tail(3))
-                    RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
-
-                if len(RENKO_Final)>0:
-                    if RENKO_Final.iloc[-1, 3] == "BUY" and company_data['last_price'] <= RENKO[company_data['instrument_token']][1] - (RENKO_Final.iloc[-1, 2] - RENKO_Final.iloc[-1, 1]) - ohlc_final_1min.iloc[-1, 7]:
+                while RENKO[company_data['instrument_token']][3] == "BUY":
+                    if (company_data['last_price'] >= ohlc_final_1min.iloc[-1, 7] + RENKO[company_data['instrument_token']][1]):
+                        RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] + ohlc_final_1min.iloc[-1, 7]
+                        RENKO[company_data['instrument_token']][3] = "BUY"
+                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol", "Open", "Close", "Signal", "Position"])
+                        RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
+                        print(RENKO_Final.tail(3))
+                        RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
+                    elif company_data['last_price'] <= RENKO[company_data['instrument_token']][1] - (RENKO_Final.iloc[-1, 2] - RENKO_Final.iloc[-1, 1]) - ohlc_final_1min.iloc[-1, 7]:
+                        RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 1]
                         RENKO[company_data['instrument_token']][2] = RENKO_Final.iloc[-1, 1] - ohlc_final_1min.iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "SELL"
-                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol","Open", "Close", "Signal", "Position"])
+                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol", "Open", "Close", "Signal", "Position"])
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
                         print(RENKO_Final.tail(3))
+                        RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
+                while RENKO[company_data['instrument_token']][3] == "SELL":
+                    if (company_data['last_price']<= RENKO[company_data['instrument_token']][1] - ohlc_final_1min.iloc[-1, 7]):
+                        RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] - ohlc_final_1min.iloc[-1, 7]
+                        RENKO[company_data['instrument_token']][3] = "SELL"
+                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol", "Open", "Close", "Signal", "Position"])
+                        RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
+                        print(RENKO_Final.tail(3))
+                        RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
+                    elif company_data['last_price'] >= RENKO[company_data['instrument_token']][1] + (RENKO_Final.iloc[-1, 1] - RENKO_Final.iloc[-1, 2]) + ohlc_final_1min.iloc[-1, 7]:
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 1]
-
-                    elif RENKO[company_data['instrument_token']][3] == "SELL" and company_data['last_price'] >= RENKO[company_data['instrument_token']][1] + (RENKO_Final.iloc[-1, 1] - RENKO_Final.iloc[-1, 2]) + ohlc_final_1min.iloc[-1, 7]:
                         RENKO[company_data['instrument_token']][2] = RENKO_Final.iloc[-1, 1] + ohlc_final_1min.iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "BUY"
-                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol","Open", "Close", "Signal", "Position"])
+                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol", "Open", "Close", "Signal", "Position"])
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
                         print(RENKO_Final.tail(3))
-                        RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 1]
+                        RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
+
     except Exception as e:
             traceback.print_exc()
 
 
 def calcpsoitions(Token, quantity, Last_price, Signal):
-    global profit_Final, profit_temp, profit
+    global profit_Final, profit_temp, profit, overall_profit
     profit[Token][0] = trd_portfolio[Token]
     if Signal == "SELL":
         profit[Token][1] = Last_price
@@ -159,9 +161,11 @@ def calcpsoitions(Token, quantity, Last_price, Signal):
         profit[Token][3] = ((profit[Token][1] - profit[Token][2]) * quantity) - (BuyBrokerage + SellBrokerage + STT + TNXChrgs + GST + SEBIChrgs + StampDuty)
         profit_temp = pd.DataFrame([profit[x]], columns=["Symbol", "SELL Price", "BUY Price", "Profit"])
         profit_Final = profit_Final.append(profit_temp, sort=False)
+        overall_profit += profit_Final.iloc[-1, 3]
         profit[Token][1] = 0
         profit[Token][2] = 0
         print(profit_Final.tail(3))
+        print(overall_profit)
 
 def on_ticks(ws, ticks):  # retrive continius ticks in JSON format
     global ohlc_final_1min, RENKO_Final, quantity
