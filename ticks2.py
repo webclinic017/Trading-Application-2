@@ -16,7 +16,7 @@ kite = "";
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "gmdVzgHIc16Xk1YccCGQECr1YlMa9zIA"
+access_token = "EwNL1ArrAWSa98c2EDpvnxnL98f0f7uu"
 kws = KiteTicker(api_k, access_token)
 
 #def TrueRange()
@@ -90,7 +90,7 @@ def calculate_ohlc_one_minute(company_data):
                 if RENKO[company_data['instrument_token']][1] == 0:  # assigning the first, last price of the tick to open
                     RENKO[company_data['instrument_token']][1] = company_data['last_price']
                 ########################################################
-                while RENKO[company_data['instrument_token']][3] == "Signal":
+                if RENKO[company_data['instrument_token']][3] == "Signal":
                     if (company_data['last_price'] >= ohlc_final_1min.iloc[-1, 7] + RENKO[company_data['instrument_token']][1]):
                         RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] + ohlc_final_1min.iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "BUY"
@@ -106,7 +106,7 @@ def calculate_ohlc_one_minute(company_data):
                         print(RENKO_Final.tail(3))
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
 
-                while RENKO[company_data['instrument_token']][3] == "BUY":
+                if RENKO[company_data['instrument_token']][3] == "BUY":
                     if (company_data['last_price'] >= ohlc_final_1min.iloc[-1, 7] + RENKO[company_data['instrument_token']][1]):
                         RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] + ohlc_final_1min.iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "BUY"
@@ -122,7 +122,7 @@ def calculate_ohlc_one_minute(company_data):
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
                         print(RENKO_Final.tail(3))
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
-                while RENKO[company_data['instrument_token']][3] == "SELL":
+                if RENKO[company_data['instrument_token']][3] == "SELL":
                     if (company_data['last_price']<= RENKO[company_data['instrument_token']][1] - ohlc_final_1min.iloc[-1, 7]):
                         RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] - ohlc_final_1min.iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "SELL"

@@ -15,7 +15,7 @@ kite = "";
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "gmdVzgHIc16Xk1YccCGQECr1YlMa9zIA"
+access_token = "EwNL1ArrAWSa98c2EDpvnxnL98f0f7uu"
 kws = KiteTicker(api_k, access_token)
 
 #def TrueRange()
@@ -123,20 +123,22 @@ def calculate_ohlc_one_minute(company_data):
 
                 if len(RENKO_Final)>0:
                     if RENKO_Final.iloc[-1, 3] == "BUY" and company_data['last_price'] <= RENKO[company_data['instrument_token']][1] - (RENKO_Final.iloc[-1, 2] - RENKO_Final.iloc[-1, 1]) - ohlc_final_1min.iloc[-1, 7]:
+                        RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 1]
                         RENKO[company_data['instrument_token']][2] = RENKO_Final.iloc[-1, 1] - ohlc_final_1min.iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "SELL"
                         RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol","Open", "Close", "Signal", "Position"])
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
                         print(RENKO_Final.tail(3))
-                        RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 1]
+                        RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
 
                     elif RENKO[company_data['instrument_token']][3] == "SELL" and company_data['last_price'] >= RENKO[company_data['instrument_token']][1] + (RENKO_Final.iloc[-1, 1] - RENKO_Final.iloc[-1, 2]) + ohlc_final_1min.iloc[-1, 7]:
+                        RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 1]
                         RENKO[company_data['instrument_token']][2] = RENKO_Final.iloc[-1, 1] + ohlc_final_1min.iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "BUY"
                         RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol","Open", "Close", "Signal", "Position"])
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
                         print(RENKO_Final.tail(3))
-                        RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 1]
+                        RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
     except Exception as e:
             traceback.print_exc()
 
