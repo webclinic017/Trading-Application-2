@@ -15,7 +15,7 @@ kite = "";
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "EwNL1ArrAWSa98c2EDpvnxnL98f0f7uu"
+access_token = "lSR1ITImta3mGeCW7QFJlz1C9rxcn1w0"
 kws = KiteTicker(api_k, access_token)
 
 #def TrueRange()
