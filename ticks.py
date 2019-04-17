@@ -10,12 +10,13 @@ trd_portfolio = {779521: "SBIN"}
 
 lastValue = 0;
 quantity = 4000;
+overall_profit = 0;
 kws = "";
 kite = "";
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "EwNL1ArrAWSa98c2EDpvnxnL98f0f7uu"
+access_token = "oPTDo8RD7hJ4scRd0454N8LKXGxF1sxF"
 kws = KiteTicker(api_k, access_token)
 
 #def TrueRange()
@@ -144,7 +145,7 @@ def calculate_ohlc_one_minute(company_data):
 
 
 def calcpsoitions(Token, quantity, Last_price, Signal):
-    global profit_Final, profit_temp, profit
+    global profit_Final, profit_temp, profit, overall_profit
     profit[Token][0] = trd_portfolio[Token]
     if Signal == "SELL":
         profit[Token][1] = Last_price
@@ -163,6 +164,7 @@ def calcpsoitions(Token, quantity, Last_price, Signal):
         profit_Final = profit_Final.append(profit_temp, sort=False)
         profit[Token][1] = 0
         profit[Token][2] = 0
+        overall_profit += profit_Final[3]
         print(profit_Final.tail(3))
 
 def on_ticks(ws, ticks):  # retrive continius ticks in JSON format
