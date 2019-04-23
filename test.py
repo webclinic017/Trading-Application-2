@@ -9,16 +9,21 @@ import datetime,time,os,random;
 trd_portfolio = {779521: "SBIN"}
 
 lastValue = 0;
-quantity = 4000;
+
 overall_profit = 0
 kws = "";
 kite = "";
+
+
+
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
 access_token = "3vfYasI0fiWghRw0AvW9Kr716gLPgvWL"
 kws = KiteTicker(api_k, access_token)
-
+self = KiteConnect(api_key=api_k, access_token = access_token)
+mar = KiteConnect.margins(self,"equity")
+#quantity = min(4000,mar);
 #def TrueRange()
 
 ohlc = {};  # python dictionary to store the ohlc data in it
@@ -192,7 +197,8 @@ def on_ticks(ws, ticks):  # retrive continius ticks in JSON format
     global ohlc_final_1min, RENKO_Final, quantity
     try:
         for company_data in ticks:
-            calculate_ohlc_one_minute(company_data);
+            #calculate_ohlc_one_minute(company_data);
+            print(mar)
             if len(RENKO_Final) > 0:
                 if ohlc_final_1min.iloc[-1,9]!=0:
                     if RENKO_Final.iloc[-1,3] == "SELL" and RENKO_Final.iloc[-1,1] < ohlc_final_1min.iloc[-1,9] and RENKO_Final.iloc[-1,2] < ohlc_final_1min.iloc[-1,9] and RENKO[company_data['instrument_token']][4]!= "SHORT":
