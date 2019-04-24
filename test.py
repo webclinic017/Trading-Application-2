@@ -14,17 +14,17 @@ overall_profit = 0
 kws = "";
 kite = "";
 
-
-
-
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "3vfYasI0fiWghRw0AvW9Kr716gLPgvWL"
+access_token = "k2lU0IxAcM0AITYE98pcUzAM9IXy7Mhh"
 kws = KiteTicker(api_k, access_token)
 self = KiteConnect(api_key=api_k, access_token = access_token)
-mar = KiteConnect.margins(self,"equity")
-#quantity = min(4000,mar);
-#def TrueRange()
+mar = KiteConnect.margins(self)
+equity_mar = mar['equity']['net']
+
+def quantity(ltp):
+    global equity_mar
+    return round((equity_mar/ltp)*12.5)
 
 ohlc = {};  # python dictionary to store the ohlc data in it
 ohlc_temp = pd.DataFrame(columns=["Symbol","Time", "Open", "High", "Low", "Close", "TR","ATR","SMA","TMA"])
@@ -47,44 +47,44 @@ def calculate_ohlc_one_minute(company_data):
     try:
         # below if condition is to check the data being received, and the data present are of the same minute or not
         if (str(((company_data["timestamp"]).replace(second=0))) != ohlc[company_data['instrument_token']][1]) and (ohlc[company_data['instrument_token']][1]!= "Time"):
-            ohlc_temp = pd.DataFrame([ohlc[x]], columns=["Symbol","Time", "Open", "High", "Low", "Close","TR","ATR","SMA","TMA"])
+            ohlc_temp = pd.DataFrame([ohlc[x]], columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
         # Calculating True Range
-            if (len(ohlc_final_1min) > 0):
-                ohlc_temp.iloc[-1, 6] = max((abs((ohlc_temp.iloc[-1, 3]) - (ohlc_temp.iloc[-1, 4])),
+            if len(ohlc_final_1min) > 0:
+                ohlc_temp.iloc[-1, 6] = round(max((abs((ohlc_temp.iloc[-1, 3]) - (ohlc_temp.iloc[-1, 4])),
                                                    abs((ohlc_temp.iloc[-1, 3]) - (ohlc_final_1min.iloc[-1, 4])),
-                                                   abs((ohlc_temp.iloc[-1, 4]) - (ohlc_final_1min.iloc[-1, 4]))))
+                                                   abs((ohlc_temp.iloc[-1, 4]) - (ohlc_final_1min.iloc[-1, 4])))), 2)
             else:
-                ohlc_temp.iloc[-1, 6] = (abs((ohlc_temp.iloc[-1, 3]) - (ohlc_temp.iloc[-1, 4])))
+                ohlc_temp.iloc[-1, 6] = round(abs((ohlc_temp.iloc[-1, 3]) - (ohlc_temp.iloc[-1, 4])), 2)
         # True Range Calculation complete
         # Calculating ATR
-            if (len(ohlc_final_1min)<13):
+            if len(ohlc_final_1min)<13:
                 ohlc_temp.iloc[-1, 7] = 0
 
-            elif (len(ohlc_final_1min) == 13):
+            elif len(ohlc_final_1min) == 13:
                 a = [ohlc_temp.iloc[-1, 6], ohlc_final_1min.iloc[-1, 6], ohlc_final_1min.iloc[-2, 6], ohlc_final_1min.iloc[-3, 6], ohlc_final_1min.iloc[-4, 6],
                      ohlc_final_1min.iloc[-5, 6], ohlc_final_1min.iloc[-6, 6], ohlc_final_1min.iloc[-7, 6], ohlc_final_1min.iloc[-8, 6], ohlc_final_1min.iloc[-9, 6],
                 ohlc_final_1min.iloc[-10, 6], ohlc_final_1min.iloc[-11, 6], ohlc_final_1min.iloc[-12, 6]]
-                ohlc_temp.iloc[-1, 7] = sum(a)/13
+                ohlc_temp.iloc[-1, 7] = round(sum(a)/13, 2)
 
-            elif (len(ohlc_final_1min) > 13):
-                ohlc_temp.iloc[-1, 7] = ((ohlc_final_1min.iloc[-1, 7]*13) + ohlc_temp.iloc[-1, 6])/14
-        # Calculating ATR complete
+            elif len(ohlc_final_1min) > 13:
+                ohlc_temp.iloc[-1, 7] = round(((ohlc_final_1min.iloc[-1, 7]*13) + ohlc_temp.iloc[-1, 6])/14, 2)
+        # ATR Calculation complete
         # Calculating SMA
-            if (len(ohlc_final_1min) < 10):
+            if len(ohlc_final_1min) < 10:
                 ohlc_temp.iloc[-1, 8] = 0
-            elif (len(ohlc_final_1min) >= 10):
+            elif len(ohlc_final_1min) >= 10:
                 b = [ohlc_temp.iloc[-1, 5], ohlc_final_1min.iloc[-1, 5], ohlc_final_1min.iloc[-2, 5], ohlc_final_1min.iloc[-3, 5], ohlc_final_1min.iloc[-4, 5],
                      ohlc_final_1min.iloc[-5, 5], ohlc_final_1min.iloc[-6, 5], ohlc_final_1min.iloc[-7, 5], ohlc_final_1min.iloc[-8, 5], ohlc_final_1min.iloc[-9, 5]]
-                ohlc_temp.iloc[-1, 8] = sum(b) / 10
+                ohlc_temp.iloc[-1, 8] = round(sum(b) / 10, 2)
         # SMA Calculation complete
 
         # Calculating Triangular moving average
-            if (len(ohlc_final_1min) < 19):
+            if len(ohlc_final_1min) < 19:
                 ohlc_temp.iloc[-1, 9] = 0
-            elif (len(ohlc_final_1min) >= 19):
+            elif len(ohlc_final_1min) >= 19:
                 c = [ohlc_temp.iloc[-1, 8], ohlc_final_1min.iloc[-1, 8], ohlc_final_1min.iloc[-2, 8], ohlc_final_1min.iloc[-3, 8], ohlc_final_1min.iloc[-4, 8],
                      ohlc_final_1min.iloc[-5, 8], ohlc_final_1min.iloc[-6, 8], ohlc_final_1min.iloc[-7, 8], ohlc_final_1min.iloc[-8, 8], ohlc_final_1min.iloc[-9, 8]]
-                ohlc_temp.iloc[-1, 9] = sum(c) / 10
+                ohlc_temp.iloc[-1, 9] = round(c / 10, 2)
         # TMA calculation complete
 
         # adding the row into the final ohlc table
@@ -106,12 +106,12 @@ def calculate_ohlc_one_minute(company_data):
             ohlc[company_data['instrument_token']][4] = company_data['last_price']
 
         ohlc[company_data['instrument_token']][5] = company_data['last_price']  # closing price
-        ohlc[company_data['instrument_token']][1] = str(((company_data["timestamp"]).replace(second=0)));
+        ohlc[company_data['instrument_token']][1] = str(((company_data["timestamp"]).replace(second=0)))
 
         if len(ohlc_final_1min) > 0:  #checking if there is atleast 1 candle in OHLC Dataframe
             if ohlc_final_1min.iloc[-1, 7] != 0:  #checking that we do not have the ATR value as 0
                 if RENKO[company_data['instrument_token']][0] == "Symbol":
-                    RENKO[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']];
+                    RENKO[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]
                 ########################################################
                 if RENKO[company_data['instrument_token']][1] == 0:  # assigning the first, last price of the tick to open
                     RENKO[company_data['instrument_token']][1] = company_data['last_price']
@@ -197,23 +197,23 @@ def on_ticks(ws, ticks):  # retrive continius ticks in JSON format
     global ohlc_final_1min, RENKO_Final, quantity
     try:
         for company_data in ticks:
-            #calculate_ohlc_one_minute(company_data);
-            print(mar)
+            calculate_ohlc_one_minute(company_data)
+            # print(quantity(company_data['last_price']))
             if len(RENKO_Final) > 0:
                 if ohlc_final_1min.iloc[-1,9]!=0:
                     if RENKO_Final.iloc[-1,3] == "SELL" and RENKO_Final.iloc[-1,1] < ohlc_final_1min.iloc[-1,9] and RENKO_Final.iloc[-1,2] < ohlc_final_1min.iloc[-1,9] and RENKO[company_data['instrument_token']][4]!= "SHORT":
                         print('Sell at ', str(company_data['last_price']))
-                        calcpsoitions(company_data['instrument_token'], quantity, company_data['last_price'], "SELL")
+                        calcpsoitions(company_data['instrument_token'], quantity(company_data['last_price']), company_data['last_price'], "SELL")
                         if RENKO[company_data['instrument_token']][4] != "None":
                             print('Sell at ', str(company_data['last_price']))
-                            calcpsoitions(company_data['instrument_token'], quantity, company_data['last_price'],"SELL")
+                            calcpsoitions(company_data['instrument_token'], quantity(company_data['last_price']), company_data['last_price'],"SELL")
                         RENKO[company_data['instrument_token']][4] = "SHORT"
                     elif RENKO_Final.iloc[-1,3] == "BUY" and RENKO_Final.iloc[-1,1] > ohlc_final_1min.iloc[-1,9] and RENKO_Final.iloc[-1,2] > ohlc_final_1min.iloc[-1,9] and RENKO[company_data['instrument_token']][4]!="LONG":
                         print('Buy at ', str(company_data['last_price']))
-                        calcpsoitions(company_data['instrument_token'], quantity, company_data['last_price'], "BUY")
+                        calcpsoitions(company_data['instrument_token'], quantity(company_data['last_price']), company_data['last_price'], "BUY")
                         if RENKO[company_data['instrument_token']][4] != "None":
                             print('Buy at ', str(company_data['last_price']))
-                            calcpsoitions(company_data['instrument_token'], quantity, company_data['last_price'], "BUY")
+                            calcpsoitions(company_data['instrument_token'], quantity(company_data['last_price']), company_data['last_price'], "BUY")
                         RENKO[company_data['instrument_token']][4] = "LONG"
     except Exception as e:
         traceback.print_exc()
