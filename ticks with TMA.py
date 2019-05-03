@@ -84,7 +84,7 @@ def calculate_ohlc_one_minute(company_data):
 
         # adding the row into the final ohlc table
             ohlc_final_1min = ohlc_final_1min.append(ohlc_temp)
-            print(ohlc_final_1min.tail())
+            print(ohlc_temp)
 
             # making ohlc for new candle
             ohlc[company_data['instrument_token']][2] = company_data['last_price'];  # open
