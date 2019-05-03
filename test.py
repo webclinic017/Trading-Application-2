@@ -16,11 +16,20 @@ kite = "";
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "k2lU0IxAcM0AITYE98pcUzAM9IXy7Mhh"
+access_token = "9G5fiow3pah0iRqlwgor6sb2l3hWKXkW"
 kws = KiteTicker(api_k, access_token)
 self = KiteConnect(api_key=api_k, access_token = access_token)
 mar = KiteConnect.margins(self)
 equity_mar = mar['equity']['net']
+
+variety = "regular"
+order_type = "MARKET"
+product = "MIS"
+validity = "DAY"
+tradingsymbol = ""
+exchange = ""
+transaction_type = ""
+
 
 def quantity(ltp):
     global equity_mar
@@ -30,15 +39,15 @@ ohlc = {};  # python dictionary to store the ohlc data in it
 ohlc_temp = pd.DataFrame(columns=["Symbol","Time", "Open", "High", "Low", "Close", "TR","ATR","SMA","TMA"])
 ohlc_final_1min = pd.DataFrame(columns=["Symbol","Time", "Open", "High", "Low", "Close", "TR", "ATR","SMA","TMA"])
 RENKO = {};  # python dictionary to store the renko chart data in it
-RENKO_temp = pd.DataFrame(columns=["Symbol","Open", "Close", "Signal", "Position"])
-RENKO_Final = pd.DataFrame(columns=["Symbol","Open", "Close", "Signal", "Position"])
+RENKO_temp = pd.DataFrame(columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
+RENKO_Final = pd.DataFrame(columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
 profit = {};
 profit_temp = pd.DataFrame(columns=["Symbol", "SELL Price", "BUY Price", "Profit"])
 profit_Final = pd.DataFrame(columns=["Symbol", "SELL Price", "BUY Price", "Profit"])
 
 for x in trd_portfolio:
     ohlc[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0, 0, 0];  # [Symbol, Traded Time, Open, High, Low, Close, True Range, Average True Range, Simple Moving Average, Triangular moving average]
-    RENKO[x] = ["Symbol", 0, 0, "Signal", "None"];
+    RENKO[x] = ["Symbol", 0, 0, "Signal", "None", 0, 0];
     profit[x] = ["Symbol", 0, 0, "Profit"]
 
 
@@ -84,12 +93,12 @@ def calculate_ohlc_one_minute(company_data):
             elif len(ohlc_final_1min) >= 19:
                 c = [ohlc_temp.iloc[-1, 8], ohlc_final_1min.iloc[-1, 8], ohlc_final_1min.iloc[-2, 8], ohlc_final_1min.iloc[-3, 8], ohlc_final_1min.iloc[-4, 8],
                      ohlc_final_1min.iloc[-5, 8], ohlc_final_1min.iloc[-6, 8], ohlc_final_1min.iloc[-7, 8], ohlc_final_1min.iloc[-8, 8], ohlc_final_1min.iloc[-9, 8]]
-                ohlc_temp.iloc[-1, 9] = round(c / 10, 2)
+                ohlc_temp.iloc[-1, 9] = round((sum(c) / 10), 2)
         # TMA calculation complete
 
         # adding the row into the final ohlc table
             ohlc_final_1min = ohlc_final_1min.append(ohlc_temp)
-            print(ohlc_final_1min.tail())
+            #print(ohlc_final_1min.tail())
 
             # making ohlc for new candle
             ohlc[company_data['instrument_token']][2] = company_data['last_price'];  # open
@@ -120,14 +129,54 @@ def calculate_ohlc_one_minute(company_data):
                     if (company_data['last_price'] >= ohlc_final_1min.iloc[-1, 7] + RENKO[company_data['instrument_token']][1]):
                         RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] + ohlc_final_1min.iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "BUY"
-                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol", "Open", "Close", "Signal", "Position"])
+                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
+
+                        # Calculating SMA
+                        if len(RENKO_Final) <= 9:
+                            RENKO_temp.iloc[-1, 5] = 0
+                        elif len(RENKO_Final) > 9:
+                            d = [RENKO_temp.iloc[-1, 2], RENKO_Final.iloc[-1, 2], RENKO_Final.iloc[-2, 2], RENKO_Final.iloc[-3, 2], RENKO_Final.iloc[-4, 2],
+                                 RENKO_Final.iloc[-5, 2], RENKO_Final.iloc[-6, 2], RENKO_Final.iloc[-7, 2], RENKO_Final.iloc[-8, 2], RENKO_Final.iloc[-9, 2]]
+                            RENKO_temp.iloc[-1, 5] = round(sum(d) / 10, 2)
+                        # SMA Calculation complete
+
+                        # Calculating Triangular moving average
+                        if len(RENKO_Final) < 19:
+                            RENKO_temp.iloc[-1, 6] = 0
+                        elif len(RENKO_Final) >= 19:
+                            e = [RENKO_temp.iloc[-1, 5], RENKO_Final.iloc[-1, 5], RENKO_Final.iloc[-2, 5], RENKO_Final.iloc[-3, 5], RENKO_Final.iloc[-4, 5],
+                                 RENKO_Final.iloc[-5, 5], RENKO_Final.iloc[-6, 5], RENKO_Final.iloc[-7, 5], RENKO_Final.iloc[-8, 5], RENKO_Final.iloc[-9, 5]]
+                            RENKO_temp.iloc[-1, 6] = round((sum(e) / 10), 2)
+                        # TMA calculation complete
+
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
                         print(RENKO_Final.tail(3))
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
                     elif (company_data['last_price']<= RENKO[company_data['instrument_token']][1] - ohlc_final_1min.iloc[-1, 7]):
                         RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] - ohlc_final_1min.iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "SELL"
-                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol", "Open", "Close", "Signal", "Position"])
+                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
+                        # Calculating SMA
+                        if len(RENKO_Final) <= 9:
+                            RENKO_temp.iloc[-1, 5] = 0
+                        elif len(RENKO_Final) > 9:
+                            d = [RENKO_temp.iloc[-1, 2], RENKO_Final.iloc[-1, 2], RENKO_Final.iloc[-2, 2],
+                                 RENKO_Final.iloc[-3, 2], RENKO_Final.iloc[-4, 2],
+                                 RENKO_Final.iloc[-5, 2], RENKO_Final.iloc[-6, 2], RENKO_Final.iloc[-7, 2],
+                                 RENKO_Final.iloc[-8, 2], RENKO_Final.iloc[-9, 2]]
+                            RENKO_temp.iloc[-1, 5] = round(sum(d) / 10, 2)
+                        # SMA Calculation complete
+
+                        # Calculating Triangular moving average
+                        if len(RENKO_Final) < 19:
+                            RENKO_temp.iloc[-1, 6] = 0
+                        elif len(RENKO_Final) >= 19:
+                            e = [RENKO_temp.iloc[-1, 5], RENKO_Final.iloc[-1, 5], RENKO_Final.iloc[-2, 5],
+                                 RENKO_Final.iloc[-3, 5], RENKO_Final.iloc[-4, 5],
+                                 RENKO_Final.iloc[-5, 5], RENKO_Final.iloc[-6, 5], RENKO_Final.iloc[-7, 5],
+                                 RENKO_Final.iloc[-8, 5], RENKO_Final.iloc[-9, 5]]
+                            RENKO_temp.iloc[-1, 6] = round((sum(e) / 10), 2)
+                        # TMA calculation complete
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
                         print(RENKO_Final.tail(3))
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
@@ -136,7 +185,28 @@ def calculate_ohlc_one_minute(company_data):
                     if (company_data['last_price'] >= ohlc_final_1min.iloc[-1, 7] + RENKO[company_data['instrument_token']][1]):
                         RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] + ohlc_final_1min.iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "BUY"
-                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol", "Open", "Close", "Signal", "Position"])
+                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
+                        # Calculating SMA
+                        if len(RENKO_Final) <= 9:
+                            RENKO_temp.iloc[-1, 5] = 0
+                        elif len(RENKO_Final) > 9:
+                            d = [RENKO_temp.iloc[-1, 2], RENKO_Final.iloc[-1, 2], RENKO_Final.iloc[-2, 2],
+                                 RENKO_Final.iloc[-3, 2], RENKO_Final.iloc[-4, 2],
+                                 RENKO_Final.iloc[-5, 2], RENKO_Final.iloc[-6, 2], RENKO_Final.iloc[-7, 2],
+                                 RENKO_Final.iloc[-8, 2], RENKO_Final.iloc[-9, 2]]
+                            RENKO_temp.iloc[-1, 5] = round(sum(d) / 10, 2)
+                        # SMA Calculation complete
+
+                        # Calculating Triangular moving average
+                        if len(RENKO_Final) < 19:
+                            RENKO_temp.iloc[-1, 6] = 0
+                        elif len(RENKO_Final) >= 19:
+                            e = [RENKO_temp.iloc[-1, 5], RENKO_Final.iloc[-1, 5], RENKO_Final.iloc[-2, 5],
+                                 RENKO_Final.iloc[-3, 5], RENKO_Final.iloc[-4, 5],
+                                 RENKO_Final.iloc[-5, 5], RENKO_Final.iloc[-6, 5], RENKO_Final.iloc[-7, 5],
+                                 RENKO_Final.iloc[-8, 5], RENKO_Final.iloc[-9, 5]]
+                            RENKO_temp.iloc[-1, 6] = round((sum(e) / 10), 2)
+                        # TMA calculation complete
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
                         print(RENKO_Final.tail(3))
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
@@ -144,7 +214,28 @@ def calculate_ohlc_one_minute(company_data):
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 1]
                         RENKO[company_data['instrument_token']][2] = RENKO_Final.iloc[-1, 1] - ohlc_final_1min.iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "SELL"
-                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol", "Open", "Close", "Signal", "Position"])
+                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
+                        # Calculating SMA
+                        if len(RENKO_Final) <= 9:
+                            RENKO_temp.iloc[-1, 5] = 0
+                        elif len(RENKO_Final) > 9:
+                            d = [RENKO_temp.iloc[-1, 2], RENKO_Final.iloc[-1, 2], RENKO_Final.iloc[-2, 2],
+                                 RENKO_Final.iloc[-3, 2], RENKO_Final.iloc[-4, 2],
+                                 RENKO_Final.iloc[-5, 2], RENKO_Final.iloc[-6, 2], RENKO_Final.iloc[-7, 2],
+                                 RENKO_Final.iloc[-8, 2], RENKO_Final.iloc[-9, 2]]
+                            RENKO_temp.iloc[-1, 5] = round(sum(d) / 10, 2)
+                        # SMA Calculation complete
+
+                        # Calculating Triangular moving average
+                        if len(RENKO_Final) < 19:
+                            RENKO_temp.iloc[-1, 6] = 0
+                        elif len(RENKO_Final) >= 19:
+                            e = [RENKO_temp.iloc[-1, 5], RENKO_Final.iloc[-1, 5], RENKO_Final.iloc[-2, 5],
+                                 RENKO_Final.iloc[-3, 5], RENKO_Final.iloc[-4, 5],
+                                 RENKO_Final.iloc[-5, 5], RENKO_Final.iloc[-6, 5], RENKO_Final.iloc[-7, 5],
+                                 RENKO_Final.iloc[-8, 5], RENKO_Final.iloc[-9, 5]]
+                            RENKO_temp.iloc[-1, 6] = round((sum(e) / 10), 2)
+                        # TMA calculation complete
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
                         print(RENKO_Final.tail(3))
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
@@ -152,7 +243,28 @@ def calculate_ohlc_one_minute(company_data):
                     if (company_data['last_price']<= RENKO[company_data['instrument_token']][1] - ohlc_final_1min.iloc[-1, 7]):
                         RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] - ohlc_final_1min.iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "SELL"
-                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol", "Open", "Close", "Signal", "Position"])
+                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
+                        # Calculating SMA
+                        if len(RENKO_Final) <= 9:
+                            RENKO_temp.iloc[-1, 5] = 0
+                        elif len(RENKO_Final) > 9:
+                            d = [RENKO_temp.iloc[-1, 2], RENKO_Final.iloc[-1, 2], RENKO_Final.iloc[-2, 2],
+                                 RENKO_Final.iloc[-3, 2], RENKO_Final.iloc[-4, 2],
+                                 RENKO_Final.iloc[-5, 2], RENKO_Final.iloc[-6, 2], RENKO_Final.iloc[-7, 2],
+                                 RENKO_Final.iloc[-8, 2], RENKO_Final.iloc[-9, 2]]
+                            RENKO_temp.iloc[-1, 5] = round(sum(d) / 10, 2)
+                        # SMA Calculation complete
+
+                        # Calculating Triangular moving average
+                        if len(RENKO_Final) < 19:
+                            RENKO_temp.iloc[-1, 6] = 0
+                        elif len(RENKO_Final) >= 19:
+                            e = [RENKO_temp.iloc[-1, 5], RENKO_Final.iloc[-1, 5], RENKO_Final.iloc[-2, 5],
+                                 RENKO_Final.iloc[-3, 5], RENKO_Final.iloc[-4, 5],
+                                 RENKO_Final.iloc[-5, 5], RENKO_Final.iloc[-6, 5], RENKO_Final.iloc[-7, 5],
+                                 RENKO_Final.iloc[-8, 5], RENKO_Final.iloc[-9, 5]]
+                            RENKO_temp.iloc[-1, 6] = round((sum(e) / 10), 2)
+                        # TMA calculation complete
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
                         print(RENKO_Final.tail(3))
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
@@ -160,7 +272,28 @@ def calculate_ohlc_one_minute(company_data):
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 1]
                         RENKO[company_data['instrument_token']][2] = RENKO_Final.iloc[-1, 1] + ohlc_final_1min.iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "BUY"
-                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol", "Open", "Close", "Signal", "Position"])
+                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
+                        # Calculating SMA
+                        if len(RENKO_Final) <= 9:
+                            RENKO_temp.iloc[-1, 5] = 0
+                        elif len(RENKO_Final) > 9:
+                            d = [RENKO_temp.iloc[-1, 2], RENKO_Final.iloc[-1, 2], RENKO_Final.iloc[-2, 2],
+                                 RENKO_Final.iloc[-3, 2], RENKO_Final.iloc[-4, 2],
+                                 RENKO_Final.iloc[-5, 2], RENKO_Final.iloc[-6, 2], RENKO_Final.iloc[-7, 2],
+                                 RENKO_Final.iloc[-8, 2], RENKO_Final.iloc[-9, 2]]
+                            RENKO_temp.iloc[-1, 5] = round(sum(d) / 10, 2)
+                        # SMA Calculation complete
+
+                        # Calculating Triangular moving average
+                        if len(RENKO_Final) < 19:
+                            RENKO_temp.iloc[-1, 6] = 0
+                        elif len(RENKO_Final) >= 19:
+                            e = [RENKO_temp.iloc[-1, 5], RENKO_Final.iloc[-1, 5], RENKO_Final.iloc[-2, 5],
+                                 RENKO_Final.iloc[-3, 5], RENKO_Final.iloc[-4, 5],
+                                 RENKO_Final.iloc[-5, 5], RENKO_Final.iloc[-6, 5], RENKO_Final.iloc[-7, 5],
+                                 RENKO_Final.iloc[-8, 5], RENKO_Final.iloc[-9, 5]]
+                            RENKO_temp.iloc[-1, 6] = round((sum(e) / 10), 2)
+                        # TMA calculation complete
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
                         print(RENKO_Final.tail(3))
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
@@ -194,26 +327,35 @@ def calcpsoitions(Token, quantity, Last_price, Signal):
         print(overall_profit)
 
 def on_ticks(ws, ticks):  # retrive continius ticks in JSON format
-    global ohlc_final_1min, RENKO_Final, quantity
+    global ohlc_final_1min, RENKO_Final, quantity, self
     try:
         for company_data in ticks:
             calculate_ohlc_one_minute(company_data)
             # print(quantity(company_data['last_price']))
             if len(RENKO_Final) > 0:
                 if ohlc_final_1min.iloc[-1,9]!=0:
-                    if RENKO_Final.iloc[-1,3] == "SELL" and RENKO_Final.iloc[-1,1] < ohlc_final_1min.iloc[-1,9] and RENKO_Final.iloc[-1,2] < ohlc_final_1min.iloc[-1,9] and RENKO[company_data['instrument_token']][4]!= "SHORT":
+                    if RENKO_Final.iloc[-1,3] == "SELL" and RENKO_Final.iloc[-1,1] < RENKO_Final.iloc[-1,6] and RENKO_Final.iloc[-1,2] < RENKO_Final.iloc[-1,6] and RENKO[company_data['instrument_token']][4]!= "SHORT" and RENKO_Final.iloc[-1,6] != 0:
                         print('Sell at ', str(company_data['last_price']))
                         calcpsoitions(company_data['instrument_token'], quantity(company_data['last_price']), company_data['last_price'], "SELL")
+                        self.place_order(variety="regular",exchange=kite.EXCHANGE_NSE,tradingsymbol="SBIN",transaction_type=kite.TRANSACTION_TYPE_SELL, quantity = quantity(company_data['last_price']), order_type = kite.ORDER_TYPE_MARKET, product = kite.PRODUCT_MIS)
                         if RENKO[company_data['instrument_token']][4] != "None":
+                            self.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol="SBIN",
+                                             transaction_type=kite.TRANSACTION_TYPE_SELL,
+                                             quantity=quantity(company_data['last_price']),
+                                             order_type=kite.ORDER_TYPE_MARKET, product=kite.PRODUCT_MIS)
                             print('Sell at ', str(company_data['last_price']))
                             calcpsoitions(company_data['instrument_token'], quantity(company_data['last_price']), company_data['last_price'],"SELL")
                         RENKO[company_data['instrument_token']][4] = "SHORT"
-                    elif RENKO_Final.iloc[-1,3] == "BUY" and RENKO_Final.iloc[-1,1] > ohlc_final_1min.iloc[-1,9] and RENKO_Final.iloc[-1,2] > ohlc_final_1min.iloc[-1,9] and RENKO[company_data['instrument_token']][4]!="LONG":
+                    elif RENKO_Final.iloc[-1,3] == "BUY" and RENKO_Final.iloc[-1,1] > RENKO_Final.iloc[-1,6] and RENKO_Final.iloc[-1,2] > RENKO_Final.iloc[-1,6] and RENKO[company_data['instrument_token']][4]!="LONG" and RENKO_Final.iloc[-1,6] != 0:
                         print('Buy at ', str(company_data['last_price']))
                         calcpsoitions(company_data['instrument_token'], quantity(company_data['last_price']), company_data['last_price'], "BUY")
+                        self.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol="SBIN", transaction_type=kite.TRANSACTION_TYPE_BUY, quantity=quantity(company_data['last_price']),
+                                         order_type=kite.ORDER_TYPE_MARKET, product=kite.PRODUCT_MIS)
                         if RENKO[company_data['instrument_token']][4] != "None":
                             print('Buy at ', str(company_data['last_price']))
                             calcpsoitions(company_data['instrument_token'], quantity(company_data['last_price']), company_data['last_price'], "BUY")
+                            self.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol="SBIN", transaction_type=kite.TRANSACTION_TYPE_BUY, quantity=quantity(company_data['last_price']),
+                                             order_type=kite.ORDER_TYPE_MARKET, product=kite.PRODUCT_MIS)
                         RENKO[company_data['instrument_token']][4] = "LONG"
     except Exception as e:
         traceback.print_exc()
