@@ -16,8 +16,9 @@ kite = "";
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "9G5fiow3pah0iRqlwgor6sb2l3hWKXkW"
+access_token = "7aqKVM5I3LFR26eNn7cQHIxEbp4dywLS"
 kws = KiteTicker(api_k, access_token)
+self = KiteConnect(api_key=api_k, access_token=access_token)
 
 #def TrueRange()
 
@@ -35,6 +36,15 @@ for x in trd_portfolio:
     ohlc[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0, 0, 0];  # [Symbol, Traded Time, Open, High, Low, Close, True Range, Average True Range, Simple Moving Average, Triangular moving average]
     RENKO[x] = ["Symbol", 0, 0, "Signal", "None"];
     profit[x] = ["Symbol", 0, 0, "Profit"]
+
+def positions(token):
+    pos = self.positions()['day']
+    posdf = pd.DataFrame(pos)
+    if posdf.empty:
+        return 0
+    else:
+        final_pos = posdf.loc[posdf['instrument_token'] == token, ['quantity']]
+        return final_pos.iloc[0, 0]
 
 
 def calculate_ohlc_one_minute(company_data):
@@ -84,7 +94,8 @@ def calculate_ohlc_one_minute(company_data):
 
         # adding the row into the final ohlc table
             ohlc_final_1min = ohlc_final_1min.append(ohlc_temp)
-            print(ohlc_temp)
+            print(ohlc[company_data['instrument_token']][0], ":", ohlc[company_data['instrument_token']][1], ":", ohlc[company_data['instrument_token']][2], ":",
+                  ohlc[company_data['instrument_token']][3], ":", ohlc[company_data['instrument_token']][4], ":", ohlc[company_data['instrument_token']][5])
 
             # making ohlc for new candle
             ohlc[company_data['instrument_token']][2] = company_data['last_price'];  # open
@@ -117,14 +128,14 @@ def calculate_ohlc_one_minute(company_data):
                         RENKO[company_data['instrument_token']][3] = "BUY"
                         RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol", "Open", "Close", "Signal", "Position"])
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_Final.tail(3))
+                        #print(RENKO_Final.tail(3))
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
                     elif (company_data['last_price']<= RENKO[company_data['instrument_token']][1] - ohlc_final_1min.iloc[-1, 7]):
                         RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] - ohlc_final_1min.iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "SELL"
                         RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol", "Open", "Close", "Signal", "Position"])
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_Final.tail(3))
+                        #print(RENKO_Final.tail(3))
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
 
                 if RENKO[company_data['instrument_token']][3] == "BUY":
@@ -133,7 +144,7 @@ def calculate_ohlc_one_minute(company_data):
                         RENKO[company_data['instrument_token']][3] = "BUY"
                         RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol", "Open", "Close", "Signal", "Position"])
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_Final.tail(3))
+                        #print(RENKO_Final.tail(3))
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
                     elif company_data['last_price'] <= RENKO[company_data['instrument_token']][1] - (RENKO_Final.iloc[-1, 2] - RENKO_Final.iloc[-1, 1]) - ohlc_final_1min.iloc[-1, 7]:
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 1]
@@ -141,7 +152,7 @@ def calculate_ohlc_one_minute(company_data):
                         RENKO[company_data['instrument_token']][3] = "SELL"
                         RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol", "Open", "Close", "Signal", "Position"])
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_Final.tail(3))
+                        #print(RENKO_Final.tail(3))
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
                 if RENKO[company_data['instrument_token']][3] == "SELL":
                     if (company_data['last_price']<= RENKO[company_data['instrument_token']][1] - ohlc_final_1min.iloc[-1, 7]):
@@ -149,7 +160,7 @@ def calculate_ohlc_one_minute(company_data):
                         RENKO[company_data['instrument_token']][3] = "SELL"
                         RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol", "Open", "Close", "Signal", "Position"])
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_Final.tail(3))
+                        #print(RENKO_Final.tail(3))
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
                     elif company_data['last_price'] >= RENKO[company_data['instrument_token']][1] + (RENKO_Final.iloc[-1, 1] - RENKO_Final.iloc[-1, 2]) + ohlc_final_1min.iloc[-1, 7]:
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 1]
@@ -157,7 +168,7 @@ def calculate_ohlc_one_minute(company_data):
                         RENKO[company_data['instrument_token']][3] = "BUY"
                         RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol", "Open", "Close", "Signal", "Position"])
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_Final.tail(3))
+                        #print(RENKO_Final.tail(3))
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
 
     except Exception as e:

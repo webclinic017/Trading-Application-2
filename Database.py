@@ -4,7 +4,7 @@ conn = sqlite3.connect('database.db')
 
 c = conn.cursor()
 
-c.execute("""CREATE TABLE ohlc_one_min(
+'''c.execute("""CREATE TABLE ohlc_one_min(
             Symbol text,
             Time text,
             Open real,
@@ -14,7 +14,7 @@ c.execute("""CREATE TABLE ohlc_one_min(
             TR real,
             ATR real
             )""")
-
+'''
 conn.commit()
 
 conn.close()

@@ -16,11 +16,9 @@ kite = "";
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "cTN3pNOZ3Q3ol2aKG7UFE6Boo5I4pDJX"
+access_token = "1SZF6VIF0IJUIX026qfkl03f14BOqiWr"
 kws = KiteTicker(api_k, access_token)
-
-#def TrueRange()
-
+kite = KiteConnect(api_key=api_k, access_token = access_token)
 
 ohlc = {};  # python dictionary to store the ohlc data in it
 ohlc_temp = pd.DataFrame(columns=["Symbol","Time", "Open", "High", "Low", "Close", "TR","ATR"])
@@ -36,7 +34,6 @@ for x in trd_portfolio:
     ohlc[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0];  # [Symbol, Traded Time, Open, High, Low, Close, True Range, Average True Range]
     RENKO[x] = ["Symbol", 0, 0, "Signal", "None"];
     profit[x] = ["Symbol", 0, 0, "Profit"]
-
 
 def calculate_ohlc_one_minute(company_data):
     global ohlc_final_1min, ohlc_temp, RENKO_temp, RENKO_Final
@@ -166,6 +163,7 @@ def calcpsoitions(Token, quantity, Last_price, Signal):
         profit[Token][2] = 0
         overall_profit += profit_Final.iloc[-1, 3]
         print(profit_Final.tail(3))
+
 
 def on_ticks(ws, ticks):  # retrive continius ticks in JSON format
     global ohlc_final_1min, RENKO_Final, quantity
