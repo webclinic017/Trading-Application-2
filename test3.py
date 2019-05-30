@@ -16,22 +16,23 @@ kws = KiteTicker(api_k, access_token)
 self = KiteConnect(api_key=api_k, access_token=access_token)
 
 def positions(token):
-    global final_position
     pos = self.positions()
     day_pos = pos['day']
     posdf = pd.DataFrame(day_pos)
     if posdf.empty:
-        final_position = 0
+        return 0
+        print(0)
     else:
         total_pos = posdf.loc[posdf['instrument_token'] == token, ['quantity']]
-        return total_pos.iloc[0, 0]
+        return total_pos
+        print(total_pos)
 
 
 def quantity(ltp):
     global order_quantity
     mar = KiteConnect.margins(self)
     equity_mar = mar['equity']['net']
-    return round((equity_mar/ltp)*6) - 100
+    return round((equity_mar/ltp)*12.5) - 100
 
 
 def orderhistory():
@@ -306,33 +307,33 @@ def calculate_ohlc_one_minute(company_data):
         traceback.print_exc()
 
 def RENKO_TRIMA(company_data):
-    global ohlc_final_1min, RENKO_Final, final_position, order_quantity
+    global ohlc_final_1min, RENKO_Final, final_position, order_quantity, RENKO, RENKO_temp
     try:
         if len(RENKO_Final) > 0:
             if RENKO_Final.iloc[-1, 6] != 0:
-                if RENKO_Final.iloc[-1, 3] == "SELL" and RENKO_Final.iloc[-1, 1] < RENKO_Final.iloc[-1, 6] and RENKO_Final.iloc[-1, 2] < RENKO_Final.iloc[-1, 6]:
-                    if positions(company_data['instrument_token']) > 0:
+                if ((RENKO_Final.iloc[-1, 3] == "SELL") & (RENKO_Final.iloc[-1, 1] < RENKO_Final.iloc[-1, 6]) & (RENKO_Final.iloc[-1, 2] < RENKO_Final.iloc[-1, 6])):
+                    if (positions(company_data['instrument_token']) > 0).bool():
                         self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol="SBIN",
                                          transaction_type=self.TRANSACTION_TYPE_SELL,
                                          quantity=abs(positions(company_data['instrument_token'])),
                                          order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
-                    if positions(company_data['instrument_token'])  == 0:
+                    if (positions(company_data['instrument_token']) == 0).bool():
                         self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol="SBIN",
                                          transaction_type=self.TRANSACTION_TYPE_SELL,
                                          quantity=quantity(company_data['last_price']),
                                          order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
-                    RENKO[company_data['instrument_token']][4] = "SHORT"
-                elif RENKO_Final.iloc[-1, 3] == "BUY" and RENKO_Final.iloc[-1, 1] > RENKO_Final.iloc[-1, 6] and RENKO_Final.iloc[-1, 2] > RENKO_Final.iloc[-1, 6]:
-                    if positions(company_data['instrument_token'])  < 0:
+                    #RENKO[company_data['instrument_token']][4] = "SHORT"
+                elif ((RENKO_Final.iloc[-1, 3] == "BUY") & (RENKO_Final.iloc[-1, 1] > RENKO_Final.iloc[-1, 6]) & (RENKO_Final.iloc[-1, 2] > RENKO_Final.iloc[-1, 6])):
+                    if ((positions(company_data['instrument_token'])) < 0).bool():
                         self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol="SBIN",
                                          transaction_type=self.TRANSACTION_TYPE_BUY,
                                          quantity=abs(positions(company_data['instrument_token'])),
                                          order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
-                    if positions(company_data['instrument_token']) == 0:
+                    if (positions(company_data['instrument_token']) == 0).bool():
                         self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol="SBIN",
                                          transaction_type=self.TRANSACTION_TYPE_BUY, quantity=quantity(company_data['last_price']),
                                          order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
-                    RENKO[company_data['instrument_token']][4] = "LONG"
+                    #RENKO[company_data['instrument_token']][4] = "LONG"
     except Exception as e:
         traceback.print_exc()
 
@@ -366,10 +367,9 @@ def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
     global ohlc_final_1min, RENKO_Final, final_position, order_quantity
     try:
         for company_data in ticks:
-            #if (company_data['last_trade_time'].time()) > datetime.time(9, 15,00) and (company_data['last_trade_time'].time()) < datetime.time(15, 31,00):
-             #   calculate_ohlc_one_minute(company_data)
-              #  RENKO_TRIMA(company_data)
-            print(positions(company_data['instrument_token']))
+            if (company_data['last_trade_time'].time()) > datetime.time(9, 15,00) and (company_data['last_trade_time'].time()) < datetime.time(15, 31,00):
+                calculate_ohlc_one_minute(company_data)
+                RENKO_TRIMA(company_data)
     except Exception as e:
         traceback.print_exc()
 
