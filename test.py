@@ -4,50 +4,55 @@ from kiteconnect import KiteTicker
 import pandas as pd
 import traceback
 
-import datetime,time,os,random;
+import datetime,time,os,random
 
 trd_portfolio = {779521: "SBIN"}
-
-lastValue = 0;
-
 overall_profit = 0
-kws = "";
-kite = "";
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "HtvEcuTw4DM0KyozEdjJjEagtGabAUmo"
+access_token = "9N0vmTbdfcYwPRzRYNQdStqwWJ3HFR7K"
 kws = KiteTicker(api_k, access_token)
-self = KiteConnect(api_key=api_k, access_token = access_token)
-mar = KiteConnect.margins(self)
-equity_mar = mar['equity']['net']
+self = KiteConnect(api_key=api_k, access_token=access_token)
 
-variety = "regular"
-order_type = "MARKET"
-product = "MIS"
-validity = "DAY"
-tradingsymbol = ""
-exchange = ""
-transaction_type = ""
+def positions(token):
+    pos = self.positions()
+    day_pos = pos['day']
+    posdf = pd.DataFrame(day_pos)
+    if posdf.empty:
+        return 0
+        print(0)
+    else:
+        total_pos = posdf.loc[posdf['instrument_token'] == token, ['quantity']]
+        return total_pos
+        print(total_pos)
 
 
 def quantity(ltp):
-    global equity_mar
-    return round((equity_mar/ltp)*12.5)
+    global order_quantity
+    mar = KiteConnect.margins(self)
+    equity_mar = mar['equity']['net']
+    return round((equity_mar/ltp)*12.5) - 100
 
-ohlc = {};  # python dictionary to store the ohlc data in it
+
+def orderhistory():
+    orders = self.orders()
+    ordersdf = pd.DataFrame(orders)
+
+
+ohlc = {}  # python dictionary to store the ohlc data in it
 ohlc_temp = pd.DataFrame(columns=["Symbol","Time", "Open", "High", "Low", "Close", "TR","ATR","SMA","TMA"])
 ohlc_final_1min = pd.DataFrame(columns=["Symbol","Time", "Open", "High", "Low", "Close", "TR", "ATR","SMA","TMA"])
-RENKO = {};  # python dictionary to store the renko chart data in it
+RENKO = {}  # python dictionary to store the renko chart data in it
 RENKO_temp = pd.DataFrame(columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
 RENKO_Final = pd.DataFrame(columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
-profit = {};
+profit = {}
 profit_temp = pd.DataFrame(columns=["Symbol", "SELL Price", "BUY Price", "Profit"])
 profit_Final = pd.DataFrame(columns=["Symbol", "SELL Price", "BUY Price", "Profit"])
 
 for x in trd_portfolio:
-    ohlc[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0, 0, 0];  # [Symbol, Traded Time, Open, High, Low, Close, True Range, Average True Range, Simple Moving Average, Triangular moving average]
-    RENKO[x] = ["Symbol", 0, 0, "Signal", "None", 0, 0];
+    ohlc[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0, 0, 0]  # [Symbol, Traded Time, Open, High, Low, Close, True Range, Average True Range, Simple Moving Average, Triangular moving average]
+    RENKO[x] = ["Symbol", 0, 0, "Signal", "None", 0, 0]
     profit[x] = ["Symbol", 0, 0, "Profit"]
 
 
@@ -101,11 +106,11 @@ def calculate_ohlc_one_minute(company_data):
             #print(ohlc_final_1min.tail())
 
             # making ohlc for new candle
-            ohlc[company_data['instrument_token']][2] = company_data['last_price'];  # open
-            ohlc[company_data['instrument_token']][3] = company_data['last_price'];  # high
-            ohlc[company_data['instrument_token']][4] = company_data['last_price'];  # low
-            ohlc[company_data['instrument_token']][5] = company_data['last_price'];  # close
-            ohlc[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']];
+            ohlc[company_data['instrument_token']][2] = company_data['last_price']  # open
+            ohlc[company_data['instrument_token']][3] = company_data['last_price']  # high
+            ohlc[company_data['instrument_token']][4] = company_data['last_price']  # low
+            ohlc[company_data['instrument_token']][5] = company_data['last_price']  # close
+            ohlc[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]
 
         if ohlc[company_data['instrument_token']][3] < company_data['last_price']:  # calculating high
             ohlc[company_data['instrument_token']][3] = company_data['last_price']
@@ -150,7 +155,7 @@ def calculate_ohlc_one_minute(company_data):
                         # TMA calculation complete
 
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_Final.tail(3))
+                        print(RENKO_temp)
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
                     elif (company_data['last_price']<= RENKO[company_data['instrument_token']][1] - ohlc_final_1min.iloc[-1, 7]):
                         RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] - ohlc_final_1min.iloc[-1, 7]
@@ -178,7 +183,7 @@ def calculate_ohlc_one_minute(company_data):
                             RENKO_temp.iloc[-1, 6] = round((sum(e) / 10), 2)
                         # TMA calculation complete
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_Final.tail(3))
+                        print(RENKO_temp)
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
 
                 if RENKO[company_data['instrument_token']][3] == "BUY":
@@ -208,7 +213,7 @@ def calculate_ohlc_one_minute(company_data):
                             RENKO_temp.iloc[-1, 6] = round((sum(e) / 10), 2)
                         # TMA calculation complete
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_Final.tail(3))
+                        print(RENKO_temp)
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
                     elif company_data['last_price'] <= RENKO[company_data['instrument_token']][1] - (RENKO_Final.iloc[-1, 2] - RENKO_Final.iloc[-1, 1]) - ohlc_final_1min.iloc[-1, 7]:
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 1]
@@ -237,7 +242,7 @@ def calculate_ohlc_one_minute(company_data):
                             RENKO_temp.iloc[-1, 6] = round((sum(e) / 10), 2)
                         # TMA calculation complete
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_Final.tail(3))
+                        print(RENKO_temp)
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
                 if RENKO[company_data['instrument_token']][3] == "SELL":
                     if (company_data['last_price']<= RENKO[company_data['instrument_token']][1] - ohlc_final_1min.iloc[-1, 7]):
@@ -266,7 +271,7 @@ def calculate_ohlc_one_minute(company_data):
                             RENKO_temp.iloc[-1, 6] = round((sum(e) / 10), 2)
                         # TMA calculation complete
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_Final.tail(3))
+                        print(RENKO_temp)
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
                     elif company_data['last_price'] >= RENKO[company_data['instrument_token']][1] + (RENKO_Final.iloc[-1, 1] - RENKO_Final.iloc[-1, 2]) + ohlc_final_1min.iloc[-1, 7]:
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 1]
@@ -295,11 +300,42 @@ def calculate_ohlc_one_minute(company_data):
                             RENKO_temp.iloc[-1, 6] = round((sum(e) / 10), 2)
                         # TMA calculation complete
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_Final.tail(3))
+                        print(RENKO_temp)
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.iloc[-1, 2]
 
     except Exception as e:
-            traceback.print_exc()
+        traceback.print_exc()
+
+def RENKO_TRIMA(company_data):
+    global ohlc_final_1min, RENKO_Final, final_position, order_quantity, RENKO, RENKO_temp
+    try:
+        if len(RENKO_Final) > 0:
+            if RENKO_Final.iloc[-1, 6] != 0:
+                if ((RENKO_Final.iloc[-1, 3] == "SELL") & (RENKO_Final.iloc[-1, 1] < RENKO_Final.iloc[-1, 6]) & (RENKO_Final.iloc[-1, 2] < RENKO_Final.iloc[-1, 6])):
+                    if (positions(company_data['instrument_token']) > 0).bool():
+                        self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol="SBIN",
+                                         transaction_type=self.TRANSACTION_TYPE_SELL,
+                                         quantity=abs(positions(company_data['instrument_token'])),
+                                         order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
+                    if (positions(company_data['instrument_token']) == 0).bool():
+                        self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol="SBIN",
+                                         transaction_type=self.TRANSACTION_TYPE_SELL,
+                                         quantity=quantity(company_data['last_price']),
+                                         order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
+                    #RENKO[company_data['instrument_token']][4] = "SHORT"
+                elif ((RENKO_Final.iloc[-1, 3] == "BUY") & (RENKO_Final.iloc[-1, 1] > RENKO_Final.iloc[-1, 6]) & (RENKO_Final.iloc[-1, 2] > RENKO_Final.iloc[-1, 6])):
+                    if ((positions(company_data['instrument_token'])) < 0).bool():
+                        self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol="SBIN",
+                                         transaction_type=self.TRANSACTION_TYPE_BUY,
+                                         quantity=abs(positions(company_data['instrument_token'])),
+                                         order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
+                    if (positions(company_data['instrument_token']) == 0).bool():
+                        self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol="SBIN",
+                                         transaction_type=self.TRANSACTION_TYPE_BUY, quantity=quantity(company_data['last_price']),
+                                         order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
+                    #RENKO[company_data['instrument_token']][4] = "LONG"
+    except Exception as e:
+        traceback.print_exc()
 
 
 def calcpsoitions(Token, quantity, Last_price, Signal):
@@ -326,46 +362,25 @@ def calcpsoitions(Token, quantity, Last_price, Signal):
         print(profit_Final.tail(3))
         print(overall_profit)
 
-def on_ticks(ws, ticks):  # retrive continius ticks in JSON format
-    global ohlc_final_1min, RENKO_Final, quantity, self
+
+def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
+    global ohlc_final_1min, RENKO_Final, final_position, order_quantity
     try:
         for company_data in ticks:
-            calculate_ohlc_one_minute(company_data)
-            # print(quantity(company_data['last_price']))
-            if len(RENKO_Final) > 0:
-                if ohlc_final_1min.iloc[-1,9]!=0:
-                    if RENKO_Final.iloc[-1,3] == "SELL" and RENKO_Final.iloc[-1,1] < RENKO_Final.iloc[-1,6] and RENKO_Final.iloc[-1,2] < RENKO_Final.iloc[-1,6] and RENKO[company_data['instrument_token']][4]!= "SHORT" and RENKO_Final.iloc[-1,6] != 0:
-                        print('Sell at ', str(company_data['last_price']))
-                        calcpsoitions(company_data['instrument_token'], quantity(company_data['last_price']), company_data['last_price'], "SELL")
-                        self.place_order(variety="regular",exchange=kite.EXCHANGE_NSE,tradingsymbol="SBIN",transaction_type=kite.TRANSACTION_TYPE_SELL, quantity = quantity(company_data['last_price']), order_type = kite.ORDER_TYPE_MARKET, product = kite.PRODUCT_MIS)
-                        if RENKO[company_data['instrument_token']][4] != "None":
-                            self.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol="SBIN",
-                                             transaction_type=kite.TRANSACTION_TYPE_SELL,
-                                             quantity=quantity(company_data['last_price']),
-                                             order_type=kite.ORDER_TYPE_MARKET, product=kite.PRODUCT_MIS)
-                            print('Sell at ', str(company_data['last_price']))
-                            calcpsoitions(company_data['instrument_token'], quantity(company_data['last_price']), company_data['last_price'],"SELL")
-                        RENKO[company_data['instrument_token']][4] = "SHORT"
-                    elif RENKO_Final.iloc[-1,3] == "BUY" and RENKO_Final.iloc[-1,1] > RENKO_Final.iloc[-1,6] and RENKO_Final.iloc[-1,2] > RENKO_Final.iloc[-1,6] and RENKO[company_data['instrument_token']][4]!="LONG" and RENKO_Final.iloc[-1,6] != 0:
-                        print('Buy at ', str(company_data['last_price']))
-                        calcpsoitions(company_data['instrument_token'], quantity(company_data['last_price']), company_data['last_price'], "BUY")
-                        self.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol="SBIN", transaction_type=kite.TRANSACTION_TYPE_BUY, quantity=quantity(company_data['last_price']),
-                                         order_type=kite.ORDER_TYPE_MARKET, product=kite.PRODUCT_MIS)
-                        if RENKO[company_data['instrument_token']][4] != "None":
-                            print('Buy at ', str(company_data['last_price']))
-                            calcpsoitions(company_data['instrument_token'], quantity(company_data['last_price']), company_data['last_price'], "BUY")
-                            self.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol="SBIN", transaction_type=kite.TRANSACTION_TYPE_BUY, quantity=quantity(company_data['last_price']),
-                                             order_type=kite.ORDER_TYPE_MARKET, product=kite.PRODUCT_MIS)
-                        RENKO[company_data['instrument_token']][4] = "LONG"
+            pos = self.positions()
+            day_pos = pos['day']
+            posdf = pd.DataFrame(day_pos)
+            total_pos = posdf.loc[posdf['instrument_token'] == company_data['instrument_token'], ['quantity']]
+            print(total_pos.iloc[0,0])
     except Exception as e:
         traceback.print_exc()
+
 
 def on_connect(ws, response):
     ws.subscribe([x for x in trd_portfolio])
     ws.set_mode(ws.MODE_FULL, [x for x in trd_portfolio])
 
-# Assign the callbacks.
+
 kws.on_ticks = on_ticks
 kws.on_connect = on_connect
-
 kws.connect()

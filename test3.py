@@ -11,7 +11,7 @@ overall_profit = 0
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "iJGNdt8y8B3kkf1klT3dhIB6Y44H4w2E"
+access_token = "9N0vmTbdfcYwPRzRYNQdStqwWJ3HFR7K"
 kws = KiteTicker(api_k, access_token)
 self = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -24,7 +24,7 @@ def positions(token):
         print(0)
     else:
         total_pos = posdf.loc[posdf['instrument_token'] == token, ['quantity']]
-        return total_pos
+        return total_pos.iloc[0,0]
         print(total_pos)
 
 
@@ -312,24 +312,24 @@ def RENKO_TRIMA(company_data):
         if len(RENKO_Final) > 0:
             if RENKO_Final.iloc[-1, 6] != 0:
                 if ((RENKO_Final.iloc[-1, 3] == "SELL") & (RENKO_Final.iloc[-1, 1] < RENKO_Final.iloc[-1, 6]) & (RENKO_Final.iloc[-1, 2] < RENKO_Final.iloc[-1, 6])):
-                    if (positions(company_data['instrument_token']) > 0).bool():
+                    if (positions(company_data['instrument_token']) > 0):
                         self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol="SBIN",
                                          transaction_type=self.TRANSACTION_TYPE_SELL,
                                          quantity=abs(positions(company_data['instrument_token'])),
                                          order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
-                    if (positions(company_data['instrument_token']) == 0).bool():
+                    if (positions(company_data['instrument_token']) == 0):
                         self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol="SBIN",
                                          transaction_type=self.TRANSACTION_TYPE_SELL,
                                          quantity=quantity(company_data['last_price']),
                                          order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
                     #RENKO[company_data['instrument_token']][4] = "SHORT"
                 elif ((RENKO_Final.iloc[-1, 3] == "BUY") & (RENKO_Final.iloc[-1, 1] > RENKO_Final.iloc[-1, 6]) & (RENKO_Final.iloc[-1, 2] > RENKO_Final.iloc[-1, 6])):
-                    if ((positions(company_data['instrument_token'])) < 0).bool():
+                    if ((positions(company_data['instrument_token'])) < 0):
                         self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol="SBIN",
                                          transaction_type=self.TRANSACTION_TYPE_BUY,
                                          quantity=abs(positions(company_data['instrument_token'])),
                                          order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
-                    if (positions(company_data['instrument_token']) == 0).bool():
+                    if (positions(company_data['instrument_token']) == 0):
                         self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol="SBIN",
                                          transaction_type=self.TRANSACTION_TYPE_BUY, quantity=quantity(company_data['last_price']),
                                          order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)

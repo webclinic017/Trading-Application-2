@@ -16,7 +16,7 @@ kite = "";
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "k7n9TXfLllvueQ5OoqvDBfcX6Xidulxy"
+access_token = "9N0vmTbdfcYwPRzRYNQdStqwWJ3HFR7K"
 kws = KiteTicker(api_k, access_token)
 self = KiteConnect(api_key=api_k, access_token=access_token)
 
