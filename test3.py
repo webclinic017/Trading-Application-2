@@ -3,6 +3,8 @@ from kiteconnect import KiteConnect
 from kiteconnect import KiteTicker
 import pandas as pd
 import traceback
+import requests
+from requests.exceptions import ReadTimeout
 
 import datetime,time,os,random
 
@@ -11,7 +13,7 @@ overall_profit = 0
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "9N0vmTbdfcYwPRzRYNQdStqwWJ3HFR7K"
+access_token = "a160sSfDh795GwC5p4nL8Wm370czL2z2"
 kws = KiteTicker(api_k, access_token)
 self = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -336,6 +338,8 @@ def RENKO_TRIMA(company_data):
                     #RENKO[company_data['instrument_token']][4] = "LONG"
     except Exception as e:
         traceback.print_exc()
+    except ReadTimeout:
+        pass
 
 
 def calcpsoitions(Token, quantity, Last_price, Signal):
