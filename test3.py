@@ -5,15 +5,16 @@ import pandas as pd
 import traceback
 import requests
 from requests.exceptions import ReadTimeout
+from kiteconnect import exceptions
 
 import datetime,time,os,random
 
-trd_portfolio = {779521: "SBIN"}
+trd_portfolio = {11368706: "NIFTY1962011600PE"}
 overall_profit = 0
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "a160sSfDh795GwC5p4nL8Wm370czL2z2"
+access_token = "B4EdpdRZXL0lw31pe13vowsCx9H4TiYs"
 kws = KiteTicker(api_k, access_token)
 self = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -34,7 +35,12 @@ def quantity(ltp):
     global order_quantity
     mar = KiteConnect.margins(self)
     equity_mar = mar['equity']['net']
-    return round((equity_mar/ltp)*12.5) - 100
+    maxquantity = equity_mar/ltp
+    multiplier = 0
+    while (ltp * multiplier * 75) < maxquantity:
+        multiplier = multiplier+1
+    else:
+        return multiplier * 75
 
 
 def orderhistory():
@@ -336,10 +342,12 @@ def RENKO_TRIMA(company_data):
                                          transaction_type=self.TRANSACTION_TYPE_BUY, quantity=quantity(company_data['last_price']),
                                          order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
                     #RENKO[company_data['instrument_token']][4] = "LONG"
-    except Exception as e:
-        traceback.print_exc()
     except ReadTimeout:
         pass
+    except exceptions.NetworkException:
+        pass
+    except Exception as e:
+        traceback.print_exc()
 
 
 def calcpsoitions(Token, quantity, Last_price, Signal):
