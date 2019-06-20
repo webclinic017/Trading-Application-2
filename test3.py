@@ -9,12 +9,12 @@ from kiteconnect import exceptions
 
 import datetime,time,os,random
 
-trd_portfolio = {11368706: "NIFTY1962011600PE"}
+trd_portfolio = {11368706:"NIFTY1962011600PE"}
 overall_profit = 0
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "B4EdpdRZXL0lw31pe13vowsCx9H4TiYs"
+access_token = "znvtwP6ZQGArol5ZTQ2V5boycMDmiL10"
 kws = KiteTicker(api_k, access_token)
 self = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -35,9 +35,9 @@ def quantity(ltp):
     global order_quantity
     mar = KiteConnect.margins(self)
     equity_mar = mar['equity']['net']
-    maxquantity = equity_mar/ltp
+    maxquantity = min(equity_mar/ltp,5000)
     multiplier = 0
-    while (ltp * multiplier * 75) < maxquantity:
+    while (multiplier * 75) < maxquantity:
         multiplier = multiplier+1
     else:
         return multiplier * 75
@@ -321,24 +321,24 @@ def RENKO_TRIMA(company_data):
             if RENKO_Final.iloc[-1, 6] != 0:
                 if ((RENKO_Final.iloc[-1, 3] == "SELL") & (RENKO_Final.iloc[-1, 1] < RENKO_Final.iloc[-1, 6]) & (RENKO_Final.iloc[-1, 2] < RENKO_Final.iloc[-1, 6])):
                     if (positions(company_data['instrument_token']) > 0):
-                        self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol="SBIN",
+                        self.place_order(variety="regular", exchange=self.EXCHANGE_NFO, tradingsymbol=trd_portfolio[company_data['instrument_token']],
                                          transaction_type=self.TRANSACTION_TYPE_SELL,
                                          quantity=abs(positions(company_data['instrument_token'])),
                                          order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
-                    if (positions(company_data['instrument_token']) == 0):
-                        self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol="SBIN",
+                    '''if (positions(company_data['instrument_token']) == 0):
+                        self.place_order(variety="regular", exchange=self.EXCHANGE_NFO, tradingsymbol=trd_portfolio[company_data['instrument_token']],
                                          transaction_type=self.TRANSACTION_TYPE_SELL,
                                          quantity=quantity(company_data['last_price']),
                                          order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
-                    #RENKO[company_data['instrument_token']][4] = "SHORT"
+                    #RENKO[company_data['instrument_token']][4] = "SHORT"'''
                 elif ((RENKO_Final.iloc[-1, 3] == "BUY") & (RENKO_Final.iloc[-1, 1] > RENKO_Final.iloc[-1, 6]) & (RENKO_Final.iloc[-1, 2] > RENKO_Final.iloc[-1, 6])):
                     if ((positions(company_data['instrument_token'])) < 0):
-                        self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol="SBIN",
+                        self.place_order(variety="regular", exchange=self.EXCHANGE_NFO, tradingsymbol=trd_portfolio[company_data['instrument_token']],
                                          transaction_type=self.TRANSACTION_TYPE_BUY,
                                          quantity=abs(positions(company_data['instrument_token'])),
                                          order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
                     if (positions(company_data['instrument_token']) == 0):
-                        self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol="SBIN",
+                        self.place_order(variety="regular", exchange=self.EXCHANGE_NFO, tradingsymbol=trd_portfolio[company_data['instrument_token']],
                                          transaction_type=self.TRANSACTION_TYPE_BUY, quantity=quantity(company_data['last_price']),
                                          order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
                     #RENKO[company_data['instrument_token']][4] = "LONG"
