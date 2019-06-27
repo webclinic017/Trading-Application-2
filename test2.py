@@ -9,12 +9,12 @@ from kiteconnect import exceptions
 
 import datetime,time,os,random
 
-trd_portfolio = {12302850:"NIFTY19JUN11800CE"}
+trd_portfolio = {12100098:"NIFTY19JUL12000CE"}
 overall_profit = 0
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "znvtwP6ZQGArol5ZTQ2V5boycMDmiL10"
+access_token = "PiMRibCalYZpRyj8sbhJ5AA3cyypgeqo"
 kws = KiteTicker(api_k, access_token)
 self = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -22,13 +22,15 @@ def positions(token):
     pos = self.positions()
     day_pos = pos['day']
     posdf = pd.DataFrame(day_pos)
+    print(posdf)
     if posdf.empty:
         return 0
-        print(0)
     else:
         total_pos = posdf.loc[posdf['instrument_token'] == token, ['quantity']]
-        return total_pos.iloc[0,0]
-        print(total_pos)
+        if total_pos.empty:
+            return 0
+        else:
+            return total_pos.iloc[0,0]
 
 
 def quantity(ltp):
@@ -40,7 +42,7 @@ def quantity(ltp):
     while (multiplier * 75) < maxquantity:
         multiplier = multiplier+1
     else:
-        return multiplier * 75
+        return (multiplier-1) * 75
 
 
 def orderhistory():
@@ -337,7 +339,7 @@ def RENKO_TRIMA(company_data):
                                          transaction_type=self.TRANSACTION_TYPE_BUY,
                                          quantity=abs(positions(company_data['instrument_token'])),
                                          order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
-                    if (positions(company_data['instrument_token']) == 0):
+                    if (positions(company_data['instrument_token']) == 0) & quantity(company_data['last_price']) > 0:
                         self.place_order(variety="regular", exchange=self.EXCHANGE_NFO, tradingsymbol=trd_portfolio[company_data['instrument_token']],
                                          transaction_type=self.TRANSACTION_TYPE_BUY, quantity=quantity(company_data['last_price']),
                                          order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
