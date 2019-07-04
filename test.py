@@ -9,12 +9,12 @@ from kiteconnect import exceptions
 
 import datetime,time,os,random
 
-trd_portfolio = {12089346:"NIFTY19JUL11200CE"}
+trd_portfolio = {9624066:"NIFTY1970412000CE"}
 overall_profit = 0
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "PiMRibCalYZpRyj8sbhJ5AA3cyypgeqo"
+access_token = "Ugk5OqxhKPDgTSGGul3vTVSZp3XRLFRQ"
 kws = KiteTicker(api_k, access_token)
 self = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -22,7 +22,6 @@ def positions(token):
     pos = self.positions()
     day_pos = pos['day']
     posdf = pd.DataFrame(day_pos)
-    print(posdf)
     if posdf.empty:
         return 0
     else:
@@ -30,7 +29,13 @@ def positions(token):
         if total_pos.empty:
             return 0
         else:
-            return total_pos.iloc[0,0]
+            current_pos = total_pos.iloc[0,0]
+            maxquantity = min(current_pos, 5000)
+            multiplier = 0
+            while (multiplier * 75) < maxquantity:
+                multiplier = multiplier + 1
+            else:
+                return (multiplier - 1) * 75
 
 
 def quantity(ltp):

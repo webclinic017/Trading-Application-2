@@ -9,12 +9,12 @@ from kiteconnect import exceptions
 
 import datetime,time,os,random
 
-trd_portfolio = {12098050:"NIFTY19JUL11800PE"}
+trd_portfolio = {10967298:"NIFTY1971111800PE"}
 overall_profit = 0
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "PiMRibCalYZpRyj8sbhJ5AA3cyypgeqo"
+access_token = "gq3H1p6C6Z5eSZ7pocK1jlOOltI2OXMO"
 kws = KiteTicker(api_k, access_token)
 self = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -22,7 +22,6 @@ def positions(token):
     pos = self.positions()
     day_pos = pos['day']
     posdf = pd.DataFrame(day_pos)
-    print(posdf)
     if posdf.empty:
         return 0
     else:
@@ -30,7 +29,13 @@ def positions(token):
         if total_pos.empty:
             return 0
         else:
-            return total_pos.iloc[0,0]
+            current_pos = total_pos.iloc[0,0]
+            maxquantity = min(current_pos, 5000)
+            multiplier = 0
+            while (multiplier * 75) <= maxquantity:
+                multiplier = multiplier + 1
+            else:
+                return (multiplier - 1) * 75
 
 
 def quantity(ltp):
@@ -334,12 +339,12 @@ def RENKO_TRIMA(company_data):
                                          order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
                     #RENKO[company_data['instrument_token']][4] = "SHORT"'''
                 elif ((RENKO_Final.iloc[-1, 3] == "BUY") & (RENKO_Final.iloc[-1, 1] > RENKO_Final.iloc[-1, 6]) & (RENKO_Final.iloc[-1, 2] > RENKO_Final.iloc[-1, 6])):
-                    if ((positions(company_data['instrument_token'])) < 0):
+                    '''if ((positions(company_data['instrument_token'])) < 0):
                         self.place_order(variety="regular", exchange=self.EXCHANGE_NFO, tradingsymbol=trd_portfolio[company_data['instrument_token']],
                                          transaction_type=self.TRANSACTION_TYPE_BUY,
                                          quantity=abs(positions(company_data['instrument_token'])),
-                                         order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
-                    if (positions(company_data['instrument_token']) == 0) & quantity(company_data['last_price']) > 0:
+                                         order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)'''
+                    if quantity(company_data['last_price']) > 0:
                         self.place_order(variety="regular", exchange=self.EXCHANGE_NFO, tradingsymbol=trd_portfolio[company_data['instrument_token']],
                                          transaction_type=self.TRANSACTION_TYPE_BUY, quantity=quantity(company_data['last_price']),
                                          order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
