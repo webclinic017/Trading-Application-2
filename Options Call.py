@@ -14,7 +14,7 @@ overall_profit = 0
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "gq3H1p6C6Z5eSZ7pocK1jlOOltI2OXMO"
+access_token = "klPpjqOG29Ijg5aFoBeyL1TCeCv0pBNZ"
 kws = KiteTicker(api_k, access_token)
 self = KiteConnect(api_key=api_k, access_token=access_token)
 
