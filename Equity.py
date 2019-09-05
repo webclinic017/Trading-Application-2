@@ -6,6 +6,7 @@ import traceback
 import requests
 from requests.exceptions import ReadTimeout
 from kiteconnect import exceptions
+import math
 
 import datetime,time,os,random
 
@@ -13,10 +14,11 @@ trd_portfolio = {779521:"SBIN"}
 overall_profit = 0
 Direction = ""
 Orderid = ''
+Target_order = ''
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "oGZjir0xxEIYJGtAgs2vQxAuuQO9ddYB"
+access_token = "2IUKA52EFvTrw5G5iz5fcZRZirf8II77"
 kws = KiteTicker(api_k, access_token)
 self = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -39,6 +41,17 @@ def positions(token):
             else:
                 return (multiplier - 1) * 75'''
             return current_pos
+
+def target(Orderid, direction):
+    global ohlc_temp
+    Order_data = self.order_history(Orderid)
+    for item in Order_data:
+        if item['status'] == "COMPLETE":
+            traded_price = item['average_price']
+            if direction == "Up":
+                return traded_price + ohlc_temp.iloc[-1, 7]
+            elif direction == "Down":
+                return traded_price - ohlc_temp.iloc[-1, 7]
 
 
 def quantity(ltp):
@@ -322,34 +335,40 @@ def calculate_ohlc_one_minute(company_data):
         traceback.print_exc()
 
 def RENKO_TRIMA(company_data):
-    global ohlc_final_1min, RENKO_Final, final_position, order_quantity, RENKO, RENKO_temp, Direction
+    global ohlc_final_1min, RENKO_Final, final_position, order_quantity, RENKO, RENKO_temp, Direction, Orderid, Target_order
     try:
         if len(RENKO_Final) > 0:
             if RENKO_Final.iloc[-1, 6] != 0:
-                if ((RENKO_Final.iloc[-1, 3] == "SELL") & (RENKO_Final.iloc[-1, 1] < RENKO_Final.iloc[-1, 6]) & (RENKO_Final.iloc[-1, 2] < RENKO_Final.iloc[-1, 6])) & Direction!= "Down":
-                    if (positions(company_data['instrument_token']) > 0):
+                if ((RENKO_Final.iloc[-1, 3] == "SELL") & ((RENKO_Final.iloc[-1, 1] < RENKO_Final.iloc[-1, 6]) & (RENKO_Final.iloc[-1, 2] < RENKO_Final.iloc[-1, 6]))):
+                    if Direction != "Down":
+                        if (positions(company_data['instrument_token']) == 0):
+                            Orderid = self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']],
+                                             transaction_type=self.TRANSACTION_TYPE_SELL, quantity=quantity(company_data['last_price']),
+                                             order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
+                            Direction = "Down"
+                            Target_order = "NO"
+                        #RENKO[company_data['instrument_token']][4] = "SHORT"
+                elif ((RENKO_Final.iloc[-1, 3] == "BUY") & ((RENKO_Final.iloc[-1, 1] > RENKO_Final.iloc[-1, 6]) & (RENKO_Final.iloc[-1, 2] > RENKO_Final.iloc[-1, 6]))):
+                    if Direction != "Up":
+                        if (positions(company_data['instrument_token']) == 0):
+                            Orderid = self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']],
+                                             transaction_type=self.TRANSACTION_TYPE_BUY, quantity=quantity(company_data['last_price']),
+                                             order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
+                            Direction = "Up"
+                            Target_order = "NO"
+                if (positions(company_data['instrument_token']) > 0):
+                    if Target_order != "YES":
                         self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']],
                                          transaction_type=self.TRANSACTION_TYPE_SELL, quantity=abs(positions(company_data['instrument_token'])),
-                                         order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
-                    if (positions(company_data['instrument_token']) == 0) & quantity(company_data['last_price']) > 0:
-                        Orderid = self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']],
-                                         transaction_type=self.TRANSACTION_TYPE_SELL, quantity=quantity(company_data['last_price']),
-                                         order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
-                        print(self.order_history(Orderid))
-                        Direction = "Down"
-                    #RENKO[company_data['instrument_token']][4] = "SHORT"
-                elif ((RENKO_Final.iloc[-1, 3] == "BUY") & (RENKO_Final.iloc[-1, 1] > RENKO_Final.iloc[-1, 6]) & (RENKO_Final.iloc[-1, 2] > RENKO_Final.iloc[-1, 6])) & Direction!= "Up":
-                    if ((positions(company_data['instrument_token'])) < 0):
+                                         order_type=self.ORDER_TYPE_LIMIT, price=round(target(Orderid, Direction),1), product=self.PRODUCT_MIS)
+                        Target_order = "YES"
+                if ((positions(company_data['instrument_token'])) < 0):
+                    if Target_order != "YES":
                         self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']],
                                          transaction_type=self.TRANSACTION_TYPE_BUY, quantity=abs(positions(company_data['instrument_token'])),
-                                         order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
-                    if (positions(company_data['instrument_token']) == 0) & quantity(company_data['last_price']) > 0:
-                        Orderid = self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']],
-                                         transaction_type=self.TRANSACTION_TYPE_BUY, quantity=quantity(company_data['last_price']),
-                                         order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
-                        print(self.order_history(Orderid))
-                        Direction = "Up"
-                    #RENKO[company_data['instrument_token']][4] = "LONG"
+                                         order_type=self.ORDER_TYPE_LIMIT, price=round(target(Orderid, Direction),1), product=self.PRODUCT_MIS)
+                        Target_order = "YES"
+                        #RENKO[company_data['instrument_token']][4] = "LONG"
     except ReadTimeout:
         pass
     except exceptions.NetworkException:
