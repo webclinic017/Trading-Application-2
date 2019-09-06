@@ -112,4 +112,5 @@ finalRenko['SMA'] = finalData['SMA']
 finalRenko['TMA'] = finalData['TMA']
 #finalRenko=finalRenko[['Symbol','Open','Close','Signal','Position','SMA','TMA']]
 finalRenkodf = pd.DataFrame(finalRenko,index=None)
+finalRenkodf.set_index('Symbol', inplace=True)
 print(finalRenkodf)
