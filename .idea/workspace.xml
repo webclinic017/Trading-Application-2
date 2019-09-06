@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/ackautomatic.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/historical data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Equity.py" beforeDir="false" afterPath="$PROJECT_DIR$/Equity.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ticks.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticks.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/historical data.py" beforeDir="false" afterPath="$PROJECT_DIR$/historical data.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -55,8 +52,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Equity.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret line="303" column="86" lean-forward="true" selection-start-line="303" selection-start-column="86" selection-end-line="303" selection-end-column="86" />
+            <state relative-caret-position="-1678">
+              <caret line="78" column="76" lean-forward="true" selection-start-line="78" selection-start-column="76" selection-end-line="78" selection-end-column="76" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -76,7 +73,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/historical data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
+            <state relative-caret-position="119">
+              <caret line="35" lean-forward="true" selection-start-line="35" selection-end-line="35" />
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
               </folding>
@@ -136,6 +134,8 @@
       <find>id</find>
       <find>round</find>
       <find>[stock]</find>
+      <find>red</find>
+      <find>green</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -460,7 +460,14 @@
       <option name="project" value="LOCAL" />
       <updated>1564643665401</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="lot of changes. Trying to get historical data.">
+      <created>1567668126381</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1567668126382</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TodoView">
@@ -481,7 +488,7 @@
       <window_info content_ui="combo" id="Project" order="2" sideWeight="0.37482318" visible="true" weight="0.050858654" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32956153" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49867898" visible="true" weight="0.4427157" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49867898" visible="true" weight="0.523338" />
       <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
       <window_info anchor="bottom" id="Debug" order="5" sideWeight="0.5237781" weight="0.5572843" />
@@ -522,7 +529,8 @@
     <MESSAGE value="update the positions function to return 0 if no position for subscribed stock while we have other stocks." />
     <MESSAGE value="Made changes to the positions quantity for optoins code and also renamed for options." />
     <MESSAGE value="Modified tick file to work for equity. on directional decision strategy. Next update would be to exit positions at previous ordered price + ATR" />
-    <option name="LAST_COMMIT_MESSAGE" value="Modified tick file to work for equity. on directional decision strategy. Next update would be to exit positions at previous ordered price + ATR" />
+    <MESSAGE value="lot of changes. Trying to get historical data." />
+    <option name="LAST_COMMIT_MESSAGE" value="lot of changes. Trying to get historical data." />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
@@ -676,8 +684,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Equity.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="303" column="86" lean-forward="true" selection-start-line="303" selection-start-column="86" selection-end-line="303" selection-end-column="86" />
+        <state relative-caret-position="-1678">
+          <caret line="78" column="76" lean-forward="true" selection-start-line="78" selection-start-column="76" selection-end-line="78" selection-end-column="76" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
@@ -686,7 +694,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/historical data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
+        <state relative-caret-position="119">
+          <caret line="35" lean-forward="true" selection-start-line="35" selection-end-line="35" />
           <folding>
             <element signature="e#0#28#0" expanded="true" />
           </folding>

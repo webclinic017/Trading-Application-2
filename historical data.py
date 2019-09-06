@@ -8,6 +8,10 @@ with urlopen("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&sy
 
 finalData={} # This should contain our final output and that is Renko OHLC data
 renkoData={} # It contains information on the lastest bar of renko data for the number of stocks we are working on
+finalRenko = {}
+
+Position = ''
+Symbol = 'SBIN'
 
 n = 14
 def ATR(df,n): #df is the DataFrame, n is the period 7,14 ,etc
@@ -24,8 +28,8 @@ def ATR(df,n): #df is the DataFrame, n is the period 7,14 ,etc
 data = json.loads(source)
 
 #json.dumps(data, indent=2)
-print(data)
-'''minute_data = data["Time Series (1min)"]
+#print(data)
+minute_data = data["Time Series (1min)"]
 df = pd.DataFrame.from_dict(minute_data,orient='index')
 df.drop(['5. volume'], axis=1, inplace = True)
 df.rename(columns = {'1. open':'Open', '2. high':'High', '3. low':'Low', '4. close':'Close'}, inplace = True)
@@ -35,13 +39,12 @@ ATR(df,14)
 df=df[['Open','High','Low','Close','ATR']]
 print(df)
 
-renkoData={'BrickSize':0.0, 'Open':0.0,'Close':0.0,'Color':''}
+renkoData={'BrickSize': 0, 'Open':0.0,'Close':0.0,'Color':''}
 renkoData['BrickSize']=round(df['ATR'][-1],2) #This can be set manually as well!
 renkoData['Open']=renkoData['BrickSize']+renkoData['Close'] # This can be done the otherway round
-renkoData['Color']='red'    # Should you choose to do the other way round, please change the color to 'green'
+renkoData['Color']='SELL'    # Should you choose to do the other way round, please change the color to 'BUY'
 
-finalData=pd.DataFrame()
-finalData.index.name='Date'
+finalData=pd.DataFrame(index=None)
 finalData['ReOpen']=0.0
 finalData['ReHigh']=0.0
 finalData['ReLow']=0.0
@@ -51,7 +54,7 @@ finalData['Color']=''
 for index, row in df.iterrows():  # One may choose to use Pure python instead of Iterrows to loop though each n
     # every row to improve performace if datasets are large.
     if renkoData['Open'] > renkoData['Close']:
-        while row['Close'] > (renkoData['Open'] + int(renkoData['BrickSize'])):
+        while float(row['Close']) > (float(renkoData['Open']) + float(renkoData['BrickSize'])):
             renkoData['Open'] += renkoData['BrickSize']
             renkoData['Close'] += renkoData['BrickSize']
             finalData.loc[index] = row
@@ -59,9 +62,9 @@ for index, row in df.iterrows():  # One may choose to use Pure python instead of
             finalData['ReHigh'].loc[index] = renkoData['Open']
             finalData['ReLow'].loc[index] = renkoData['Close']
             finalData['ReClose'].loc[index] = renkoData['Open']
-            finalData['Color'].loc[index] = 'green'
+            finalData['Color'].loc[index] = 'BUY'
 
-        while row['Close'] < (renkoData['Close'] - renkoData['BrickSize']):
+        while float(row['Close']) < float((renkoData['Close']) - float(renkoData['BrickSize'])):
             renkoData['Open'] -= renkoData['BrickSize']
             renkoData['Close'] -= renkoData['BrickSize']
             finalData.loc[index] = row
@@ -69,10 +72,10 @@ for index, row in df.iterrows():  # One may choose to use Pure python instead of
             finalData['ReHigh'].loc[index] = renkoData['Open']
             finalData['ReLow'].loc[index] = renkoData['Close']
             finalData['ReClose'].loc[index] = renkoData['Close']
-            finalData['Color'].loc[index] = 'red'
+            finalData['Color'].loc[index] = 'SELL'
 
     else:
-        while row['Close'] < (renkoData['Open'] - renkoData['BrickSize']):
+        while float(row['Close']) < float((renkoData['Open']) - float(renkoData['BrickSize'])):
             renkoData['Open'] -= renkoData['BrickSize']
             renkoData['Close'] -= renkoData['BrickSize']
             finalData.loc[index] = row
@@ -80,9 +83,9 @@ for index, row in df.iterrows():  # One may choose to use Pure python instead of
             finalData['ReHigh'].loc[index] = renkoData['Close']
             finalData['ReLow'].loc[index] = renkoData['Open']
             finalData['ReClose'].loc[index] = renkoData['Open']
-            finalData['Color'].loc[index] = 'red'
+            finalData['Color'].loc[index] = 'SELL'
 
-        while row['Close'] > (renkoData['Close'] + renkoData['BrickSize']):
+        while float(row['Close']) > float((renkoData['Close']) + float(renkoData['BrickSize'])):
             renkoData['Open'] += renkoData['BrickSize']
             renkoData['Close'] += renkoData['BrickSize']
             finalData.loc[index] = row
@@ -90,6 +93,23 @@ for index, row in df.iterrows():  # One may choose to use Pure python instead of
             finalData['ReHigh'].loc[index] = renkoData['Close']
             finalData['ReLow'].loc[index] = renkoData['Open']
             finalData['ReClose'].loc[index] = renkoData['Close']
-            finalData['Color'].loc[index] = 'green'
+            finalData['Color'].loc[index] = 'BUY'
 
-print(finalData)'''
+print(finalData)
+finalData['SMA'] = finalData.ReClose.rolling(10).mean()
+finalData['TMA'] = finalData.SMA.rolling(10).mean()
+print(finalData)
+
+#"Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"
+
+finalRenko = {'Symbol': '','Open':0, 'Close':0, 'Signal':'', 'Position':'', 'SMA':0, 'TMA':0}
+finalRenko['Symbol'] = Symbol
+finalRenko['Position'] = Position
+finalRenko['Open'] = finalData['ReOpen']
+finalRenko['Close'] = finalData['ReClose']
+finalRenko['Signal'] = finalData['Color']
+finalRenko['SMA'] = finalData['SMA']
+finalRenko['TMA'] = finalData['TMA']
+#finalRenko=finalRenko[['Symbol','Open','Close','Signal','Position','SMA','TMA']]
+finalRenkodf = pd.DataFrame(finalRenko,index=None)
+print(finalRenkodf)
