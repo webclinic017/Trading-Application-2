@@ -95,7 +95,6 @@ for index, row in df.iterrows():  # One may choose to use Pure python instead of
             finalData['ReClose'].loc[index] = renkoData['Close']
             finalData['Color'].loc[index] = 'BUY'
 
-print(finalData)
 finalData['SMA'] = finalData.ReClose.rolling(10).mean()
 finalData['TMA'] = finalData.SMA.rolling(10).mean()
 print(finalData)
@@ -110,7 +109,6 @@ finalRenko['Close'] = finalData['ReClose']
 finalRenko['Signal'] = finalData['Color']
 finalRenko['SMA'] = finalData['SMA']
 finalRenko['TMA'] = finalData['TMA']
-#finalRenko=finalRenko[['Symbol','Open','Close','Signal','Position','SMA','TMA']]
 finalRenkodf = pd.DataFrame(finalRenko,index=None)
-finalRenkodf.set_index('Symbol', inplace=True)
+#finalRenkodf.set_index('Symbol', inplace=True)
 print(finalRenkodf)

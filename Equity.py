@@ -6,8 +6,9 @@ import traceback
 import requests
 from requests.exceptions import ReadTimeout
 from kiteconnect import exceptions
-import math
-
+from urllib.request import *
+import json
+import numpy as np
 import datetime,time,os,random
 
 trd_portfolio = {779521:"SBIN"}
@@ -15,12 +16,116 @@ overall_profit = 0
 Direction = ""
 Orderid = ''
 Target_order = ''
+Position = ''
+Symbol = 'SBIN'
+
+with urlopen("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=NSE:SBIN&interval=1min&outputsize=full&apikey=08AXPZ0UQEVKUSD8") as response:
+    source = response.read()
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "2IUKA52EFvTrw5G5iz5fcZRZirf8II77"
+access_token = "snyYa3L33oztHpks0vBYOS7HklImkT30"
 kws = KiteTicker(api_k, access_token)
 self = KiteConnect(api_key=api_k, access_token=access_token)
+n = 14
+
+
+def ATR(df,n): #df is the DataFrame, n is the period 7,14 ,etc
+    df['H-L']=abs(df['High'].astype(float)-df['Low'].astype(float))
+    df['H-PC']=abs(df['High'].astype(float)-df['Close'].astype(float).shift(1))
+    df['L-PC']=abs(df['Low'].astype(float)-df['Close'].astype(float).shift(1))
+    df['TR']=df[['H-L','H-PC','L-PC']].max(axis=1)
+    df['ATR']=np.nan
+    df.ix[n-1,'ATR']=df['TR'][:n-1].mean() #.ix is deprecated from pandas version- 0.19
+    for i in range(n,len(df)):
+        df['ATR'][i]=(df['ATR'][i-1]*(n-1)+ df['TR'][i])/n
+    return
+
+data = json.loads(source)
+
+minute_data = data["Time Series (1min)"]
+df = pd.DataFrame.from_dict(minute_data,orient='index')
+df.drop(['5. volume'], axis=1, inplace = True)
+df.rename(columns = {'1. open':'Open', '2. high':'High', '3. low':'Low', '4. close':'Close'}, inplace = True)
+
+#print(json.dumps(minute_data, indent=2))
+ATR(df,14)
+df=df[['Open','High','Low','Close','ATR']]
+print(df)
+
+renkoData_his={'BrickSize': 0, 'Open':0.0,'Close':0.0,'Color':''}
+renkoData_his['BrickSize']=round(df['ATR'][-1],2) #This can be set manually as well!
+renkoData_his['Open']=renkoData_his['BrickSize']+renkoData_his['Close'] # This can be done the otherway round
+renkoData_his['Color']='SELL'    # Should you choose to do the other way round, please change the color to 'BUY'
+
+finalData_his=pd.DataFrame(index=None)
+finalData_his['ReOpen']=0.0
+finalData_his['ReHigh']=0.0
+finalData_his['ReLow']=0.0
+finalData_his['ReClose']=0.0
+finalData_his['Color']=''
+
+for index, row in df.iterrows():  # One may choose to use Pure python instead of Iterrows to loop though each n
+    # every row to improve performace if datasets are large.
+    if renkoData_his['Open'] > renkoData_his['Close']:
+        while float(row['Close']) > (float(renkoData_his['Open']) + float(renkoData_his['BrickSize'])):
+            renkoData_his['Open'] += renkoData_his['BrickSize']
+            renkoData_his['Close'] += renkoData_his['BrickSize']
+            finalData_his.loc[index] = row
+            finalData_his['ReOpen'].loc[index] = renkoData_his['Close']
+            finalData_his['ReHigh'].loc[index] = renkoData_his['Open']
+            finalData_his['ReLow'].loc[index] = renkoData_his['Close']
+            finalData_his['ReClose'].loc[index] = renkoData_his['Open']
+            finalData_his['Color'].loc[index] = 'BUY'
+
+        while float(row['Close']) < float((renkoData_his['Close']) - float(renkoData_his['BrickSize'])):
+            renkoData_his['Open'] -= renkoData_his['BrickSize']
+            renkoData_his['Close'] -= renkoData_his['BrickSize']
+            finalData_his.loc[index] = row
+            finalData_his['ReOpen'].loc[index] = renkoData_his['Open']
+            finalData_his['ReHigh'].loc[index] = renkoData_his['Open']
+            finalData_his['ReLow'].loc[index] = renkoData_his['Close']
+            finalData_his['ReClose'].loc[index] = renkoData_his['Close']
+            finalData_his['Color'].loc[index] = 'SELL'
+
+    else:
+        while float(row['Close']) < float((renkoData_his['Open']) - float(renkoData_his['BrickSize'])):
+            renkoData_his['Open'] -= renkoData_his['BrickSize']
+            renkoData_his['Close'] -= renkoData_his['BrickSize']
+            finalData_his.loc[index] = row
+            finalData_his['ReOpen'].loc[index] = renkoData_his['Close']
+            finalData_his['ReHigh'].loc[index] = renkoData_his['Close']
+            finalData_his['ReLow'].loc[index] = renkoData_his['Open']
+            finalData_his['ReClose'].loc[index] = renkoData_his['Open']
+            finalData_his['Color'].loc[index] = 'SELL'
+
+        while float(row['Close']) > float((renkoData_his['Close']) + float(renkoData_his['BrickSize'])):
+            renkoData_his['Open'] += renkoData_his['BrickSize']
+            renkoData_his['Close'] += renkoData_his['BrickSize']
+            finalData_his.loc[index] = row
+            finalData_his['ReOpen'].loc[index] = renkoData_his['Open']
+            finalData_his['ReHigh'].loc[index] = renkoData_his['Close']
+            finalData_his['ReLow'].loc[index] = renkoData_his['Open']
+            finalData_his['ReClose'].loc[index] = renkoData_his['Close']
+            finalData_his['Color'].loc[index] = 'BUY'
+
+finalData_his['SMA'] = finalData_his.ReClose.rolling(10).mean()
+finalData_his['TMA'] = finalData_his.SMA.rolling(10).mean()
+print(finalData_his)
+
+#"Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"
+
+finalRenko = {'Symbol': '','Open':0, 'Close':0, 'Signal':'', 'Position':'', 'SMA':0, 'TMA':0}
+finalRenko['Symbol'] = Symbol
+finalRenko['Position'] = Position
+finalRenko['Open'] = finalData_his['ReOpen']
+finalRenko['Close'] = finalData_his['ReClose']
+finalRenko['Signal'] = finalData_his['Color']
+finalRenko['SMA'] = finalData_his['SMA']
+finalRenko['TMA'] = finalData_his['TMA']
+finalRenkodf = pd.DataFrame(finalRenko,index=None)
+#finalRenkodf.set_index('Symbol', inplace=True)
+print(finalRenkodf)
 
 def positions(token):
     pos = self.positions()
@@ -77,6 +182,11 @@ RENKO_Final = pd.DataFrame(columns=["Symbol","Open", "Close", "Signal", "Positio
 profit = {}
 profit_temp = pd.DataFrame(columns=["Symbol", "SELL Price", "BUY Price", "Profit"])
 profit_Final = pd.DataFrame(columns=["Symbol", "SELL Price", "BUY Price", "Profit"])
+finalData={} # This should contain our final output and that is Renko OHLC data
+renkoData={} # It contains information on the lastest bar of renko data for the number of stocks we are working on
+finalRenko = {}
+
+RENKO_Final = RENKO_Final.append(finalRenkodf)
 
 for x in trd_portfolio:
     ohlc[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0, 0, 0]  # [Symbol, Traded Time, Open, High, Low, Close, True Range, Average True Range, Simple Moving Average, Triangular moving average]
