@@ -34,8 +34,7 @@ profit_temp = pd.DataFrame(columns=["Symbol", "SELL Price", "BUY Price", "Profit
 profit_Final = pd.DataFrame(columns=["Symbol", "SELL Price", "BUY Price", "Profit"])
 
 for x in trd_portfolio:
-    ohlc[x] = ["Symbol", "Time", 0, 0, 0, 0, 0,
-               0];  # [Symbol, Traded Time, Open, High, Low, Close, True Range, Average True Range]
+    ohlc[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0];  # [Symbol, Traded Time, Open, High, Low, Close, True Range, Average True Range]
     RENKO[x] = ["Symbol", 0, 0, "Signal", "None"];
     profit[x] = ["Symbol", 0, 0, "Profit"]
 

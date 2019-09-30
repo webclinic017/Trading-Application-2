@@ -16,6 +16,7 @@ overall_profit = 0
 Direction = ""
 Orderid = ''
 Target_order = ''
+Target_order_id = ''
 Position = ''
 Symbol = 'SBIN'
 
@@ -24,7 +25,7 @@ with urlopen("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&sy
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "snyYa3L33oztHpks0vBYOS7HklImkT30"
+access_token = "JubdDZSs32ousYqU2F143ZrmmlUcNBSD"
 kws = KiteTicker(api_k, access_token)
 self = KiteConnect(api_key=api_k, access_token=access_token)
 n = 14
@@ -163,7 +164,7 @@ def quantity(ltp):
     global order_quantity
     mar = KiteConnect.margins(self)
     equity_mar = mar['equity']['net']
-    return round((equity_mar / ltp) * 12.5) - 10
+    return round((equity_mar / ltp) * 8) - 10
 
     '''maxquantity = min(equity_mar/ltp,5000)
     multiplier = 0
@@ -445,36 +446,39 @@ def calculate_ohlc_one_minute(company_data):
         traceback.print_exc()
 
 def RENKO_TRIMA(company_data):
-    global ohlc_final_1min, RENKO_Final, final_position, order_quantity, RENKO, RENKO_temp, Direction, Orderid, Target_order
+    global ohlc_final_1min, RENKO_Final, final_position, order_quantity, RENKO, RENKO_temp, Direction, Orderid, Target_order, Target_order_id
     try:
         if len(RENKO_Final) > 0:
             if RENKO_Final.iloc[-1, 6] != 0:
-                if ((RENKO_Final.iloc[-1, 3] == "SELL") & ((RENKO_Final.iloc[-1, 1] < RENKO_Final.iloc[-1, 6]) & (RENKO_Final.iloc[-1, 2] < RENKO_Final.iloc[-1, 6]))):
+                if (RENKO_Final.iloc[-1, 3] == "SELL"):
                     if Direction != "Down":
                         if (positions(company_data['instrument_token']) == 0):
                             Orderid = self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']],
-                                             transaction_type=self.TRANSACTION_TYPE_SELL, quantity=quantity(company_data['last_price']),
-                                             order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
+                                             transaction_type=self.TRANSACTION_TYPE_SELL, quantity=quantity(company_data['last_price']), order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
                             Direction = "Down"
                             Target_order = "NO"
                         #RENKO[company_data['instrument_token']][4] = "SHORT"
-                elif ((RENKO_Final.iloc[-1, 3] == "BUY") & ((RENKO_Final.iloc[-1, 1] > RENKO_Final.iloc[-1, 6]) & (RENKO_Final.iloc[-1, 2] > RENKO_Final.iloc[-1, 6]))):
+                        if (positions(company_data['instrument_token']) > 0):
+                            self.modify_order(variety="regular",order_id=Target_order_id, order_type=self.ORDER_TYPE_MARKET)
+                elif (RENKO_Final.iloc[-1, 3] == "BUY"):
                     if Direction != "Up":
                         if (positions(company_data['instrument_token']) == 0):
                             Orderid = self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']],
-                                             transaction_type=self.TRANSACTION_TYPE_BUY, quantity=quantity(company_data['last_price']),
-                                             order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
+                                             transaction_type=self.TRANSACTION_TYPE_BUY, quantity=quantity(company_data['last_price']), order_type=self.ORDER_TYPE_MARKET, product=self.PRODUCT_MIS)
                             Direction = "Up"
                             Target_order = "NO"
+                        if Direction != "Up":
+                            if (positions(company_data['instrument_token']) < 0):
+                                self.modify_order(variety="regular",order_id=Target_order_id, order_type=self.ORDER_TYPE_MARKET)
                 if (positions(company_data['instrument_token']) > 0):
                     if Target_order != "YES":
-                        self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']],
+                        Target_order_id = self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']],
                                          transaction_type=self.TRANSACTION_TYPE_SELL, quantity=abs(positions(company_data['instrument_token'])),
                                          order_type=self.ORDER_TYPE_LIMIT, price=round(target(Orderid, Direction),1), product=self.PRODUCT_MIS)
                         Target_order = "YES"
                 if ((positions(company_data['instrument_token'])) < 0):
                     if Target_order != "YES":
-                        self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']],
+                        Target_order_id = self.place_order(variety="regular", exchange=self.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']],
                                          transaction_type=self.TRANSACTION_TYPE_BUY, quantity=abs(positions(company_data['instrument_token'])),
                                          order_type=self.ORDER_TYPE_LIMIT, price=round(target(Orderid, Direction),1), product=self.PRODUCT_MIS)
                         Target_order = "YES"

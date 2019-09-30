@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Multi_Equity.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Equity.py" beforeDir="false" afterPath="$PROJECT_DIR$/Equity.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/historical data.py" beforeDir="false" afterPath="$PROJECT_DIR$/historical data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ticks2.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticks2.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -20,8 +21,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Generate Access Token.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="7" column="8" lean-forward="true" selection-start-line="7" selection-start-column="8" selection-end-line="7" selection-end-column="8" />
+            <state relative-caret-position="51">
+              <caret line="7" column="8" selection-start-line="7" selection-start-column="8" selection-end-line="7" selection-end-column="8" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -32,20 +33,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ticks2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="14" column="10" selection-start-line="14" selection-start-column="10" selection-end-line="14" selection-end-column="10" />
-              <folding>
-                <element signature="e#0#14#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ticks.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6596">
-              <caret line="397" column="48" selection-start-line="393" selection-start-column="12" selection-end-line="397" selection-end-column="48" />
+            <state relative-caret-position="3468">
+              <caret line="210" column="73" selection-start-line="210" selection-start-column="73" selection-end-line="210" selection-end-column="73" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -54,10 +43,21 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Equity.py">
+        <entry file="file://$PROJECT_DIR$/ticks.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="473" column="44" lean-forward="true" selection-start-line="473" selection-start-column="44" selection-end-line="473" selection-end-column="44" />
+            <state relative-caret-position="129">
+              <caret line="368" column="37" lean-forward="true" selection-start-line="368" selection-start-column="37" selection-end-line="368" selection-end-column="37" />
+              <folding>
+                <element signature="e#0#14#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Multi_Equity.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -143,6 +143,7 @@
       <find>copy</find>
       <find>print</find>
       <find>append</find>
+      <find>Orderid</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -159,19 +160,19 @@
         <option value="$PROJECT_DIR$/test2.py" />
         <option value="$PROJECT_DIR$/Options Put.py" />
         <option value="$PROJECT_DIR$/Options Call.py" />
-        <option value="$PROJECT_DIR$/ticks2.py" />
         <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/ticks.py" />
         <option value="$PROJECT_DIR$/ackautomatic.py" />
         <option value="$PROJECT_DIR$/historical data.py" />
+        <option value="$PROJECT_DIR$/ticks2.py" />
+        <option value="$PROJECT_DIR$/Multi_Equity.py" />
         <option value="$PROJECT_DIR$/Equity.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-10" />
-    <option name="y" value="-10" />
-    <option name="width" value="980" />
+    <option name="x" value="950" />
+    <option name="width" value="979" />
     <option name="height" value="1040" />
   </component>
   <component name="ProjectView">
@@ -489,7 +490,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567746308746</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="modified equity scenario to egt historical data from Alpha Vantage">
+      <created>1568887335221</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1568887335221</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TodoView">
@@ -506,13 +514,13 @@
     <layout>
       <window_info id="Structure" order="0" sideWeight="0.50159746" side_tool="true" weight="0.072655216" />
       <window_info id="Favorites" order="1" sideWeight="0.50159746" side_tool="true" weight="0.072655216" />
-      <window_info content_ui="combo" id="Project" order="2" sideWeight="0.37482318" visible="true" weight="0.14002642" />
+      <window_info active="true" content_ui="combo" id="Project" order="2" sideWeight="0.37482318" visible="true" weight="0.1327609" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32956153" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49867898" weight="0.45685998" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49867898" weight="0.26308346" />
       <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
-      <window_info active="true" anchor="bottom" id="Debug" order="5" sideWeight="0.5237781" visible="true" weight="0.5572843" />
+      <window_info anchor="bottom" id="Debug" order="5" sideWeight="0.5237781" weight="0.40452617" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3281471" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32956153" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32956153" />
@@ -551,7 +559,8 @@
     <MESSAGE value="Made changes to the positions quantity for optoins code and also renamed for options." />
     <MESSAGE value="Modified tick file to work for equity. on directional decision strategy. Next update would be to exit positions at previous ordered price + ATR" />
     <MESSAGE value="lot of changes. Trying to get historical data." />
-    <option name="LAST_COMMIT_MESSAGE" value="lot of changes. Trying to get historical data." />
+    <MESSAGE value="modified equity scenario to egt historical data from Alpha Vantage" />
+    <option name="LAST_COMMIT_MESSAGE" value="modified equity scenario to egt historical data from Alpha Vantage" />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
@@ -569,13 +578,6 @@
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Generate Access key.py" />
-    <entry file="file://$USER_HOME$/.PyCharmCE2019.1/system/python_stubs/1199708832/builtins.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="454">
-          <caret line="782" column="19" selection-start-line="782" selection-start-column="15" selection-end-line="782" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/site-packages/kiteconnect-3.7.7-py3.7.egg!/kiteconnect/connect.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="141">
@@ -645,6 +647,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/json/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="19" lean-forward="true" selection-start-line="10" selection-start-column="19" selection-end-line="10" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharmCE2019.1/system/python_stubs/1199708832/builtins.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="311">
+          <caret line="5160" column="18" selection-start-line="5160" selection-start-column="18" selection-end-line="5160" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python37-32/Lib/site-packages/urllib3/util/wait.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="117">
@@ -652,20 +668,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ticks2.py">
+    <entry file="file://$PROJECT_DIR$/Equity.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="14" column="10" selection-start-line="14" selection-start-column="10" selection-end-line="14" selection-end-column="10" />
+        <state>
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ticks.py">
+    <entry file="file://$PROJECT_DIR$/Generate Access Token.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6596">
-          <caret line="397" column="48" selection-start-line="393" selection-start-column="12" selection-end-line="397" selection-end-column="48" />
+        <state relative-caret-position="51">
+          <caret line="7" column="8" selection-start-line="7" selection-start-column="8" selection-end-line="7" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ticks2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3468">
+          <caret line="210" column="73" selection-start-line="210" selection-start-column="73" selection-end-line="210" selection-end-column="73" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Multi_Equity.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
@@ -676,6 +710,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="7" column="20" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/historical data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1751">
+          <caret line="106" column="40" selection-start-line="106" selection-start-column="40" selection-end-line="106" selection-end-column="40" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -696,30 +740,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/historical data.py">
+    <entry file="file://$PROJECT_DIR$/ticks.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1751">
-          <caret line="106" column="40" selection-start-line="106" selection-start-column="40" selection-end-line="106" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Generate Access Token.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="8" lean-forward="true" selection-start-line="7" selection-start-column="8" selection-end-line="7" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Equity.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="473" column="44" lean-forward="true" selection-start-line="473" selection-start-column="44" selection-end-line="473" selection-end-column="44" />
+        <state relative-caret-position="129">
+          <caret line="368" column="37" lean-forward="true" selection-start-line="368" selection-start-column="37" selection-end-line="368" selection-end-column="37" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
