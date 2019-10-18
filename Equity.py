@@ -25,7 +25,7 @@ with urlopen("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&sy
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "JubdDZSs32ousYqU2F143ZrmmlUcNBSD"
+access_token = "ed8WaG8H3ie5p4x52e6oFQw5s6E09Hg2"
 kws = KiteTicker(api_k, access_token)
 self = KiteConnect(api_key=api_k, access_token=access_token)
 n = 14
@@ -183,11 +183,9 @@ RENKO_Final = pd.DataFrame(columns=["Symbol","Open", "Close", "Signal", "Positio
 profit = {}
 profit_temp = pd.DataFrame(columns=["Symbol", "SELL Price", "BUY Price", "Profit"])
 profit_Final = pd.DataFrame(columns=["Symbol", "SELL Price", "BUY Price", "Profit"])
-finalData={} # This should contain our final output and that is Renko OHLC data
-renkoData={} # It contains information on the lastest bar of renko data for the number of stocks we are working on
-finalRenko = {}
 
 RENKO_Final = RENKO_Final.append(finalRenkodf)
+print(RENKO_Final)
 
 for x in trd_portfolio:
     ohlc[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0, 0, 0]  # [Symbol, Traded Time, Open, High, Low, Close, True Range, Average True Range, Simple Moving Average, Triangular moving average]
