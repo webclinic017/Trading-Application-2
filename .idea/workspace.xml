@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/1.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Trading-Application.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Trading-Application.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Equity.py" beforeDir="false" afterPath="$PROJECT_DIR$/Equity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1.py" beforeDir="false" afterPath="$PROJECT_DIR$/1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -335,7 +332,14 @@
       <option name="project" value="LOCAL" />
       <updated>1568887335221</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="updated the calculate 1 min to refer to multiple stocks.">
+      <created>1571412239862</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1571412239862</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TodoView">
@@ -370,7 +374,8 @@
     <MESSAGE value="Modified tick file to work for equity. on directional decision strategy. Next update would be to exit positions at previous ordered price + ATR" />
     <MESSAGE value="lot of changes. Trying to get historical data." />
     <MESSAGE value="modified equity scenario to egt historical data from Alpha Vantage" />
-    <option name="LAST_COMMIT_MESSAGE" value="modified equity scenario to egt historical data from Alpha Vantage" />
+    <MESSAGE value="updated the calculate 1 min to refer to multiple stocks." />
+    <option name="LAST_COMMIT_MESSAGE" value="updated the calculate 1 min to refer to multiple stocks." />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">

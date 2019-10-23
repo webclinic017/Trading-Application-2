@@ -1,9 +1,7 @@
-from kiteconnect import KiteConnect
-from kiteconnect import KiteTicker
-import traceback
+import math
 
-trd_portfolio = {779521:{"Symbol":"SBIN","max_quantity":10000},
-                 779522:{"Symbol":"ABC","max_quantity":100}
-                 }
+def round_down(n, decimals=0):
+    multiplier = 10 ** decimals
+    return math.floor(n * multiplier) / multiplier
 
-print(trd_portfolio[779521]['Symbol'])
+print(round_down(1.57256984,3))
