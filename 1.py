@@ -26,20 +26,13 @@ def positions(token):
             return 0
         else:
             current_pos = total_pos.iloc[0,0]
-            '''maxquantity = min(current_pos, 5000)
-            multiplier = 0
-            while (multiplier * 75) < maxquantity:
-                multiplier = multiplier + 1
-            else:
-                return (multiplier - 1) * 75'''
             return current_pos
 
 
-def quantity(ltp):
-    global order_quantity
+def quantity(ltp, token):
     mar = KiteConnect.margins(kite)
     equity_mar = mar['equity']['net']
-    return round((equity_mar / ltp) * 8) - 10
+    return round(min((equity_mar / ltp) * 12.5) - 10, trd_portfolio[token]['max_quantity'])
 
     '''maxquantity = min(equity_mar/ltp,5000)
     multiplier = 0
@@ -479,7 +472,7 @@ def RENKO_TRIMA(company_data):
                     if trd_portfolio[company_data['instrument_token']]['Direction'] != "Down":
                         if positions(company_data['instrument_token']) == 0:
                             trd_portfolio[company_data['instrument_token']]['Orderid'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']]['Symbol'],
-                                             transaction_type=kite.TRANSACTION_TYPE_SELL, quantity=quantity(company_data['last_price']), order_type=kite.ORDER_TYPE_MARKET, product=kite.PRODUCT_MIS)
+                                             transaction_type=kite.TRANSACTION_TYPE_SELL, quantity=quantity(company_data['last_price'], company_data['instrument_token']), order_type=kite.ORDER_TYPE_MARKET, product=kite.PRODUCT_MIS)
                             trd_portfolio[company_data['instrument_token']]['Direction'] = "Down"
                             trd_portfolio[company_data['instrument_token']]['Target_order'] = "NO"
                         #RENKO[company_data['instrument_token']][4] = "SHORT"
