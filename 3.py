@@ -24,17 +24,14 @@ def positions(token):
         if total_pos.empty:
             return 0
         else:
-            current_pos = total_pos.iloc[0, 0]
+            current_pos = total_pos.iloc[0,0]
             return current_pos
 
 
 def quantity(ltp, token):
     mar = KiteConnect.margins(kite)
     equity_mar = mar['equity']['net']
-    if ((equity_mar / ltp) * 12.5)-10 < 1:
-        return 0
-    else:
-        return int(round(min(((equity_mar / ltp) * 12.5)-10, trd_portfolio[token]['max_quantity']), 0))
+    return round(min((equity_mar / ltp) * 12.5) - 10, trd_portfolio[token]['max_quantity'])
 
     '''maxquantity = min(equity_mar/ltp,5000)
     multiplier = 0
@@ -102,7 +99,7 @@ def ATR(df, n):  # df is the DataFrame, n is the period 7,14 ,etc
 
 
 def history(stock):
-    global RENKO_Final, ohlc_final_1min
+    global RENKO_Final
     with urlopen(
             "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=NSE:" + stock + "&interval=1min&outputsize=full&apikey=08AXPZ0UQEVKUSD8") as response:
         source = response.read()
@@ -110,15 +107,18 @@ def history(stock):
         minute_data = data["Time Series (1min)"]
         df = pd.DataFrame.from_dict(minute_data, orient='index')
         df.drop(['5. volume'], axis=1, inplace=True)
-        df.sort_index(axis=0, ascending=True, inplace=True)
         df.rename(columns={'1. open': 'Open', '2. high': 'High', '3. low': 'Low', '4. close': 'Close'}, inplace=True)
         Position = ''
 
         # print(json.dumps(minute_data, indent=2))
         ATR(df, 14)
+        df = df[['Open', 'High', 'Low', 'Close', 'ATR']]
+        # print(df)
+
         renkoData_his = {'BrickSize': 0, 'Open': 0.0, 'Close': 0.0, 'Color': ''}
         renkoData_his['BrickSize'] = round(df['ATR'][-1], 2)  # This can be set manually as well!
-        renkoData_his['Open'] = renkoData_his['BrickSize'] + renkoData_his['Close']  # This can be done the otherway round
+        renkoData_his['Open'] = renkoData_his['BrickSize'] + renkoData_his[
+            'Close']  # This can be done the otherway round
         renkoData_his['Color'] = 'SELL'  # Should you choose to do the other way round, please change the color to 'BUY'
 
         finalData_his = pd.DataFrame(index=None)
@@ -190,16 +190,6 @@ def history(stock):
         RENKO_Final = RENKO_Final.append(finalRenkodf)
         print(RENKO_Final)
 
-        df['Symbol'] = stock
-        df.reset_index(inplace=True)
-        df.rename(columns={'index': 'Time'}, inplace=True)
-        df['SMA'] = df.Close.rolling(10).mean()
-        df['TMA'] = df.SMA.rolling(10).mean()
-        df = df[['Symbol', 'Time', 'Open', 'High', 'Low', 'Close', 'TR', 'ATR', 'SMA', 'TMA']]
-        # print(df.to_string())
-        ohlc_final_1min = ohlc_final_1min.append(df)
-        print(ohlc_final_1min)
-
 
 def calculate_ohlc_one_minute(company_data):
     global ohlc_final_1min, ohlc_temp, RENKO_temp, RENKO_Final
@@ -214,8 +204,8 @@ def calculate_ohlc_one_minute(company_data):
                                                    abs((ohlc_temp.iloc[-1, 4]) - (ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 4])))), 2)
             else:
                 ohlc_temp.iloc[-1, 6] = round(abs((ohlc_temp.iloc[-1, 3]) - (ohlc_temp.iloc[-1, 4])), 2)
-        # True Range Calculation complete for ohlc
-        # Calculating ATR for ohlc
+        # True Range Calculation complete
+        # Calculating ATR
             if len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) < 13:
                 ohlc_temp.iloc[-1, 7] = 0
 
@@ -236,8 +226,8 @@ def calculate_ohlc_one_minute(company_data):
 
             elif len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 13:
                 ohlc_temp.iloc[-1, 7] = round(((ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]*13) + ohlc_temp.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 6])/14, 2)
-        # ATR Calculation complete for ohlc
-        # Calculating SMA for ohlc
+        # ATR Calculation complete
+        # Calculating SMA
             if len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) < 10:
                 ohlc_temp.iloc[-1, 8] = 0
             elif len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) >= 10:
@@ -252,9 +242,9 @@ def calculate_ohlc_one_minute(company_data):
                      ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-8, 5],
                      ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-9, 5]]
                 ohlc_temp.iloc[-1, 8] = round(sum(b) / 10, 2)
-        # SMA Calculation complete for ohlc
+        # SMA Calculation complete
 
-        # Calculating Triangular moving average for ohlc
+        # Calculating Triangular moving average
             if len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) < 19:
                 ohlc_temp.iloc[-1, 9] = 0
             elif len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) >= 19:
@@ -269,7 +259,7 @@ def calculate_ohlc_one_minute(company_data):
                      ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-8, 8],
                      ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-9, 8]]
                 ohlc_temp.iloc[-1, 9] = round((sum(c) / 10), 2)
-        # TMA calculation complete for ohlc
+        # TMA calculation complete
 
         # adding the row into the final ohlc table
             ohlc_final_1min = ohlc_final_1min.append(ohlc_temp)
@@ -292,8 +282,8 @@ def calculate_ohlc_one_minute(company_data):
         ohlc[company_data['instrument_token']][5] = company_data['last_price']  # closing price
         ohlc[company_data['instrument_token']][1] = str(((company_data["timestamp"]).replace(second=0)))
 
-        if (len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0):# or (len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0):  # checking if there is atleast 1 candle in OHLC Dataframe or RENKO Dataframe
-            if (ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7] != 0):# or (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7] != [0, 'NaN']):  #checking that we do not have the ATR value as 0
+        if len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0:  # checking if there is atleast 1 candle in OHLC Dataframe
+            if ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7] != 0:  #checking that we do not have the ATR value as 0
                 if RENKO[company_data['instrument_token']][0] == "Symbol":
                     RENKO[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]['Symbol']
                 ########################################################
@@ -488,26 +478,6 @@ def round_down(n, decimals=0):
     multiplier = 10 ** decimals
     return math.floor(n * multiplier) / multiplier
 
-def order_status(token, orderid, type):
-    order_details = kite.order_history(orderid)
-    for item in order_details:
-        if item['status'] == "COMPLETE":
-            if type == 'SELL':
-                trd_portfolio[token]['Direction'] = "Down"
-                trd_portfolio[token]['Target_order'] = "NO"
-                print(trd_portfolio[token]['Direction'], trd_portfolio[token]['Target_order'])
-            elif type == 'BUY':
-                trd_portfolio[token]['Direction'] = "Up"
-                trd_portfolio[token]['Target_order'] = "NO"
-                print(trd_portfolio[token]['Direction'],
-                      trd_portfolio[token]['Target_order'])
-        elif item['status'] == "REJECTED":
-            print(trd_portfolio[token]['Direction'],
-                  trd_portfolio[token]['Target_order'])
-    else:
-        time.sleep(1)
-        order_status(token, orderid, type)
-
 
 def RENKO_TRIMA(company_data):
     global ohlc_final_1min, RENKO_Final, final_position, order_quantity, RENKO, RENKO_temp, Direction, Orderid, Target_order, Target_order_id
@@ -517,41 +487,36 @@ def RENKO_TRIMA(company_data):
                 if RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 3] == "SELL":
                     if trd_portfolio[company_data['instrument_token']]['Direction'] != "Down":
                         if positions(company_data['instrument_token']) == 0:
-                            if quantity(company_data['last_price'], company_data['instrument_token']) > 0:
-                                trd_portfolio[company_data['instrument_token']]['Orderid'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']]['Symbol'],
+                            trd_portfolio[company_data['instrument_token']]['Orderid'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']]['Symbol'],
                                              transaction_type=kite.TRANSACTION_TYPE_SELL, quantity=quantity(company_data['last_price'], company_data['instrument_token']), order_type=kite.ORDER_TYPE_MARKET, product=kite.PRODUCT_MIS)
-                                print(trd_portfolio[company_data['instrument_token']]['Orderid'])
-                                time.sleep(1)
-                                order_status(company_data['instrument_token'], trd_portfolio[company_data['instrument_token']]['Orderid'], 'SELL')
-
-
+                            trd_portfolio[company_data['instrument_token']]['Direction'] = "Down"
+                            trd_portfolio[company_data['instrument_token']]['Target_order'] = "NO"
+                        #RENKO[company_data['instrument_token']][4] = "SHORT"
                         if positions(company_data['instrument_token']) > 0:
                             kite.modify_order(variety="regular", order_id=trd_portfolio[company_data['instrument_token']]['Target_order_id'], order_type=kite.ORDER_TYPE_MARKET)
                 elif RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 3] == "BUY":
                     if trd_portfolio[company_data['instrument_token']]['Direction'] != "Up":
                         if positions(company_data['instrument_token']) == 0:
-                            if quantity(company_data['last_price'], company_data['instrument_token']) > 0:
-                                trd_portfolio[company_data['instrument_token']]['Orderid'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']]['Symbol'],
-                                             transaction_type=kite.TRANSACTION_TYPE_BUY, quantity=quantity(company_data['last_price'], company_data['instrument_token']), order_type=kite.ORDER_TYPE_MARKET, product=kite.PRODUCT_MIS)
-                                print(trd_portfolio[company_data['instrument_token']]['Orderid'])
-                                time.sleep(1)
-                                order_status(company_data, trd_portfolio[company_data['instrument_token']]['Orderid'], 'BUY')
-
-
-                        if (positions(company_data['instrument_token']) < 0):
-                            kite.modify_order(variety="regular", order_id=trd_portfolio[company_data['instrument_token']]['Target_order_id'], order_type=kite.ORDER_TYPE_MARKET)
+                            trd_portfolio[company_data['instrument_token']]['Orderid'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']]['Symbol'],
+                                             transaction_type=kite.TRANSACTION_TYPE_BUY, quantity=quantity(company_data['last_price']), order_type=kite.ORDER_TYPE_MARKET, product=kite.PRODUCT_MIS)
+                            trd_portfolio[company_data['instrument_token']]['Direction'] = "Up"
+                            trd_portfolio[company_data['instrument_token']]['Target_order'] = "NO"
+                        if trd_portfolio[company_data['instrument_token']]['Direction'] != "Up":
+                            if (positions(company_data['instrument_token']) < 0):
+                                kite.modify_order(variety="regular",order_id=trd_portfolio[company_data['instrument_token']]['Target_order_id'], order_type=kite.ORDER_TYPE_MARKET)
                 if (positions(company_data['instrument_token']) > 0):
                     if trd_portfolio[company_data['instrument_token']]['Target_order'] != "YES":
                         trd_portfolio[company_data['instrument_token']]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']]['Symbol'],
                                          transaction_type=kite.TRANSACTION_TYPE_SELL, quantity=abs(positions(company_data['instrument_token'])),
-                                         order_type=kite.ORDER_TYPE_LIMIT, price=round(target(trd_portfolio[company_data['instrument_token']]['Orderid'], 'Up'), 1), product=kite.PRODUCT_MIS)
+                                         order_type=kite.ORDER_TYPE_LIMIT, price=round(target(trd_portfolio[company_data['instrument_token']]['Orderid'], trd_portfolio[company_data['instrument_token']]['Direction']), 1), product=kite.PRODUCT_MIS)
                         trd_portfolio[company_data['instrument_token']]['Target_order'] = "YES"
                 if ((positions(company_data['instrument_token'])) < 0):
                     if trd_portfolio[company_data['instrument_token']]['Target_order'] != "YES":
                         trd_portfolio[company_data['instrument_token']]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']],
                                          transaction_type=kite.TRANSACTION_TYPE_BUY, quantity=abs(positions(company_data['instrument_token'])),
-                                         order_type=kite.ORDER_TYPE_LIMIT, price=round_down(target(trd_portfolio[company_data['instrument_token']]['Orderid'], 'Down'), 1), product=kite.PRODUCT_MIS)
+                                         order_type=kite.ORDER_TYPE_LIMIT, price=round_down(target(trd_portfolio[company_data['instrument_token']]['Orderid'], trd_portfolio[company_data['instrument_token']]['Direction']), 1), product=kite.PRODUCT_MIS)
                         trd_portfolio[company_data['instrument_token']]['Target_order'] = "YES"
+                        #RENKO[company_data['instrument_token']][4] = "LONG"
     except ReadTimeout:
         pass
     except exceptions.NetworkException:
@@ -572,21 +537,123 @@ def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "lG6E8NNt9G9UYik755sZSj3inegj42Hd"
+access_token = "R7Rt1XCmqs5F4tw2w72OkiVgvb6qJKNY"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
-trd_portfolio = {5633: {"Symbol": "ACC", "max_quantity": 10000, "Direction": "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
-                 25601: {"Symbol": "AMARAJABAT", "max_quantity": 10000, "Direction": "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0}
-                 }
+trd_portfolio = {5633: {"Symbol": "ACC", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                 25601: {"Symbol": "AMARAJABAT", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0}}
+'''
+325121: {"Symbol": "AMBUJACEM", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+41729: {"Symbol": "APOLLOTYRE", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+60417: {"Symbol": "ASIANPAINT", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+1510401: {"Symbol": "AXISBANK", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+4267265: {"Symbol": "BAJAJ-AUTO", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+4268801: {"Symbol": "BAJAJFINSV", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+81153: {"Symbol": "BAJFINANCE", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+85761: {"Symbol": "BALKRISIND", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                1195009: {"Symbol": "BANKBARODA", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                94977: {"Symbol": "BATAINDIA", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                98049: {"Symbol": "BEL", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                103425: {"Symbol": "BERGEPAINT", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                108033: {"Symbol": "BHARATFORG", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                2911489: {"Symbol": "BIOCON", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                558337: {"Symbol": "BOSCHLTD", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                134657: {"Symbol": "BPCL", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                140033: {"Symbol": "BRITANNIA", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                2029825: {"Symbol": "CADILAHC", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                2763265: {"Symbol": "CANBK", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                320001: {"Symbol": "CASTROLIND", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                160001: {"Symbol": "CENTURYTEX", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                160769: {"Symbol": "CESC", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                175361: {"Symbol": "CHOLAFIN", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                177665: {"Symbol": "CIPLA", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                5215745: {"Symbol": "COALINDIA", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                3876097: {"Symbol": "COLPAL", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                1215745: {"Symbol": "CONCOR", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                486657: {"Symbol": "CUMMINSIND", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                197633: {"Symbol": "DABUR", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                232961: {"Symbol": "EICHERMOT", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                1256193: {"Symbol": "ENGINERSIN", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                245249: {"Symbol": "ESCORTS", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                173057: {"Symbol": "EXIDEIND", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                261889: {"Symbol": "FEDERALBNK", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                1895937: {"Symbol": "GLENMARK", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                2585345: {"Symbol": "GODREJCP", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                315393: {"Symbol": "GRASIM", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                2513665: {"Symbol": "HAVELLS", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                1850625: {"Symbol": "HCLTECH", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                340481: {"Symbol": "HDFC", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                341249: {"Symbol": "HDFCBANK", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                345089: {"Symbol": "HEROMOTOCO", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                2747905: {"Symbol": "HEXAWARE", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                348929: {"Symbol": "HINDALCO", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                356865: {"Symbol": "HINDUNILVR", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                364545: {"Symbol": "HINDZINC", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                1270529: {"Symbol": "ICICIBANK", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                2883073: {"Symbol": "IGL", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                7458561: {"Symbol": "INFRATEL", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                424961: {"Symbol": "ITC", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                3001089: {"Symbol": "JSWSTEEL", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                462849: {"Symbol": "KAJARIACER", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                492033: {"Symbol": "KOTAKBANK", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                511233: {"Symbol": "LICHSGFIN", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                2939649: {"Symbol": "LT", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                2672641: {"Symbol": "LUPIN", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                4879617: {"Symbol": "MANAPPURAM", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                1041153: {"Symbol": "MARICO", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                2815745: {"Symbol": "MARUTI", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                2674433: {"Symbol": "MCDOWELL-N", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                7982337: {"Symbol": "MCX", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                548353: {"Symbol": "MFSL", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                4488705: {"Symbol": "MGL", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                3675137: {"Symbol": "MINDTREE", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                582913: {"Symbol": "MRF", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                6054401: {"Symbol": "MUTHOOTFIN", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                1629185: {"Symbol": "NATIONALUM", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                8042241: {"Symbol": "NBCC", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                593665: {"Symbol": "NCC", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                4598529: {"Symbol": "NESTLEIND", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                2955009: {"Symbol": "NIITTECH", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                3924993: {"Symbol": "NMDC", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                2977281: {"Symbol": "NTPC", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                2748929: {"Symbol": "OFSS", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                4464129: {"Symbol": "OIL", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                633601: {"Symbol": "ONGC", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                681985: {"Symbol": "PIDILITIND", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                3834113: {"Symbol": "POWERGRID", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                3365633: {"Symbol": "PVR", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                523009: {"Symbol": "RAMCOCEM", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                731905: {"Symbol": "RAYMOND", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                3930881: {"Symbol": "RECLTD", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                738561: {"Symbol": "RELIANCE", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                758529: {"Symbol": "SAIL", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                779521: {"Symbol": "SBIN", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                794369: {"Symbol": "SHREECEM", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                806401: {"Symbol": "SIEMENS", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                871681: {"Symbol": "TATACHEM", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                873217: {"Symbol": "TATAELXSI", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                878593: {"Symbol": "TATAGLOBAL", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                877057: {"Symbol": "TATAPOWER", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                895745: {"Symbol": "TATASTEEL", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                2953217: {"Symbol": "TCS", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                3465729: {"Symbol": "TECHM", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                900609: {"Symbol": "TORNTPHARM", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                3529217: {"Symbol": "TORNTPOWER", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                2170625: {"Symbol": "TVSMOTOR", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                4278529: {"Symbol": "UBL", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                2952193: {"Symbol": "ULTRACEMCO", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                2889473: {"Symbol": "UPL", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                951809: {"Symbol": "VOLTAS", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                969473: {"Symbol": "WIPRO", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0} '''
 
 
 ohlc = {}  # python dictionary to store the ohlc data in it
 ohlc_temp = pd.DataFrame(columns=["Symbol","Time", "Open", "High", "Low", "Close", "TR","ATR","SMA","TMA"])
-ohlc_final_1min = pd.DataFrame(columns=["Symbol","Time", "Open", "High", "Low", "Close", "TR", "ATR","SMA","TMA"])
+ohlc_final_1min = pd.DataFrame()
 RENKO = {}  # python dictionary to store the renko chart data in it
 RENKO_temp = pd.DataFrame(columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
-RENKO_Final = pd.DataFrame(columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
+RENKO_Final = pd.DataFrame()
 profit = {}
 profit_temp = pd.DataFrame(columns=["Symbol", "SELL Price", "BUY Price", "Profit"])
 profit_Final = pd.DataFrame(columns=["Symbol", "SELL Price", "BUY Price", "Profit"])
