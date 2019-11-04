@@ -14,17 +14,27 @@ import math
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "lG6E8NNt9G9UYik755sZSj3inegj42Hd"
+access_token = "YeDIn3IQ3b52tw4bGS1jrZipfJq7bhCW"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
-print(kite.order_history(191031001576644))
+trd_portfolio = {5633: {"Symbol": "ACC", "max_quantity": 10000, "Direction": "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
+                 25601: {"Symbol": "AMARAJABAT", "max_quantity": 10000, "Direction": "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0}
+                 }
 
-def order_status():
-    order_details = kite.order_history(191031001576644)
-    for item in order_details:
-        if item['status'] == "COMPLETE":
-            print('order successfull')
-            order_status()
 
-order_status()
+def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
+    try:
+        print(ticks)
+        for company_data in ticks:
+            print(company_data['instrument_token'])
+    except Exception as e:
+        traceback.print_exc()
+
+def on_connect(ws, response):
+    ws.subscribe([x for x in trd_portfolio])
+    ws.set_mode(ws.MODE_FULL, [x for x in trd_portfolio])
+
+kws.on_ticks = on_ticks
+kws.on_connect = on_connect
+kws.connect()

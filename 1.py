@@ -490,20 +490,22 @@ def round_down(n, decimals=0):
 
 def order_status(token, orderid, type):
     order_details = kite.order_history(orderid)
-    for item in order_details:
+    order_dict = json.load(order_details)
+    for item in order_dict:
         if item['status'] == "COMPLETE":
             if type == 'SELL':
                 trd_portfolio[token]['Direction'] = "Down"
                 trd_portfolio[token]['Target_order'] = "NO"
                 print(trd_portfolio[token]['Direction'], trd_portfolio[token]['Target_order'])
+                return
             elif type == 'BUY':
                 trd_portfolio[token]['Direction'] = "Up"
                 trd_portfolio[token]['Target_order'] = "NO"
-                print(trd_portfolio[token]['Direction'],
-                      trd_portfolio[token]['Target_order'])
+                print(trd_portfolio[token]['Direction'], trd_portfolio[token]['Target_order'])
+                return
         elif item['status'] == "REJECTED":
-            print(trd_portfolio[token]['Direction'],
-                  trd_portfolio[token]['Target_order'])
+            print(trd_portfolio[token]['Direction'], trd_portfolio[token]['Target_order'])
+            return
     else:
         time.sleep(1)
         order_status(token, orderid, type)
@@ -572,7 +574,7 @@ def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "lG6E8NNt9G9UYik755sZSj3inegj42Hd"
+access_token = "YeDIn3IQ3b52tw4bGS1jrZipfJq7bhCW"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
