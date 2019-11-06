@@ -207,6 +207,7 @@ def calculate_ohlc_one_minute(company_data):
         # below if condition is to check the data being received, and the data present are of the same minute or not
         if (str(((company_data["timestamp"]).replace(second=0))) != ohlc[company_data['instrument_token']][1]) and (ohlc[company_data['instrument_token']][1]!= "Time"):
             ohlc_temp = pd.DataFrame([ohlc[x]], columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
+            #print(ohlc_temp.head(), ohlc_final_1min.head())
         # Calculating True Range
             if len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0:
                 ohlc_temp.iloc[-1, 6] = round(max((abs((ohlc_temp.iloc[-1, 3]) - (ohlc_temp.iloc[-1, 4])),
@@ -490,22 +491,21 @@ def round_down(n, decimals=0):
 
 def order_status(token, orderid, type):
     order_details = kite.order_history(orderid)
-    order_dict = json.load(order_details)
-    for item in order_dict:
+    for item in order_details:
         if item['status'] == "COMPLETE":
             if type == 'SELL':
                 trd_portfolio[token]['Direction'] = "Down"
                 trd_portfolio[token]['Target_order'] = "NO"
                 print(trd_portfolio[token]['Direction'], trd_portfolio[token]['Target_order'])
-                return
+                break
             elif type == 'BUY':
                 trd_portfolio[token]['Direction'] = "Up"
                 trd_portfolio[token]['Target_order'] = "NO"
                 print(trd_portfolio[token]['Direction'], trd_portfolio[token]['Target_order'])
-                return
+                break
         elif item['status'] == "REJECTED":
             print(trd_portfolio[token]['Direction'], trd_portfolio[token]['Target_order'])
-            return
+            break
     else:
         time.sleep(1)
         order_status(token, orderid, type)
@@ -550,7 +550,7 @@ def RENKO_TRIMA(company_data):
                         trd_portfolio[company_data['instrument_token']]['Target_order'] = "YES"
                 if ((positions(company_data['instrument_token'])) < 0):
                     if trd_portfolio[company_data['instrument_token']]['Target_order'] != "YES":
-                        trd_portfolio[company_data['instrument_token']]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']],
+                        trd_portfolio[company_data['instrument_token']]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']]['Symbol'],
                                          transaction_type=kite.TRANSACTION_TYPE_BUY, quantity=abs(positions(company_data['instrument_token'])),
                                          order_type=kite.ORDER_TYPE_LIMIT, price=round_down(target(trd_portfolio[company_data['instrument_token']]['Orderid'], 'Down'), 1), product=kite.PRODUCT_MIS)
                         trd_portfolio[company_data['instrument_token']]['Target_order'] = "YES"
@@ -562,9 +562,10 @@ def RENKO_TRIMA(company_data):
         traceback.print_exc()
 
 def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
-    global ohlc_final_1min, RENKO_Final, final_position, order_quantity
+    global ohlc_final_1min, RENKO_Final, final_position, order_quantity, ohlc_temp
     try:
         for company_data in ticks:
+            print("Temp ohle table", ohlc_temp.columns, "ohlc final 1 min", ohlc_final_1min.columns)
             if (company_data['last_trade_time'].time()) > datetime.time(9,15,00) and (company_data['last_trade_time'].time()) < datetime.time(15,31,00):
                 calculate_ohlc_one_minute(company_data)
                 RENKO_TRIMA(company_data)
@@ -574,7 +575,7 @@ def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "YeDIn3IQ3b52tw4bGS1jrZipfJq7bhCW"
+access_token = "3Gd9CrcD6JMZHc46Fm7niQkp278IasCI"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 

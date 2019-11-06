@@ -24,14 +24,17 @@ def positions(token):
         if total_pos.empty:
             return 0
         else:
-            current_pos = total_pos.iloc[0,0]
+            current_pos = total_pos.iloc[0, 0]
             return current_pos
 
 
 def quantity(ltp, token):
     mar = KiteConnect.margins(kite)
     equity_mar = mar['equity']['net']
-    return int(round(min((equity_mar / ltp) * 12.5, trd_portfolio[token]['max_quantity']), 0))
+    if ((equity_mar / ltp) * 12.5)-10 < 1:
+        return 0
+    else:
+        return int(round(min(((equity_mar / ltp) * 12.5)-10, trd_portfolio[token]['max_quantity']), 0))
 
     '''maxquantity = min(equity_mar/ltp,5000)
     multiplier = 0
@@ -99,7 +102,7 @@ def ATR(df, n):  # df is the DataFrame, n is the period 7,14 ,etc
 
 
 def history(stock):
-    global RENKO_Final
+    global RENKO_Final, ohlc_final_1min
     with urlopen(
             "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=NSE:" + stock + "&interval=1min&outputsize=full&apikey=08AXPZ0UQEVKUSD8") as response:
         source = response.read()
@@ -107,18 +110,15 @@ def history(stock):
         minute_data = data["Time Series (1min)"]
         df = pd.DataFrame.from_dict(minute_data, orient='index')
         df.drop(['5. volume'], axis=1, inplace=True)
+        df.sort_index(axis=0, ascending=True, inplace=True)
         df.rename(columns={'1. open': 'Open', '2. high': 'High', '3. low': 'Low', '4. close': 'Close'}, inplace=True)
         Position = ''
 
         # print(json.dumps(minute_data, indent=2))
         ATR(df, 14)
-        df = df[['Open', 'High', 'Low', 'Close', 'ATR']]
-        # print(df)
-
         renkoData_his = {'BrickSize': 0, 'Open': 0.0, 'Close': 0.0, 'Color': ''}
         renkoData_his['BrickSize'] = round(df['ATR'][-1], 2)  # This can be set manually as well!
-        renkoData_his['Open'] = renkoData_his['BrickSize'] + renkoData_his[
-            'Close']  # This can be done the otherway round
+        renkoData_his['Open'] = renkoData_his['BrickSize'] + renkoData_his['Close']  # This can be done the otherway round
         renkoData_his['Color'] = 'SELL'  # Should you choose to do the other way round, please change the color to 'BUY'
 
         finalData_his = pd.DataFrame(index=None)
@@ -190,13 +190,24 @@ def history(stock):
         RENKO_Final = RENKO_Final.append(finalRenkodf)
         print(RENKO_Final)
 
+        df['Symbol'] = stock
+        df.reset_index(inplace=True)
+        df.rename(columns={'index': 'Time'}, inplace=True)
+        df['SMA'] = df.Close.rolling(10).mean()
+        df['TMA'] = df.SMA.rolling(10).mean()
+        df = df[['Symbol', 'Time', 'Open', 'High', 'Low', 'Close', 'TR', 'ATR', 'SMA', 'TMA']]
+        # print(df.to_string())
+        ohlc_final_1min = ohlc_final_1min.append(df)
+        print(ohlc_final_1min)
+
 
 def calculate_ohlc_one_minute(company_data):
     global ohlc_final_1min, ohlc_temp, RENKO_temp, RENKO_Final
     try:
         # below if condition is to check the data being received, and the data present are of the same minute or not
         if (str(((company_data["timestamp"]).replace(second=0))) != ohlc[company_data['instrument_token']][1]) and (ohlc[company_data['instrument_token']][1]!= "Time"):
-            ohlc_temp = pd.DataFrame([ohlc[x]], columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
+            ohlc_temp = pd.DataFrame([ohlc[company_data['instrument_token']]], columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
+            #print(ohlc_temp.head(), ohlc_final_1min.head())
         # Calculating True Range
             if len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0:
                 ohlc_temp.iloc[-1, 6] = round(max((abs((ohlc_temp.iloc[-1, 3]) - (ohlc_temp.iloc[-1, 4])),
@@ -225,7 +236,7 @@ def calculate_ohlc_one_minute(company_data):
                 ohlc_temp.iloc[-1, 7] = round(sum(a)/13, 2)
 
             elif len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 13:
-                ohlc_temp.iloc[-1, 7] = round(((ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]*13) + ohlc_temp.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 6])/14, 2)
+                ohlc_temp.iloc[-1, 7] = round(((ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]*13) + ohlc_temp.iloc[-1, 6])/14, 2)
         # ATR Calculation complete for ohlc
         # Calculating SMA for ohlc
             if len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) < 10:
@@ -263,14 +274,14 @@ def calculate_ohlc_one_minute(company_data):
 
         # adding the row into the final ohlc table
             ohlc_final_1min = ohlc_final_1min.append(ohlc_temp)
-            #print(ohlc_final_1min.tail())
+            # print(ohlc_temp.to_string())
 
             # making ohlc for new candle
             ohlc[company_data['instrument_token']][2] = company_data['last_price']  # open
             ohlc[company_data['instrument_token']][3] = company_data['last_price']  # high
             ohlc[company_data['instrument_token']][4] = company_data['last_price']  # low
             ohlc[company_data['instrument_token']][5] = company_data['last_price']  # close
-            ohlc[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]
+            ohlc[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]['Symbol']
 
         if ohlc[company_data['instrument_token']][3] < company_data['last_price']:  # calculating high
             ohlc[company_data['instrument_token']][3] = company_data['last_price']
@@ -282,8 +293,8 @@ def calculate_ohlc_one_minute(company_data):
         ohlc[company_data['instrument_token']][5] = company_data['last_price']  # closing price
         ohlc[company_data['instrument_token']][1] = str(((company_data["timestamp"]).replace(second=0)))
 
-        if (len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0) or (len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0):  # checking if there is atleast 1 candle in OHLC Dataframe or RENKO Dataframe
-            if (ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7] != 0) or (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7] != [0, 'NaN']):  #checking that we do not have the ATR value as 0
+        if (len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0):# or (len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0):  # checking if there is atleast 1 candle in OHLC Dataframe or RENKO Dataframe
+            if (ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7] != 0):# or (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7] != [0, 'NaN']):  #checking that we do not have the ATR value as 0
                 if RENKO[company_data['instrument_token']][0] == "Symbol":
                     RENKO[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]['Symbol']
                 ########################################################
@@ -294,7 +305,7 @@ def calculate_ohlc_one_minute(company_data):
                     if (company_data['last_price'] >= ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7] + RENKO[company_data['instrument_token']][1]):
                         RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] + ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "BUY"
-                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
+                        RENKO_temp = pd.DataFrame([RENKO[company_data['instrument_token']]], columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
 
                         # Calculating SMA
                         if len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) <= 9:
@@ -315,12 +326,12 @@ def calculate_ohlc_one_minute(company_data):
                         # TMA calculation complete
 
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_temp)
+                        print(RENKO_temp.to_string())
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]
                     elif (company_data['last_price']<= RENKO[company_data['instrument_token']][1] - ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]):
                         RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] - ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "SELL"
-                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
+                        RENKO_temp = pd.DataFrame([RENKO[company_data['instrument_token']]], columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
                         # Calculating SMA
                         if len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) <= 9:
                             RENKO_temp.iloc[-1, 5] = 0
@@ -346,14 +357,14 @@ def calculate_ohlc_one_minute(company_data):
                         # TMA calculation complete
 
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_temp)
+                        print(RENKO_temp.to_string())
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]
 
                 if RENKO[company_data['instrument_token']][3] == "BUY":
                     if (company_data['last_price'] >= ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7] + RENKO[company_data['instrument_token']][1]):
                         RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] + ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "BUY"
-                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
+                        RENKO_temp = pd.DataFrame([RENKO[company_data['instrument_token']]], columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
                         # Calculating SMA
                         if len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) <= 9:
                             RENKO_temp.iloc[-1, 5] = 0
@@ -377,13 +388,13 @@ def calculate_ohlc_one_minute(company_data):
                         # TMA calculation complete
 
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_temp)
+                        print(RENKO_temp.to_string())
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]
                     elif company_data['last_price'] <= RENKO[company_data['instrument_token']][1] - (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2] - RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1]) - ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]:
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1]
                         RENKO[company_data['instrument_token']][2] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1] - ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "SELL"
-                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
+                        RENKO_temp = pd.DataFrame([RENKO[company_data['instrument_token']]], columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
                         # Calculating SMA
                         if len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) <= 9:
                             RENKO_temp.iloc[-1, 5] = 0
@@ -407,13 +418,13 @@ def calculate_ohlc_one_minute(company_data):
                         # TMA calculation complete
 
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_temp)
+                        print(RENKO_temp.to_string())
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]
                 if RENKO[company_data['instrument_token']][3] == "SELL":
                     if (company_data['last_price']<= RENKO[company_data['instrument_token']][1] - ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]):
                         RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] - ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "SELL"
-                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
+                        RENKO_temp = pd.DataFrame([RENKO[company_data['instrument_token']]], columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
                         # Calculating SMA
                         if len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) <= 9:
                             RENKO_temp.iloc[-1, 5] = 0
@@ -437,13 +448,13 @@ def calculate_ohlc_one_minute(company_data):
                         # TMA calculation complete
 
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_temp)
+                        print(RENKO_temp.to_string())
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]
                     elif company_data['last_price'] >= RENKO[company_data['instrument_token']][1] + (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1] - RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]) + ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]:
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1]
                         RENKO[company_data['instrument_token']][2] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1] + ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "BUY"
-                        RENKO_temp = pd.DataFrame([RENKO[x]], columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
+                        RENKO_temp = pd.DataFrame([RENKO[company_data['instrument_token']]], columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
                         # Calculating SMA
                         if len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) <= 9:
                             RENKO_temp.iloc[-1, 5] = 0
@@ -467,7 +478,7 @@ def calculate_ohlc_one_minute(company_data):
                         # TMA calculation complete
 
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_temp)
+                        print(RENKO_temp.to_string())
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]
 
     except Exception as e:
@@ -478,21 +489,26 @@ def round_down(n, decimals=0):
     multiplier = 10 ** decimals
     return math.floor(n * multiplier) / multiplier
 
-def order_status(company_data, orderid, type):
+def order_status(token, orderid, type):
     order_details = kite.order_history(orderid)
     for item in order_details:
         if item['status'] == "COMPLETE":
             if type == 'SELL':
-                trd_portfolio[company_data['instrument_token']]['Direction'] = "Down"
-                trd_portfolio[company_data['instrument_token']]['Target_order'] = "NO"
+                trd_portfolio[token]['Direction'] = "Down"
+                trd_portfolio[token]['Target_order'] = "NO"
+                print(trd_portfolio[token]['Direction'], trd_portfolio[token]['Target_order'])
+                break
             elif type == 'BUY':
-                trd_portfolio[company_data['instrument_token']]['Direction'] = "Up"
-                trd_portfolio[company_data['instrument_token']]['Target_order'] = "NO"
-        if item['status'] != ["COMPLETE", 'CANCELLED', "REJECTED"]:
-            order_status(company_data, orderid, type)
-        elif item['status'] == ["REJECTED"]:
-            pass
-            return
+                trd_portfolio[token]['Direction'] = "Up"
+                trd_portfolio[token]['Target_order'] = "NO"
+                print(trd_portfolio[token]['Direction'], trd_portfolio[token]['Target_order'])
+                break
+        elif item['status'] == "REJECTED":
+            print(trd_portfolio[token]['Direction'], trd_portfolio[token]['Target_order'])
+            break
+    else:
+        time.sleep(1)
+        order_status(token, orderid, type)
 
 
 def RENKO_TRIMA(company_data):
@@ -500,40 +516,44 @@ def RENKO_TRIMA(company_data):
     try:
         if len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0:
             if RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 6] != 0:
-                if RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 3] == "SELL":
+                if (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 3] == "SELL") & (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1] < RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 6]):
                     if trd_portfolio[company_data['instrument_token']]['Direction'] != "Down":
                         if positions(company_data['instrument_token']) == 0:
-                            trd_portfolio[company_data['instrument_token']]['Orderid'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']]['Symbol'],
+                            if quantity(company_data['last_price'], company_data['instrument_token']) > 0:
+                                trd_portfolio[company_data['instrument_token']]['Orderid'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']]['Symbol'],
                                              transaction_type=kite.TRANSACTION_TYPE_SELL, quantity=quantity(company_data['last_price'], company_data['instrument_token']), order_type=kite.ORDER_TYPE_MARKET, product=kite.PRODUCT_MIS)
-                            order_status(company_data, trd_portfolio[company_data['instrument_token']]['Orderid'], 'SELL')
+                                print(trd_portfolio[company_data['instrument_token']]['Orderid'])
+                                time.sleep(1)
+                                order_status(company_data['instrument_token'], trd_portfolio[company_data['instrument_token']]['Orderid'], 'SELL')
 
 
-                        #RENKO[company_data['instrument_token']][4] = "SHORT"
                         if positions(company_data['instrument_token']) > 0:
                             kite.modify_order(variety="regular", order_id=trd_portfolio[company_data['instrument_token']]['Target_order_id'], order_type=kite.ORDER_TYPE_MARKET)
-                elif RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 3] == "BUY":
+                elif (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 3] == "BUY") & (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1] > RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 6]):
                     if trd_portfolio[company_data['instrument_token']]['Direction'] != "Up":
                         if positions(company_data['instrument_token']) == 0:
-                            trd_portfolio[company_data['instrument_token']]['Orderid'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']]['Symbol'],
+                            if quantity(company_data['last_price'], company_data['instrument_token']) > 0:
+                                trd_portfolio[company_data['instrument_token']]['Orderid'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']]['Symbol'],
                                              transaction_type=kite.TRANSACTION_TYPE_BUY, quantity=quantity(company_data['last_price'], company_data['instrument_token']), order_type=kite.ORDER_TYPE_MARKET, product=kite.PRODUCT_MIS)
-                            order_status(company_data, trd_portfolio[company_data['instrument_token']]['Orderid'], 'BUY')
+                                print(trd_portfolio[company_data['instrument_token']]['Orderid'])
+                                time.sleep(1)
+                                order_status(company_data['instrument_token'], trd_portfolio[company_data['instrument_token']]['Orderid'], 'BUY')
 
-                        if trd_portfolio[company_data['instrument_token']]['Direction'] != "Up":
-                            if (positions(company_data['instrument_token']) < 0):
-                                kite.modify_order(variety="regular",order_id=trd_portfolio[company_data['instrument_token']]['Target_order_id'], order_type=kite.ORDER_TYPE_MARKET)
+
+                        if (positions(company_data['instrument_token']) < 0):
+                            kite.modify_order(variety="regular", order_id=trd_portfolio[company_data['instrument_token']]['Target_order_id'], order_type=kite.ORDER_TYPE_MARKET)
                 if (positions(company_data['instrument_token']) > 0):
                     if trd_portfolio[company_data['instrument_token']]['Target_order'] != "YES":
                         trd_portfolio[company_data['instrument_token']]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']]['Symbol'],
                                          transaction_type=kite.TRANSACTION_TYPE_SELL, quantity=abs(positions(company_data['instrument_token'])),
-                                         order_type=kite.ORDER_TYPE_LIMIT, price=round(target(trd_portfolio[company_data['instrument_token']]['Orderid'], trd_portfolio[company_data['instrument_token']]['Direction']), 1), product=kite.PRODUCT_MIS)
+                                         order_type=kite.ORDER_TYPE_LIMIT, price=round(target(trd_portfolio[company_data['instrument_token']]['Orderid'], 'Up'), 1), product=kite.PRODUCT_MIS)
                         trd_portfolio[company_data['instrument_token']]['Target_order'] = "YES"
                 if ((positions(company_data['instrument_token'])) < 0):
                     if trd_portfolio[company_data['instrument_token']]['Target_order'] != "YES":
-                        trd_portfolio[company_data['instrument_token']]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']],
+                        trd_portfolio[company_data['instrument_token']]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']]['Symbol'],
                                          transaction_type=kite.TRANSACTION_TYPE_BUY, quantity=abs(positions(company_data['instrument_token'])),
-                                         order_type=kite.ORDER_TYPE_LIMIT, price=round_down(target(trd_portfolio[company_data['instrument_token']]['Orderid'], trd_portfolio[company_data['instrument_token']]['Direction']), 1), product=kite.PRODUCT_MIS)
+                                         order_type=kite.ORDER_TYPE_LIMIT, price=round_down(target(trd_portfolio[company_data['instrument_token']]['Orderid'], 'Down'), 1), product=kite.PRODUCT_MIS)
                         trd_portfolio[company_data['instrument_token']]['Target_order'] = "YES"
-                        #RENKO[company_data['instrument_token']][4] = "LONG"
     except ReadTimeout:
         pass
     except exceptions.NetworkException:
@@ -542,10 +562,10 @@ def RENKO_TRIMA(company_data):
         traceback.print_exc()
 
 def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
-    global ohlc_final_1min, RENKO_Final, final_position, order_quantity
+    global ohlc_final_1min, RENKO_Final, final_position, order_quantity, ohlc_temp
     try:
         for company_data in ticks:
-            if (company_data['last_trade_time'].time()) > datetime.time(9,15,00) and (company_data['last_trade_time'].time()) < datetime.time(15,31,00):
+            if (company_data['last_trade_time'].time()) > datetime.time(9,15,00) and (company_data['last_trade_time'].time()) < datetime.time(15,20,00):
                 calculate_ohlc_one_minute(company_data)
                 RENKO_TRIMA(company_data)
     except Exception as e:
@@ -554,7 +574,7 @@ def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "32CvEIkvC11u9zAt8nimBLLrnOkLErm4"
+access_token = "3Gd9CrcD6JMZHc46Fm7niQkp278IasCI"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -661,12 +681,12 @@ trd_portfolio = {5633: {"Symbol": "ACC", "max_quantity": 10000, 'Direction': "",
                  2952193: {"Symbol": "ULTRACEMCO", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
                  2889473: {"Symbol": "UPL", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
                  951809: {"Symbol": "VOLTAS", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
-                 969473: {"Symbol": "WIPRO", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0} }
+                 969473: {"Symbol": "WIPRO", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0}}
 
 
 ohlc = {}  # python dictionary to store the ohlc data in it
-ohlc_temp = pd.DataFrame(columns=["Symbol","Time", "Open", "High", "Low", "Close", "TR","ATR","SMA","TMA"])
-ohlc_final_1min = pd.DataFrame(columns=["Symbol","Time", "Open", "High", "Low", "Close", "TR", "ATR","SMA","TMA"])
+ohlc_temp = pd.DataFrame(columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
+ohlc_final_1min = pd.DataFrame(columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
 RENKO = {}  # python dictionary to store the renko chart data in it
 RENKO_temp = pd.DataFrame(columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
 RENKO_Final = pd.DataFrame(columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
@@ -674,13 +694,14 @@ profit = {}
 profit_temp = pd.DataFrame(columns=["Symbol", "SELL Price", "BUY Price", "Profit"])
 profit_Final = pd.DataFrame(columns=["Symbol", "SELL Price", "BUY Price", "Profit"])
 
+'''
 # for loop to order history for all the stocks
 for x, y in trd_portfolio.items():
     for z in y:
         if z == "Symbol":
             history(y[z])
             time.sleep(15)
-
+'''
 for x in trd_portfolio:
     ohlc[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0, 0, 0]  # [Symbol, Traded Time, Open, High, Low, Close, True Range, Average True Range, Simple Moving Average, Triangular moving average]
     RENKO[x] = ["Symbol", 0, 0, "Signal", "None", 0, 0]
