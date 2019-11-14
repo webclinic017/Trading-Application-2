@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="updates as on 11/05/2019. Not much of code difference. excpet for i parsed the order history response to dict.">
+    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/1.py" beforeDir="false" afterPath="$PROJECT_DIR$/1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/2.py" beforeDir="false" afterPath="$PROJECT_DIR$/2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,7 +33,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../teja111" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="Errors" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -51,7 +52,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.2">
+  <component name="RunManager" selected="Python.tests">
     <configuration name="1" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Trading-Application" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -180,10 +181,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.tests" />
         <item itemvalue="Python.2" />
         <item itemvalue="Python.Generate Access Token" />
         <item itemvalue="Python.1" />
-        <item itemvalue="Python.tests" />
         <item itemvalue="Python.Equity" />
       </list>
     </recent_temporary>
@@ -360,7 +361,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572894370333</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="finished the code for multiple stocks. now just need to fix the history data integration with live data.. ('_&lt;)">
+      <created>1573041756379</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1573041756379</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -389,7 +397,8 @@
     <MESSAGE value="updated the calculate 1 min to refer to multiple stocks." />
     <MESSAGE value="updates by teja." />
     <MESSAGE value="updates as on 11/05/2019. Not much of code difference. excpet for i parsed the order history response to dict." />
-    <option name="LAST_COMMIT_MESSAGE" value="updates as on 11/05/2019. Not much of code difference. excpet for i parsed the order history response to dict." />
+    <MESSAGE value="finished the code for multiple stocks. now just need to fix the history data integration with live data.. ('_&lt;)" />
+    <option name="LAST_COMMIT_MESSAGE" value="finished the code for multiple stocks. now just need to fix the history data integration with live data.. ('_&lt;)" />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
