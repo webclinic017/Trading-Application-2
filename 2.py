@@ -14,7 +14,7 @@ import math
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "RpvsXCI9SVqgV0I7Lpf9U4xCYvg9x5Xc"
+access_token = "AftHK0ET1jrWbeO3Y8dm2aNdrAueL9LW"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -47,7 +47,6 @@ trd_portfolio = {60417: {"Symbol": "ASIANPAINT", "max_quantity": 10000, 'Directi
                  2939649: {"Symbol": "LT", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
                  2815745: {"Symbol": "MARUTI", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
                  4598529: {"Symbol": "NESTLEIND", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
-                 633601: {"Symbol": "ONGC", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
                  3834113: {"Symbol": "POWERGRID", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
                  779521: {"Symbol": "SBIN", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
                  895745: {"Symbol": "TATASTEEL", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0},
