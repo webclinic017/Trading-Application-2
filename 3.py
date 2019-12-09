@@ -618,8 +618,8 @@ def order_status(token, orderid, type):
                 trd_portfolio[token]['Target_order'] = "NO"
                 print(trd_portfolio[token]['Direction'], trd_portfolio[token]['Target_order'])
                 break
-        else:
-            print("order didn't get executed", trd_portfolio[token]['Direction'], trd_portfolio[token]['Target_order'])
+        elif item['status'] == "REJECTED":
+            print("order got rejected", trd_portfolio[token]['Direction'], trd_portfolio[token]['Target_order'])
             break
     else:
         time.sleep(1)

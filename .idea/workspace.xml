@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2.py" beforeDir="false" afterPath="$PROJECT_DIR$/2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/3.py" beforeDir="false" afterPath="$PROJECT_DIR$/3.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -52,7 +50,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.3">
+  <component name="RunManager" selected="Python.tests">
     <configuration name="1" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Trading-Application" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -182,8 +180,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.3" />
-        <item itemvalue="Python.Generate Access Token" />
         <item itemvalue="Python.tests" />
+        <item itemvalue="Python.Generate Access Token" />
         <item itemvalue="Python.2" />
         <item itemvalue="Python.1" />
       </list>
@@ -375,7 +373,21 @@
       <option name="project" value="LOCAL" />
       <updated>1573727637046</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="file 3 only for SBI as of now. the target takes care of previous losses for the day. stopping the logic to run once 2% is achieved.">
+      <created>1575378627965</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1575378627965</updated>
+    </task>
+    <task id="LOCAL-00027" summary="modified the placement of lines for order modification for the existing positions">
+      <created>1575873843909</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1575873843909</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -406,7 +418,9 @@
     <MESSAGE value="updates as on 11/05/2019. Not much of code difference. excpet for i parsed the order history response to dict." />
     <MESSAGE value="finished the code for multiple stocks. now just need to fix the history data integration with live data.. ('_&lt;)" />
     <MESSAGE value="code updated for few companies and stopping the trading after the 2% profit is reached. :)" />
-    <option name="LAST_COMMIT_MESSAGE" value="code updated for few companies and stopping the trading after the 2% profit is reached. :)" />
+    <MESSAGE value="file 3 only for SBI as of now. the target takes care of previous losses for the day. stopping the logic to run once 2% is achieved." />
+    <MESSAGE value="modified the placement of lines for order modification for the existing positions" />
+    <option name="LAST_COMMIT_MESSAGE" value="modified the placement of lines for order modification for the existing positions" />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
