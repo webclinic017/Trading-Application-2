@@ -14,7 +14,7 @@ import math
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "XStugDR5oP3DUkEEE2m9vwCVXEVsMvlV"
+access_token = "QYsCgjXkSYGnlUMMJJkkAFLGaqlYta7r"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -99,7 +99,6 @@ def attained_profit():
             total_charges = sebi_total + gst + sell_tran + buy_tran + stt_ctt + buy_brookerage + sell_brookerage
             profit[token][3] = ((profit[token][2] - profit[token][1]) * volume) - total_charges
             current_profit = current_profit + profit[token][3]
-            print(current_profit)
     return (current_profit / day_margin) * 100
 
 
@@ -156,10 +155,8 @@ def target(Orderid, direction):
             profit[token][1] = 0
             profit[token][2] = 0
     for x in range(len(profit_Final)):
-        if profit_Final.iloc[-(x + 1), 6] < 0:
-            carry_forward = carry_forward + profit_Final.iloc[-(x + 1), 6]
-        elif profit_Final.iloc[-(x + 1), 6] >= 0:
-            break
+        carry_forward = carry_forward + profit_Final.iloc[-(x + 1), 6]
+
     Order_data = kite.order_history(Orderid)
     for item in Order_data:
         if item['status'] == "COMPLETE":
@@ -621,8 +618,8 @@ def order_status(token, orderid, type):
                 trd_portfolio[token]['Target_order'] = "NO"
                 print(trd_portfolio[token]['Direction'], trd_portfolio[token]['Target_order'])
                 break
-        elif item['status'] == "REJECTED":
-            print(trd_portfolio[token]['Direction'], trd_portfolio[token]['Target_order'])
+        else:
+            print("order didn't get executed", trd_portfolio[token]['Direction'], trd_portfolio[token]['Target_order'])
             break
     else:
         time.sleep(1)
@@ -635,6 +632,8 @@ def RENKO_TRIMA(company_data):
         if len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0:
             if attained_profit() < 2:
                 if (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 3] == "SELL"):
+                    if positions(company_data['instrument_token']) > 0:
+                        kite.modify_order(variety="regular", order_id=trd_portfolio[company_data['instrument_token']]['Target_order_id'], order_type=kite.ORDER_TYPE_MARKET)
                     if trd_portfolio[company_data['instrument_token']]['Direction'] != "Down":
                         if positions(company_data['instrument_token']) == 0:
                             if quantity(company_data['last_price'], company_data['instrument_token']) > 0:
@@ -643,11 +642,9 @@ def RENKO_TRIMA(company_data):
                                 print(trd_portfolio[company_data['instrument_token']]['Orderid'])
                                 time.sleep(1)
                                 order_status(company_data['instrument_token'], trd_portfolio[company_data['instrument_token']]['Orderid'], 'SELL')
-
-
-                        if positions(company_data['instrument_token']) > 0:
-                            kite.modify_order(variety="regular", order_id=trd_portfolio[company_data['instrument_token']]['Target_order_id'], order_type=kite.ORDER_TYPE_MARKET)
                 elif (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 3] == "BUY"):
+                    if (positions(company_data['instrument_token']) < 0):
+                        kite.modify_order(variety="regular", order_id=trd_portfolio[company_data['instrument_token']]['Target_order_id'], order_type=kite.ORDER_TYPE_MARKET)
                     if trd_portfolio[company_data['instrument_token']]['Direction'] != "Up":
                         if positions(company_data['instrument_token']) == 0:
                             if quantity(company_data['last_price'], company_data['instrument_token']) > 0:
@@ -656,10 +653,6 @@ def RENKO_TRIMA(company_data):
                                 print(trd_portfolio[company_data['instrument_token']]['Orderid'])
                                 time.sleep(1)
                                 order_status(company_data['instrument_token'], trd_portfolio[company_data['instrument_token']]['Orderid'], 'BUY')
-
-
-                        if (positions(company_data['instrument_token']) < 0):
-                            kite.modify_order(variety="regular", order_id=trd_portfolio[company_data['instrument_token']]['Target_order_id'], order_type=kite.ORDER_TYPE_MARKET)
                 if (positions(company_data['instrument_token']) > 0):
                     if trd_portfolio[company_data['instrument_token']]['Target_order'] != "YES":
                         trd_portfolio[company_data['instrument_token']]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']]['Symbol'],
