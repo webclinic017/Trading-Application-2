@@ -11,15 +11,19 @@ import json
 import numpy as np
 import datetime, time, os, random
 import math
+import threading
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "QYsCgjXkSYGnlUMMJJkkAFLGaqlYta7r"
+access_token = "qn7QMYiNPwJwDDTnDDgXUKjX68flC3Bo"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
 opening_margin = KiteConnect.margins(kite)
 day_margin = opening_margin['equity']['net']
+
+candle_thread_running = ""
+renko_thread_running = ""
 
 trd_portfolio = {779521: {"Symbol": "SBIN", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0}}
 
@@ -99,6 +103,8 @@ def attained_profit():
             total_charges = sebi_total + gst + sell_tran + buy_tran + stt_ctt + buy_brookerage + sell_brookerage
             profit[token][3] = ((profit[token][2] - profit[token][1]) * volume) - total_charges
             current_profit = current_profit + profit[token][3]
+            profit[token][1] = 0
+            profit[token][2] = 0
     return (current_profit / day_margin) * 100
 
 
@@ -317,9 +323,10 @@ def history(stock):
 
 
 def calculate_ohlc_one_minute(company_data):
-    global ohlc_final_1min, ohlc_temp, RENKO_temp, RENKO_Final
+    global ohlc_final_1min, ohlc_temp, RENKO_temp, RENKO_Final, candle_thread_running
     try:
         # below if condition is to check the data being received, and the data present are of the same minute or not
+        candle_thread_running = "YES"
         if (str(((company_data["timestamp"]).replace(second=0))) != ohlc[company_data['instrument_token']][1]) and (ohlc[company_data['instrument_token']][1]!= "Time"):
             ohlc_temp = pd.DataFrame([ohlc[company_data['instrument_token']]], columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
             #print(ohlc_temp.head(), ohlc_final_1min.head())
@@ -595,7 +602,7 @@ def calculate_ohlc_one_minute(company_data):
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
                         print(RENKO_temp.to_string())
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]
-
+        candle_thread_running = "NO"
     except Exception as e:
         traceback.print_exc()
 
@@ -625,15 +632,30 @@ def order_status(token, orderid, type):
         time.sleep(1)
         order_status(token, orderid, type)
 
+def target_order_status(orderid):
+    details = kite.order_history(orderid)
+    for item in details:
+        if item['status'] == "OPEN":
+            return "OPEN"
+            break
+        elif item['status'] == "REJECTED":
+            return "REJECTED"
+            break
+    else:
+        time.sleep(1)
+        target_order_status(orderid)
+
 
 def RENKO_TRIMA(company_data):
-    global ohlc_final_1min, RENKO_Final, final_position, order_quantity, RENKO, RENKO_temp, Direction, Orderid, Target_order, Target_order_id
+    global ohlc_final_1min, RENKO_Final, final_position, order_quantity, RENKO, RENKO_temp, Direction, Orderid, Target_order, Target_order_id, renko_thread_running
     try:
+        renko_thread_running = "YES"
         if len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0:
-            if attained_profit() < 2:
+            if attained_profit() < 4:
                 if (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 3] == "SELL"):
                     if positions(company_data['instrument_token']) > 0:
                         kite.modify_order(variety="regular", order_id=trd_portfolio[company_data['instrument_token']]['Target_order_id'], order_type=kite.ORDER_TYPE_MARKET)
+                        time.sleep(5)
                     if trd_portfolio[company_data['instrument_token']]['Direction'] != "Down":
                         if positions(company_data['instrument_token']) == 0:
                             if quantity(company_data['last_price'], company_data['instrument_token']) > 0:
@@ -645,6 +667,7 @@ def RENKO_TRIMA(company_data):
                 elif (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 3] == "BUY"):
                     if (positions(company_data['instrument_token']) < 0):
                         kite.modify_order(variety="regular", order_id=trd_portfolio[company_data['instrument_token']]['Target_order_id'], order_type=kite.ORDER_TYPE_MARKET)
+                        time.sleep(5)
                     if trd_portfolio[company_data['instrument_token']]['Direction'] != "Up":
                         if positions(company_data['instrument_token']) == 0:
                             if quantity(company_data['last_price'], company_data['instrument_token']) > 0:
@@ -658,13 +681,16 @@ def RENKO_TRIMA(company_data):
                         trd_portfolio[company_data['instrument_token']]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']]['Symbol'],
                                          transaction_type=kite.TRANSACTION_TYPE_SELL, quantity=abs(positions(company_data['instrument_token'])),
                                          order_type=kite.ORDER_TYPE_LIMIT, price=round(target(trd_portfolio[company_data['instrument_token']]['Orderid'], 'Up'), 1), product=kite.PRODUCT_MIS)
-                        trd_portfolio[company_data['instrument_token']]['Target_order'] = "YES"
+                        if target_order_status(trd_portfolio[company_data['instrument_token']]['Target_order_id']) == "OPEN":
+                            trd_portfolio[company_data['instrument_token']]['Target_order'] = "YES"
                 if ((positions(company_data['instrument_token'])) < 0):
                     if trd_portfolio[company_data['instrument_token']]['Target_order'] != "YES":
                         trd_portfolio[company_data['instrument_token']]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']]['Symbol'],
                                          transaction_type=kite.TRANSACTION_TYPE_BUY, quantity=abs(positions(company_data['instrument_token'])),
                                          order_type=kite.ORDER_TYPE_LIMIT, price=round_down(target(trd_portfolio[company_data['instrument_token']]['Orderid'], 'Down'), 1), product=kite.PRODUCT_MIS)
-                        trd_portfolio[company_data['instrument_token']]['Target_order'] = "YES"
+                        if target_order_status(trd_portfolio[company_data['instrument_token']]['Target_order_id']) == "OPEN":
+                            trd_portfolio[company_data['instrument_token']]['Target_order'] = "YES"
+        renko_thread_running = "NO"
     except ReadTimeout:
         pass
     except exceptions.NetworkException:
@@ -673,12 +699,17 @@ def RENKO_TRIMA(company_data):
         traceback.print_exc()
 
 def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
-    global ohlc_final_1min, RENKO_Final, final_position, order_quantity, ohlc_temp
+    global ohlc_final_1min, RENKO_Final, final_position, order_quantity, ohlc_temp, candle_thread_running, renko_thread_running
     try:
         for company_data in ticks:
-            if (company_data['last_trade_time'].time()) > datetime.time(9,15,00) and (company_data['last_trade_time'].time()) < datetime.time(15,20,00):
-                calculate_ohlc_one_minute(company_data)
-                RENKO_TRIMA(company_data)
+            if (candle_thread_running != "YES") and (renko_thread_running != "YES"):
+                if (company_data['last_trade_time'].time()) > datetime.time(9,15,00) and (company_data['last_trade_time'].time()) < datetime.time(15,20,00):
+                    candle = threading.Thread(target=calculate_ohlc_one_minute, args=(company_data,))
+                    candle.start()
+                    renko = threading.Thread(target=RENKO_TRIMA, args=(company_data,))
+                    renko.start()
+            else:
+                pass
     except Exception as e:
         traceback.print_exc()
 
