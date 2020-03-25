@@ -14,7 +14,7 @@ import math
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "0eURikuGCk9wen4xLmvaM5ppyQnjotE3"
+access_token = "fDzRMyBL4w8nX9y4GI8KJ1D4ZuOSrcGK"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -69,11 +69,48 @@ def attained_profit():
             profit[token][2] = 0
     return (current_profit / day_margin) * 100
 
-print(attained_profit())
-print(attained_profit())
-print(attained_profit())
-print(attained_profit())
-print(attained_profit())
+
+def positions(token):
+    try:
+        pos = kite.positions()
+        day_pos = pos['day']
+        posdf = pd.DataFrame(day_pos)
+        if posdf.empty:
+            return 0
+        else:
+            total_pos = posdf.loc[posdf['instrument_token'] == token, ['quantity']]
+            if total_pos.empty:
+                return 0
+            else:
+                current_pos = total_pos.iloc[0, 0]
+                return int(current_pos)
+    except Exception as e:
+        traceback.print_exc()
 
 
+'''print(attained_profit())
+print(attained_profit())
+print(attained_profit())
+print(attained_profit())
+print(attained_profit())'''
+orders = kite.orders()
+for x in orders:
+    print(x)
 
+
+def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
+    global ohlc_final_1min, RENKO_Final, final_position, order_quantity, ohlc_temp, candle_thread_running, renko_thread_running
+    try:
+        for company_data in ticks:
+            print(positions(company_data['instrument_token']))
+    except Exception as e:
+        traceback.print_exc()
+
+
+def on_connect(ws, response):
+    ws.subscribe([x for x in trd_portfolio])
+    ws.set_mode(ws.MODE_FULL, [x for x in trd_portfolio])
+
+kws.on_ticks = on_ticks
+kws.on_connect = on_connect
+kws.connect()
