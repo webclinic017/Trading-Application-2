@@ -4,7 +4,6 @@
     <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/3.py" beforeDir="false" afterPath="$PROJECT_DIR$/3.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -402,7 +401,14 @@
       <option name="project" value="LOCAL" />
       <updated>1577695164477</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="recent updates">
+      <created>1585177494473</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1585177494473</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -436,7 +442,8 @@
     <MESSAGE value="file 3 only for SBI as of now. the target takes care of previous losses for the day. stopping the logic to run once 2% is achieved." />
     <MESSAGE value="modified the placement of lines for order modification for the existing positions" />
     <MESSAGE value="modified the tics method to initiate threads to call the candle and renko methods. hopefully this works. I am not checking if the thread is alive, instead, checking if a variable, named candle_thread_running &amp; renko_thread_running is NO or not." />
-    <option name="LAST_COMMIT_MESSAGE" value="modified the tics method to initiate threads to call the candle and renko methods. hopefully this works. I am not checking if the thread is alive, instead, checking if a variable, named candle_thread_running &amp; renko_thread_running is NO or not." />
+    <MESSAGE value="recent updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="recent updates" />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
