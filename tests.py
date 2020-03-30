@@ -14,7 +14,7 @@ import math
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "fDzRMyBL4w8nX9y4GI8KJ1D4ZuOSrcGK"
+access_token = "7wLotm3jkhq36dvaL7wP6AhO6l8lud2P"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -93,8 +93,8 @@ print(attained_profit())
 print(attained_profit())
 print(attained_profit())
 print(attained_profit())'''
-orders = kite.orders()
-for x in orders:
+#orders = kite.orders()
+for x in trd_portfolio:
     print(x)
 
 
@@ -102,7 +102,7 @@ def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
     global ohlc_final_1min, RENKO_Final, final_position, order_quantity, ohlc_temp, candle_thread_running, renko_thread_running
     try:
         for company_data in ticks:
-            print(positions(company_data['instrument_token']))
+            print(company_data)
     except Exception as e:
         traceback.print_exc()
 

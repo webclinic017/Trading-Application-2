@@ -4,6 +4,7 @@
     <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/3.py" beforeDir="false" afterPath="$PROJECT_DIR$/3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -50,7 +51,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.3">
+  <component name="RunManager" selected="Python.tests">
     <configuration name="1" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Trading-Application" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -179,9 +180,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.3" />
-        <item itemvalue="Python.Generate Access Token" />
         <item itemvalue="Python.tests" />
+        <item itemvalue="Python.Generate Access Token" />
+        <item itemvalue="Python.3" />
         <item itemvalue="Python.2" />
         <item itemvalue="Python.1" />
       </list>
@@ -408,7 +409,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585177494473</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="recent updates">
+      <created>1585301808261</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1585301808261</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
