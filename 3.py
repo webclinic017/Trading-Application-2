@@ -676,12 +676,12 @@ def order_status(token, orderid, type):
                 if type == 'SELL':
                     trd_portfolio[token]['Direction'] = "Down"
                     trd_portfolio[token]['Target_order'] = "NO"
-                    print(trd_portfolio[token]['Direction'], trd_portfolio[token]['Target_order'])
+                    print(trd_portfolio[token]['Direction'])
                     break
                 elif type == 'BUY':
                     trd_portfolio[token]['Direction'] = "Up"
                     trd_portfolio[token]['Target_order'] = "NO"
-                    print(trd_portfolio[token]['Direction'], trd_portfolio[token]['Target_order'])
+                    print(trd_portfolio[token]['Direction'])
                     break
             elif item['status'] == "REJECTED":
                 print("order got rejected", trd_portfolio[token]['Direction'], trd_portfolio[token]['Target_order'])
@@ -714,10 +714,9 @@ def target_order_status(orderid):
 def RENKO_TRIMA(token):
     global ohlc_final_1min, RENKO_Final, final_position, order_quantity, RENKO, RENKO_temp, Direction, Orderid, Target_order, Target_order_id, renko_thread_running, day_profit_percent
     try:
-        trd_portfolio[token]['Positions'] = positions(token)
+        renko_thread_running = "YES"
         attained_profit()
         quantity()
-        renko_thread_running = "YES"
         if len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[token]['Symbol']]) > 0:
             if day_profit_percent < 10:
                 if (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[token]['Symbol']].iloc[-1, 3] == "SELL"):

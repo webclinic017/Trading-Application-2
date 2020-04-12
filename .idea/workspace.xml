@@ -4,9 +4,7 @@
     <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/3.py" beforeDir="false" afterPath="$PROJECT_DIR$/3.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests.py" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -29,6 +27,10 @@
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../teja111" />
@@ -38,18 +40,6 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\gkaranam\PycharmProjects\Trading-Application" />
     </key>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager" selected="Python.3">
     <configuration name="1" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -423,7 +413,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585560852267</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="recent updates where the call to RENKO_TRIMA is made from ticks only when the condition is met. with a following target order">
+      <created>1586650348729</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1586650348729</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -431,13 +428,12 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="ADded test2, which is working fine except for connection error." />
@@ -458,6 +454,7 @@
     <MESSAGE value="modified the placement of lines for order modification for the existing positions" />
     <MESSAGE value="modified the tics method to initiate threads to call the candle and renko methods. hopefully this works. I am not checking if the thread is alive, instead, checking if a variable, named candle_thread_running &amp; renko_thread_running is NO or not." />
     <MESSAGE value="recent updates" />
-    <option name="LAST_COMMIT_MESSAGE" value="recent updates" />
+    <MESSAGE value="recent updates where the call to RENKO_TRIMA is made from ticks only when the condition is met. with a following target order" />
+    <option name="LAST_COMMIT_MESSAGE" value="recent updates where the call to RENKO_TRIMA is made from ticks only when the condition is met. with a following target order" />
   </component>
 </project>
