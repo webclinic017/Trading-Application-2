@@ -51,7 +51,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.tests">
+  <component name="RunManager" selected="Python.3">
     <configuration name="1" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Trading-Application" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -180,9 +180,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.tests" />
-        <item itemvalue="Python.Generate Access Token" />
         <item itemvalue="Python.3" />
+        <item itemvalue="Python.Generate Access Token" />
+        <item itemvalue="Python.tests" />
         <item itemvalue="Python.2" />
         <item itemvalue="Python.1" />
       </list>
@@ -416,7 +416,14 @@
       <option name="project" value="LOCAL" />
       <updated>1585301808261</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="recent updates">
+      <created>1585560852267</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1585560852267</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -452,19 +459,5 @@
     <MESSAGE value="modified the tics method to initiate threads to call the candle and renko methods. hopefully this works. I am not checking if the thread is alive, instead, checking if a variable, named candle_thread_running &amp; renko_thread_running is NO or not." />
     <MESSAGE value="recent updates" />
     <option name="LAST_COMMIT_MESSAGE" value="recent updates" />
-  </component>
-  <component name="debuggerHistoryManager">
-    <expressions id="evaluateExpression">
-      <expression>
-        <expression-string>requests.post(url=kite.login_url(), params={'user_id':'DG0619', 'password':'mahalakshmi2'})</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>r</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-    </expressions>
   </component>
 </project>
