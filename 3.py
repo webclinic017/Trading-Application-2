@@ -17,7 +17,7 @@ import sys
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "o7Vs0SKvpET1QTZdHgTX4zCgF8bpxaZd"
+access_token = "y306aXgTYrJwg6bOFbxYETHauRHBuL4b"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -28,7 +28,11 @@ candle_thread_running = ""
 renko_thread_running = ""
 day_profit_percent = 0
 
-trd_portfolio = {779521: {"Symbol": "SBIN", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0, 'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0}}
+trd_portfolio = {1270529: {"Symbol": "ICICIBANK", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0, 'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0},
+                 779521: {"Symbol": "SBIN", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0, 'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0},
+                 5633: {"Symbol": "ACC", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0, 'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0},
+                 424961: {"Symbol": "ITC", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0, 'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0},
+                 364545: {"Symbol": "HINDZINC", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0, 'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0}}
 
 
 ohlc = {}  # python dictionary to store the ohlc data in it
@@ -719,7 +723,7 @@ def RENKO_TRIMA(token):
         quantity()
         if len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[token]['Symbol']]) > 0:
             if day_profit_percent < 10:
-                if (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[token]['Symbol']].iloc[-1, 3] == "SELL"):
+                if (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[token]['Symbol']].iloc[-1, 3] == "SELL") and (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[token]['Symbol']].iloc[-1, 1] < RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[token]['Symbol']].iloc[-1, 6]):
                     if trd_portfolio[token]['Positions'] > 0:
                         '''trd_portfolio[token]['Orderid'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[token]['Symbol'],
                                                 transaction_type=kite.TRANSACTION_TYPE_SELL, quantity=trd_portfolio[token]['Positions'], order_type=kite.ORDER_TYPE_MARKET, product=kite.PRODUCT_MIS)
@@ -736,7 +740,7 @@ def RENKO_TRIMA(token):
                                 time.sleep(2)
                                 order_status(token, trd_portfolio[token]['Orderid'], 'SELL')
                                 trd_portfolio[token]['Positions'] = positions(token)
-                elif (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[token]['Symbol']].iloc[-1, 3] == "BUY"):
+                elif (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[token]['Symbol']].iloc[-1, 3] == "BUY") and (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[token]['Symbol']].iloc[-1, 1] > RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[token]['Symbol']].iloc[-1, 6]):
                     if trd_portfolio[token]['Positions'] < 0:
                         kite.modify_order(variety="regular", order_id=trd_portfolio[token]['Target_order_id'], order_type=kite.ORDER_TYPE_MARKET)
                         time.sleep(2)
@@ -790,12 +794,17 @@ def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
                 pass
             if renko_thread_running != "YES":
                 if len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0:
-                    if (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 3] == "SELL") and trd_portfolio[company_data['instrument_token']] != "Down":
-                        renko_loop_initiator = threading.Thread(target=RENKO_TRIMA, args=[company_data['instrument_token']])
-                        renko_loop_initiator.start()
-                    elif (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 3] == "BUY") and trd_portfolio[company_data['instrument_token']] != "Up":
-                        renko_loop_initiator = threading.Thread(target=RENKO_TRIMA, args=[company_data['instrument_token']])
-                        renko_loop_initiator.start()
+                    if RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 6] != 0:
+                        if (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 3] == "SELL") and \
+                                (trd_portfolio[company_data['instrument_token']] != "Down") and \
+                                (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1] < RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 6]):
+                            renko_loop_initiator = threading.Thread(target=RENKO_TRIMA, args=[company_data['instrument_token']])
+                            renko_loop_initiator.start()
+                        elif (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 3] == "BUY") and \
+                                trd_portfolio[company_data['instrument_token']] != "Up" and \
+                                (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1] > RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 6]):
+                            renko_loop_initiator = threading.Thread(target=RENKO_TRIMA, args=[company_data['instrument_token']])
+                            renko_loop_initiator.start()
             else:
                 pass
     except Exception as e:
