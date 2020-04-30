@@ -4,6 +4,7 @@
     <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/3.py" beforeDir="false" afterPath="$PROJECT_DIR$/3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -424,7 +425,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586651806644</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="updating with multiple stocks">
+      <created>1587350573290</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1587350573290</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -459,32 +467,37 @@
     <MESSAGE value="modified the tics method to initiate threads to call the candle and renko methods. hopefully this works. I am not checking if the thread is alive, instead, checking if a variable, named candle_thread_running &amp; renko_thread_running is NO or not." />
     <MESSAGE value="recent updates" />
     <MESSAGE value="recent updates where the call to RENKO_TRIMA is made from ticks only when the condition is met. with a following target order" />
-    <option name="LAST_COMMIT_MESSAGE" value="recent updates where the call to RENKO_TRIMA is made from ticks only when the condition is met. with a following target order" />
+    <MESSAGE value="updating with multiple stocks" />
+    <option name="LAST_COMMIT_MESSAGE" value="updating with multiple stocks" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="300" y="108" key="CommitChangelistDialog2" timestamp="1586651806173">
+    <state x="300" y="108" key="CommitChangelistDialog2" timestamp="1587350572854">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="300" y="108" key="CommitChangelistDialog2/0.0.1920.1080@0.0.1920.1080" timestamp="1586651806173" />
-    <state width="1899" height="408" key="GridCell.Tab.0.bottom" timestamp="1587108218135">
+    <state x="300" y="108" key="CommitChangelistDialog2/0.0.1920.1080@0.0.1920.1080" timestamp="1587350572854" />
+    <state width="1899" height="321" key="GridCell.Tab.0.bottom" timestamp="1588150937953">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="321" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1588150937953" />
+    <state width="1899" height="336" key="GridCell.Tab.0.bottom/0.0.1920.1080@0.0.1920.1080" timestamp="1587993546422" />
+    <state width="1899" height="321" key="GridCell.Tab.0.center" timestamp="1588150937953">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="321" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1588150937953" />
+    <state width="1899" height="336" key="GridCell.Tab.0.center/0.0.1920.1080@0.0.1920.1080" timestamp="1587993546422" />
+    <state width="1899" height="321" key="GridCell.Tab.0.left" timestamp="1588150937953">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="321" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1588150937953" />
+    <state width="1899" height="336" key="GridCell.Tab.0.left/0.0.1920.1080@0.0.1920.1080" timestamp="1587993546422" />
+    <state width="1899" height="321" key="GridCell.Tab.0.right" timestamp="1588150937953">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="321" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1588150937953" />
+    <state width="1899" height="336" key="GridCell.Tab.0.right/0.0.1920.1080@0.0.1920.1080" timestamp="1587993546422" />
+    <state x="552" y="273" key="Vcs.Push.Dialog.v2" timestamp="1587350576492">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state width="1899" height="408" key="GridCell.Tab.0.bottom/0.0.1920.1080@0.0.1920.1080" timestamp="1587108218135" />
-    <state width="1899" height="408" key="GridCell.Tab.0.center" timestamp="1587108218134">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state width="1899" height="408" key="GridCell.Tab.0.center/0.0.1920.1080@0.0.1920.1080" timestamp="1587108218134" />
-    <state width="1899" height="408" key="GridCell.Tab.0.left" timestamp="1587108218134">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state width="1899" height="408" key="GridCell.Tab.0.left/0.0.1920.1080@0.0.1920.1080" timestamp="1587108218134" />
-    <state width="1899" height="408" key="GridCell.Tab.0.right" timestamp="1587108218134">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state width="1899" height="408" key="GridCell.Tab.0.right/0.0.1920.1080@0.0.1920.1080" timestamp="1587108218134" />
-    <state x="552" y="273" key="Vcs.Push.Dialog.v2" timestamp="1586651808810">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state x="552" y="273" key="Vcs.Push.Dialog.v2/0.0.1920.1080@0.0.1920.1080" timestamp="1586651808810" />
+    <state x="552" y="273" key="Vcs.Push.Dialog.v2/0.0.1920.1080@0.0.1920.1080" timestamp="1587350576492" />
   </component>
 </project>
