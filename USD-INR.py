@@ -38,6 +38,9 @@ ohlc_final_1min = pd.DataFrame(columns=["Symbol", "Time", "Open", "High", "Low",
 RENKO = {}  # python dictionary to store the renko chart data in it
 RENKO_temp = pd.DataFrame(columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
 RENKO_Final = pd.DataFrame(columns=["Symbol","Open", "Close", "Signal", "Position", "SMA", "TMA"])
+HA = {}  # python dictionary to store the ohlc data in it
+HA_temp = pd.DataFrame(columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
+HA_Final = pd.DataFrame(columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
 profit = {}
 profit_temp = pd.DataFrame(columns=["Symbol", "SELL Price", "BUY Price", "Profit", "Volume", "Charges", "final_profit"])
 profit_Final = pd.DataFrame(columns=["Symbol", "SELL Price", "BUY Price", "Profit", "Volume", "Charges", "final_profit"])
@@ -73,6 +76,7 @@ def positions(token):
 for x in trd_portfolio:
     ohlc[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0, 0, 0]  # [Symbol, Traded Time, Open, High, Low, Close, True Range, Average True Range, Simple Moving Average, Triangular moving average, positions ]
     RENKO[x] = ["Symbol", 0, 0, "Signal", "None", 0, 0]
+    HA[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0, 0, 0]
     profit[x] = ["Symbol", 0, 0, "Profit", 0, 0, 0]
     trd_portfolio[x]['Positions'] = positions(x)
 
@@ -377,12 +381,13 @@ def history(stock):
 
 
 def calculate_ohlc_one_minute(company_data):
-    global ohlc_final_1min, ohlc_temp, RENKO_temp, RENKO_Final, candle_thread_running
+    global ohlc_final_1min, ohlc_temp, RENKO_temp, RENKO_Final, candle_thread_running, HA_temp, HA_Final
     try:
         # below if condition is to check the data being received, and the data present are of the same minute or not
         candle_thread_running = "YES"
         if (str(((company_data["timestamp"]).replace(second=0))) != ohlc[company_data['instrument_token']][1]) and (ohlc[company_data['instrument_token']][1] != "Time"):
             ohlc_temp = pd.DataFrame([ohlc[company_data['instrument_token']]], columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
+            HA_temp = pd.DataFrame([HA[company_data['instrument_token']]], columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
             #print(ohlc_temp.head(), ohlc_final_1min.head())
         # Calculating True Range
             if len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0:
@@ -451,6 +456,7 @@ def calculate_ohlc_one_minute(company_data):
 
         # adding the row into the final ohlc table
             ohlc_final_1min = ohlc_final_1min.append(ohlc_temp)
+            HA_Final = HA_Final.append(HA_temp)
             # print(ohlc_temp.to_string())
 
             # making ohlc for new candle
@@ -470,6 +476,7 @@ def calculate_ohlc_one_minute(company_data):
         ohlc[company_data['instrument_token']][5] = company_data['last_price']  # closing price
         ohlc[company_data['instrument_token']][1] = str(((company_data["timestamp"]).replace(second=0)))
 
+        #starting to calculate the RENKO table
         if (len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0):# or (len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0):  # checking if there is atleast 1 candle in OHLC Dataframe or RENKO Dataframe
             if (ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7] != 0):# or (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7] != [0, 'NaN']):  #checking that we do not have the ATR value as 0
                 if RENKO[company_data['instrument_token']][0] == "Symbol":
@@ -503,7 +510,7 @@ def calculate_ohlc_one_minute(company_data):
                         # TMA calculation complete
 
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_temp.to_string())
+                        #print(RENKO_temp.to_string())
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]
                     elif (company_data['last_price']<= RENKO[company_data['instrument_token']][1] - ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]):
                         RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] - ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]
@@ -534,7 +541,7 @@ def calculate_ohlc_one_minute(company_data):
                         # TMA calculation complete
 
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_temp.to_string())
+                        #print(RENKO_temp.to_string())
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]
 
                 if RENKO[company_data['instrument_token']][3] == "BUY":
@@ -565,7 +572,7 @@ def calculate_ohlc_one_minute(company_data):
                         # TMA calculation complete
 
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_temp.to_string())
+                        #print(RENKO_temp.to_string())
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]
                     elif company_data['last_price'] <= RENKO[company_data['instrument_token']][1] - (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2] - RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1]) - ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]:
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1]
@@ -595,7 +602,7 @@ def calculate_ohlc_one_minute(company_data):
                         # TMA calculation complete
 
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_temp.to_string())
+                        #print(RENKO_temp.to_string())
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]
                 if RENKO[company_data['instrument_token']][3] == "SELL":
                     if (company_data['last_price']<= RENKO[company_data['instrument_token']][1] - ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]):
@@ -625,7 +632,7 @@ def calculate_ohlc_one_minute(company_data):
                         # TMA calculation complete
 
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_temp.to_string())
+                        #print(RENKO_temp.to_string())
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]
                     elif company_data['last_price'] >= RENKO[company_data['instrument_token']][1] + (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1] - RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]) + ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]:
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1]
@@ -655,8 +662,30 @@ def calculate_ohlc_one_minute(company_data):
                         # TMA calculation complete
 
                         RENKO_Final = RENKO_Final.append(RENKO_temp, sort=False)
-                        print(RENKO_temp.to_string())
+                        #print(RENKO_temp.to_string())
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]
+        if (len(HA_Final.loc[
+                        HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) < 1):
+            if HA[company_data['instrument_token']][0] == "Symbol":
+                HA[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]['Symbol']
+            HA[company_data['instrument_token']][1] = str(((company_data["timestamp"]).replace(second=0)))
+            HA[company_data['instrument_token']][2] = (ohlc[company_data['instrument_token']][2] +
+                                                       ohlc[company_data['instrument_token']][5]) / 2
+            HA[company_data['instrument_token']][3] = ohlc[company_data['instrument_token']][3]
+            HA[company_data['instrument_token']][4] = ohlc[company_data['instrument_token']][4]
+            HA[company_data['instrument_token']][5] = (ohlc[company_data['instrument_token']][2] +
+                                                       ohlc[company_data['instrument_token']][3] +
+                                                       ohlc[company_data['instrument_token']][4] +
+                                                       ohlc[company_data['instrument_token']][5]) / 4
+        if (len(HA_Final.loc[
+                        HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) >= 1):
+            if HA[company_data['instrument_token']][0] == "Symbol":
+                HA[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]['Symbol']
+            HA[company_data['instrument_token']][1] = str(((company_data["timestamp"]).replace(second=0)))
+            HA[company_data['instrument_token']][5] = (ohlc[company_data['instrument_token']][2] + ohlc[company_data['instrument_token']][3] + ohlc[company_data['instrument_token']][4] + ohlc[company_data['instrument_token']][5])/4
+            HA[company_data['instrument_token']][2] = (HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2] + HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 5])/2
+            HA[company_data['instrument_token']][3] = max(ohlc[company_data['instrument_token']][3], HA[company_data['instrument_token']][2], HA[company_data['instrument_token']][5])
+            HA[company_data['instrument_token']][4] = min(HA[company_data['instrument_token']][4], HA[company_data['instrument_token']][2], HA[company_data['instrument_token']][5])
         candle_thread_running = "NO"
     except Exception as e:
         traceback.print_exc()
@@ -668,6 +697,7 @@ def round_down(n, decimals=0):
         return math.floor(n * multiplier) / multiplier
     except Exception as e:
         traceback.print_exc()
+
 
 def order_status(token, orderid, type):
     try:
@@ -778,6 +808,12 @@ def RENKO_TRIMA(token):
     except Exception as e:
         RENKO_TRIMA(token)
         traceback.print_exc()
+
+while attained_profit() < 10:
+    for x in trd_portfolio:
+        if (len(HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']]) >= 1):
+            if (HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 2] == HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 3]) and (HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 2] > HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 5]):
+
 
 
 def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
