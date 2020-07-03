@@ -17,7 +17,7 @@ import sys
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "e1zHH9eOn0h3lk3kcxUgtm2Yew3GX1WZ"
+access_token = "kFrtYYHrdA77u5jsDjTwKX4NMnK3ZHXJ"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -28,7 +28,7 @@ candle_thread_running = ""
 renko_thread_running = ""
 day_profit_percent = 0
 
-trd_portfolio = {1270529: {"Symbol": "ICICIBANK", "max_quantity": 10000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0, 'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0},
+trd_portfolio = {698627: {"Symbol": "USDINR20JULFUT", "max_quantity": 100, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0, 'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0},
                  }
 
 
@@ -44,15 +44,6 @@ HA_Final = pd.DataFrame(columns=["Symbol", "Time", "Open", "High", "Low", "Close
 profit = {}
 profit_temp = pd.DataFrame(columns=["Symbol", "SELL Price", "BUY Price", "Profit", "Volume", "Charges", "final_profit"])
 profit_Final = pd.DataFrame(columns=["Symbol", "SELL Price", "BUY Price", "Profit", "Volume", "Charges", "final_profit"])
-
-'''
-# for loop to order history for all the stocks
-for x, y in trd_portfolio.items():
-    for z in y:
-        if z == "Symbol":
-            history(y[z])
-            time.sleep(15)
-'''
 
 def positions(token):
     try:
@@ -80,33 +71,6 @@ for x in trd_portfolio:
     profit[x] = ["Symbol", 0, 0, "Profit", 0, 0, 0]
     trd_portfolio[x]['Positions'] = positions(x)
 
-'''def constant_positon_calculator():
-    global trd_portfolio
-    for x in trd_portfolio:
-        trd_portfolio[x]['Positions'] = positions(x)
-    constant_positon_calculator()
-
-position_calculator = threading.Thread(target=constant_positon_calculator())'''
-
-def day_positions():
-    try:
-        pos = kite.positions()
-        day_pos = pos['day']
-        posdf = pd.DataFrame(day_pos)
-        if posdf.empty:
-            return 0
-        else:
-            return posdf['quantity'].sum()
-    except Exception as e:
-        day_positions()
-        traceback.print_exc()
-
-def profit_calculator():
-    global day_profit_percent
-    day_profit_percent = attained_profit()
-    time.sleep(1)
-    profit_calculator()
-
 def attained_profit():
     try:
         global day_margin, profit_Final, profit_temp, day_profit_percent
@@ -117,22 +81,24 @@ def attained_profit():
             symbol = x['tradingsymbol']
             type = x['transaction_type']
             token = x['instrument_token']
-            volume = x['quantity']
-            if type == 'BUY':
+            status = x['status']
+            volume = x['quantity'] * 1000
+            if type == 'BUY' and status == 'COMPLETE':
                 profit[token][1] = price
-            elif type == 'SELL':
+            elif type == 'SELL' and status == 'COMPLETE':
                 profit[token][2] = price
             profit[token][0] = symbol
             profit[token][4] = volume
             if (profit[token][1] != 0) & (profit[token][2] != 0):
-                buy_brookerage = min((profit[token][1] * volume * 0.0001), 20)
-                sell_brookerage = min((profit[token][2] * volume * 0.0001), 20)
-                stt_ctt = profit[token][2] * volume * 0.00025
-                buy_tran = profit[token][1] * volume * 0.0000325
-                sell_tran = profit[token][2] * volume * 0.0000325
+                buy_brookerage = min((profit[token][1] * volume * 0.0003), 20)
+                sell_brookerage = min((profit[token][2] * volume * 0.0003), 20)
+                #stt_ctt = profit[token][2] * volume * 0.00025
+                buy_tran = profit[token][1] * volume * 0.000009
+                sell_tran = profit[token][2] * volume * 0.000009
                 gst = (buy_brookerage + sell_brookerage + buy_tran + sell_tran) * 0.18
-                sebi_total = round((profit[token][1] + profit[token][2]) * 0.000001, 0)
-                total_charges = sebi_total + gst + sell_tran + buy_tran + stt_ctt + buy_brookerage + sell_brookerage
+                sebi_total = round((profit[token][1] + profit[token][2]) * volume * 0.000001, 0)
+                stamp_charges = profit[token][1] * volume * 0.000001
+                total_charges = sebi_total + gst + sell_tran + buy_tran + buy_brookerage + sell_brookerage + stamp_charges
                 profit[token][3] = ((profit[token][2] - profit[token][1]) * volume) - total_charges
                 current_profit = current_profit + profit[token][3]
                 profit[token][1] = 0
@@ -142,10 +108,6 @@ def attained_profit():
         attained_profit()
         traceback.print_exc()
 
-'''attained_profit_constant_calculator = threading.Thread(target=attained_profit())
-attained_profit_constant_calculator.start()'''
-
-
 def quantity():
     global trd_portfolio
     try:
@@ -153,17 +115,10 @@ def quantity():
             if trd_portfolio[x]['LTP'] != 0:
                 mar = KiteConnect.margins(kite)
                 equity_mar = mar['equity']['net']
-                if ((equity_mar / trd_portfolio[x]['LTP']) * 20)-10 < 1:
+                if (equity_mar / 2090) < 1:
                     trd_portfolio[x]['Tradable_quantity'] = 0
                 else:
-                    trd_portfolio[x]['Tradable_quantity'] = int(round(min(((equity_mar / trd_portfolio[x]['LTP']) * 5)-10, trd_portfolio[x]['max_quantity']), 0))
-
-                '''maxquantity = min(equity_mar/ltp,5000)
-                multiplier = 0
-                while (multiplier * 75) < maxquantity:
-                    multiplier = multiplier+1
-                else:
-                    return (multiplier-1) * 75'''
+                    trd_portfolio[x]['Tradable_quantity'] = int(round(min(((equity_mar / 2090)), trd_portfolio[x]['max_quantity']), 0))
     except Exception as e:
         quantity()
         traceback.print_exc()
@@ -181,7 +136,7 @@ def target(Orderid, direction):
             symbol = x['tradingsymbol']
             type = x['transaction_type']
             token = x['instrument_token']
-            volume = x['quantity']
+            volume = x['quantity'] * 1000
             status = x['status']
             if type == 'BUY' and status == 'COMPLETE':
                 profit[token][1] = price
@@ -190,14 +145,15 @@ def target(Orderid, direction):
             profit[token][0] = symbol
             profit[token][4] = volume
             if (profit[token][1] != 0) & (profit[token][2] != 0):
-                buy_brookerage = min((profit[token][1] * volume * 0.0001), 20)
-                sell_brookerage = min((profit[token][2] * volume * 0.0001), 20)
-                stt_ctt = profit[token][2] * volume * 0.00025
-                buy_tran = profit[token][1] * volume * 0.0000325
-                sell_tran = profit[token][2] * volume * 0.0000325
+                buy_brookerage = min((profit[token][1] * volume * 0.0003), 20)
+                sell_brookerage = min((profit[token][2] * volume * 0.0003), 20)
+                #stt_ctt = profit[token][2] * volume * 0.00025
+                buy_tran = profit[token][1] * volume * 0.000009
+                sell_tran = profit[token][2] * volume * 0.000009
                 gst = (buy_brookerage + sell_brookerage + buy_tran + sell_tran) * 0.18
-                sebi_total = round((profit[token][1] + profit[token][2]) * 0.000001, 0)
-                profit[token][5] = sebi_total + gst + sell_tran + buy_tran + stt_ctt + buy_brookerage + sell_brookerage
+                sebi_total = round((profit[token][1] + profit[token][2]) * volume * 0.000001, 0)
+                stamp_charges = profit[token][1] * volume * 0.000001
+                profit[token][5] = sebi_total + gst + sell_tran + buy_tran + buy_brookerage + sell_brookerage + stamp_charges
                 profit[token][3] = ((profit[token][2] - profit[token][1]) * volume) - profit[token][5]
                 profit[token][6] = profit[token][3] - profit[token][5]
                 profit_temp = pd.DataFrame([profit[token]],
@@ -214,14 +170,14 @@ def target(Orderid, direction):
         for item in Order_data:
             if item['status'] == "COMPLETE":
                 traded_price = item['average_price']
-                traded_quantity = item['quantity']
-                Brokerage = min(((traded_price * traded_quantity) * (.01 / 100))*2, 40)
-                STT = (traded_price * traded_quantity) * (.03 / 100)
-                TNXChrgs = ((traded_price * traded_quantity) * 2) * (.00325 / 100)
+                traded_quantity = item['quantity'] * 1000
+                Brokerage = min(((traded_price * traded_quantity) * (.03 / 100))*2, 40)
+                #STT = (traded_price * traded_quantity) * (.03 / 100)
+                TNXChrgs = ((traded_price * traded_quantity) * 2) * (.0009 / 100)
                 GST = (Brokerage + TNXChrgs) * (18 / 100)
-                SEBIChrgs = ((traded_price * 2) * traded_quantity) * (.0000015 / 100)
-                StampDuty = ((traded_price * 2) * traded_quantity) * (.003 / 100)
-                order_charges = Brokerage + STT + TNXChrgs + GST + SEBIChrgs + StampDuty
+                SEBIChrgs = ((traded_price * 2) * traded_quantity) * .0000005
+                StampDuty = ((traded_price * 2) * traded_quantity) * .000001
+                order_charges = Brokerage + TNXChrgs + GST + SEBIChrgs + StampDuty
                 if carry_forward < 0:
                     target_amount = abs(order_charges * -2 + carry_forward) / traded_quantity
                 else:
@@ -234,33 +190,6 @@ def target(Orderid, direction):
         traceback.print_exc()
         target(Orderid, direction)
 
-def calcpsoitions(Token, quantity, Last_price, Signal):
-    global profit_Final, profit_temp, profit, overall_profit
-    try:
-        profit[Token][0] = trd_portfolio[Token]
-        if Signal == "SELL":
-            profit[Token][1] = Last_price
-        elif Signal == "BUY":
-            profit[Token][2] = Last_price
-        if profit[Token][1]!=0 and profit[Token][2]!=0:
-            BuyBrokerage = min((((profit[Token][2])*quantity)*(.01/100)),20)
-            SellBrokerage = min((((profit[Token][1]) * quantity) * (.01 / 100)), 20)
-            STT = ((profit[Token][2])*quantity) * (.025/100)
-            TNXChrgs = ((profit[Token][2])*quantity) * (.00325/100)
-            GST = (STT + TNXChrgs) * (18/100)
-            SEBIChrgs = ((profit[Token][2] + profit[Token][1]) * quantity) * (.0000015/100)
-            StampDuty = ((profit[Token][2] + profit[Token][1]) * quantity) * (.003/100)
-            profit[Token][3] = ((profit[Token][1] - profit[Token][2]) * quantity) - (BuyBrokerage + SellBrokerage + STT + TNXChrgs + GST + SEBIChrgs + StampDuty)
-            profit_temp = pd.DataFrame([profit[x]], columns=["Symbol", "SELL Price", "BUY Price", "Profit"])
-            profit_Final = profit_Final.append(profit_temp, sort=False)
-            overall_profit += profit_Final.iloc[-1, 3]
-            profit[Token][1] = 0
-            profit[Token][2] = 0
-            print(profit_Final.tail(3))
-            print(overall_profit)
-    except Exception as e:
-        calcpsoitions(Token, quantity, Last_price, Signal)
-        traceback.print_exc()
 
 def ATR(df, n):  # df is the DataFrame, n is the period 7,14 ,etc
     try:
@@ -741,79 +670,87 @@ def target_order_status(orderid):
         target_order_status(orderid)
         traceback.print_exc()
 
-
-def RENKO_TRIMA(token):
-    global ohlc_final_1min, RENKO_Final, final_position, order_quantity, RENKO, RENKO_temp, Direction, Orderid, Target_order, Target_order_id, renko_thread_running, day_profit_percent
+def trigger():
     try:
-        renko_thread_running = "YES"
-        attained_profit()
+        while day_profit_percent < 10:
+            for x in trd_portfolio:
+                if (len(HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']]) >= 1):
+                    if (HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 2] == HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 3]) and (HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 2] > HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 5]):
+                        if trd_portfolio[x]['Positions'] > 0:
+                            kite.modify_order(variety="regular", order_id=trd_portfolio[x]['Target_order_id'],
+                                              order_type=kite.ORDER_TYPE_MARKET)
+                            time.sleep(2)
+                            trd_portfolio[x]['Positions'] = positions(x)
+                        elif trd_portfolio[x]['Positions'] == 0:
+                            if trd_portfolio[x]['Direction'] != "Down":
+                                if trd_portfolio[x]['Tradable_quantity'] > 0:
+                                    trd_portfolio[x]['Orderid'] = kite.place_order(variety="regular",
+                                                                                       exchange=kite.EXCHANGE_NSE,
+                                                                                       tradingsymbol=trd_portfolio[x][
+                                                                                           'Symbol'],
+                                                                                       transaction_type=kite.TRANSACTION_TYPE_SELL,
+                                                                                       quantity=trd_portfolio[x][
+                                                                                           'Tradable_quantity'],
+                                                                                       order_type=kite.ORDER_TYPE_MARKET,
+                                                                                       product=kite.PRODUCT_MIS)
+                                    print(trd_portfolio[x]['Orderid'])
+                                    time.sleep(2)
+                                    order_status(x, trd_portfolio[x]['Orderid'], 'SELL')
+                                    trd_portfolio[x]['Positions'] = positions(x)
+                    if (HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 2] ==
+                        HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 4]) and (
+                            HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 2] <
+                            HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 5]):
+                        if trd_portfolio[x]['Positions'] < 0:
+                            kite.modify_order(variety="regular", order_id=trd_portfolio[x]['Target_order_id'],
+                                              order_type=kite.ORDER_TYPE_MARKET)
+                            time.sleep(2)
+                            trd_portfolio[x]['Positions'] = positions(x)
+                        elif trd_portfolio[x]['Positions'] == 0:
+                            if trd_portfolio[x]['Direction'] != "Up":
+                                if trd_portfolio[x]['Tradable_quantity'] > 0:
+                                    trd_portfolio[x]['Orderid'] = kite.place_order(variety="regular",
+                                                                                       exchange=kite.EXCHANGE_NSE,
+                                                                                       tradingsymbol=trd_portfolio[x][
+                                                                                           'Symbol'],
+                                                                                       transaction_type=kite.TRANSACTION_TYPE_BUY,
+                                                                                       quantity=trd_portfolio[x][
+                                                                                           'Tradable_quantity'],
+                                                                                       order_type=kite.ORDER_TYPE_MARKET,
+                                                                                       product=kite.PRODUCT_MIS)
+                                    print(trd_portfolio[x]['Orderid'])
+                                    time.sleep(2)
+                                    order_status(x, trd_portfolio[x]['Orderid'], 'BUY')
+                                    trd_portfolio[x]['Positions'] = positions(x)
+                        if trd_portfolio[x]['Positions'] > 0:
+                            if trd_portfolio[x]['Target_order'] != "YES":
+                                trd_portfolio[x]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[x]['Symbol'],
+                                                 transaction_type=kite.TRANSACTION_TYPE_SELL, quantity=abs(trd_portfolio[x]['Positions']),
+                                                 order_type=kite.ORDER_TYPE_LIMIT, price=round(target(trd_portfolio[x]['Orderid'], 'Up'), 1), product=kite.PRODUCT_MIS)
+                                if target_order_status(trd_portfolio[x]['Target_order_id']) == "OPEN":
+                                    trd_portfolio[x]['Target_order'] = "YES"
+                        if trd_portfolio[x]['Positions'] < 0:
+                            if trd_portfolio[x]['Target_order'] != "YES":
+                                trd_portfolio[x]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[x]['Symbol'],
+                                                 transaction_type=kite.TRANSACTION_TYPE_BUY, quantity=abs(trd_portfolio[x]['Positions']),
+                                                 order_type=kite.ORDER_TYPE_LIMIT, price=round_down(target(trd_portfolio[x]['Orderid'], 'Down'), 1), product=kite.PRODUCT_MIS)
+                                if target_order_status(trd_portfolio[x]['Target_order_id']) == "OPEN":
+                                    trd_portfolio[x]['Target_order'] = "YES"
         quantity()
-        positions(token)
-        if len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[token]['Symbol']]) > 0:
-            if day_profit_percent < 10:
-                if (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[token]['Symbol']].iloc[-1, 3] == "SELL") and (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[token]['Symbol']].iloc[-1, 1] < RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[token]['Symbol']].iloc[-1, 6]):
-                    if trd_portfolio[token]['Positions'] > 0:
-                        '''trd_portfolio[token]['Orderid'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[token]['Symbol'],
-                                                transaction_type=kite.TRANSACTION_TYPE_SELL, quantity=trd_portfolio[token]['Positions'], order_type=kite.ORDER_TYPE_MARKET, product=kite.PRODUCT_MIS)
-                        print(trd_portfolio[token]['Orderid'])'''
-                        kite.modify_order(variety="regular", order_id=trd_portfolio[token]['Target_order_id'], order_type=kite.ORDER_TYPE_MARKET)
-                        time.sleep(2)
-                        trd_portfolio[token]['Positions'] = positions(token)
-                    if trd_portfolio[token]['Direction'] != "Down":
-                        if trd_portfolio[token]['Positions'] == 0:
-                            if trd_portfolio[token]['Tradable_quantity'] > 0:
-                                trd_portfolio[token]['Orderid'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[token]['Symbol'],
-                                             transaction_type=kite.TRANSACTION_TYPE_SELL, quantity=trd_portfolio[token]['Tradable_quantity'], order_type=kite.ORDER_TYPE_MARKET, product=kite.PRODUCT_MIS)
-                                print(trd_portfolio[token]['Orderid'])
-                                time.sleep(2)
-                                order_status(token, trd_portfolio[token]['Orderid'], 'SELL')
-                                trd_portfolio[token]['Positions'] = positions(token)
-                elif (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[token]['Symbol']].iloc[-1, 3] == "BUY") and (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[token]['Symbol']].iloc[-1, 1] > RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[token]['Symbol']].iloc[-1, 6]):
-                    if trd_portfolio[token]['Positions'] < 0:
-                        kite.modify_order(variety="regular", order_id=trd_portfolio[token]['Target_order_id'], order_type=kite.ORDER_TYPE_MARKET)
-                        time.sleep(2)
-                        '''trd_portfolio[token]['Orderid'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[token]['Symbol'],
-                                            transaction_type=kite.TRANSACTION_TYPE_BUY, quantity=abs(trd_portfolio[token]['Tradable_quantity']), order_type=kite.ORDER_TYPE_MARKET, product=kite.PRODUCT_MIS)'''
-                        trd_portfolio[token]['Positions'] = positions(token)
-                    if trd_portfolio[token]['Direction'] != "Up":
-                        if trd_portfolio[token]['Positions'] == 0:
-                            if trd_portfolio[token]['Tradable_quantity'] > 0:
-                                trd_portfolio[token]['Orderid'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[token]['Symbol'],
-                                             transaction_type=kite.TRANSACTION_TYPE_BUY, quantity=trd_portfolio[token]['Tradable_quantity'], order_type=kite.ORDER_TYPE_MARKET, product=kite.PRODUCT_MIS)
-                                print(trd_portfolio[token]['Orderid'])
-                                time.sleep(2)
-                                order_status(token, trd_portfolio[token]['Orderid'], 'BUY')
-                                trd_portfolio[token]['Positions'] = positions(token)
-                if trd_portfolio[token]['Positions'] > 0:
-                    if trd_portfolio[token]['Target_order'] != "YES":
-                        trd_portfolio[token]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[token]['Symbol'],
-                                         transaction_type=kite.TRANSACTION_TYPE_SELL, quantity=abs(trd_portfolio[token]['Positions']),
-                                         order_type=kite.ORDER_TYPE_LIMIT, price=round(target(trd_portfolio[token]['Orderid'], 'Up'), 1), product=kite.PRODUCT_MIS)
-                        if target_order_status(trd_portfolio[token]['Target_order_id']) == "OPEN":
-                            trd_portfolio[token]['Target_order'] = "YES"
-                if trd_portfolio[token]['Positions'] < 0:
-                    if trd_portfolio[token]['Target_order'] != "YES":
-                        trd_portfolio[token]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[token]['Symbol'],
-                                         transaction_type=kite.TRANSACTION_TYPE_BUY, quantity=abs(trd_portfolio[token]['Positions']),
-                                         order_type=kite.ORDER_TYPE_LIMIT, price=round_down(target(trd_portfolio[token]['Orderid'], 'Down'), 1), product=kite.PRODUCT_MIS)
-                        if target_order_status(trd_portfolio[token]['Target_order_id']) == "OPEN":
-                            trd_portfolio[token]['Target_order'] = "YES"
-        renko_thread_running = "NO"
     except ReadTimeout:
-        RENKO_TRIMA(token)
+        trigger()
+        traceback.print_exc()
         pass
     except exceptions.NetworkException:
-        RENKO_TRIMA(token)
+        trigger()
+        traceback.print_exc()
         pass
     except Exception as e:
-        RENKO_TRIMA(token)
+        trigger()
         traceback.print_exc()
 
-while attained_profit() < 10:
-    for x in trd_portfolio:
-        if (len(HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']]) >= 1):
-            if (HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 2] == HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 3]) and (HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 2] > HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 5]):
-
+order_trigger_loop_initiator = threading.Thread(target=trigger())
+order_trigger_loop_initiator.start()
 
 
 def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
@@ -824,24 +761,9 @@ def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
             if trd_portfolio[company_data['instrument_token']]['Tradable_quantity'] == 0:
                 quantity()
             if candle_thread_running != "YES":
-                if (company_data['last_trade_time'].time()) > datetime.time(9,15,00) and (company_data['last_trade_time'].time()) < datetime.time(15,20,00):
+                if (company_data['last_trade_time'].time()) > datetime.time(9,00,00) and (company_data['last_trade_time'].time()) < datetime.time(16,45,00):
                     candle = threading.Thread(target=calculate_ohlc_one_minute, args=(company_data,))
                     candle.start()
-            else:
-                pass
-            if renko_thread_running != "YES":
-                if len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0:
-                    if RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 6] != 0:
-                        if (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 3] == "SELL") and \
-                                (trd_portfolio[company_data['instrument_token']]['Direction'] != "Down") and \
-                                (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1] < RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 6]):
-                            renko_loop_initiator = threading.Thread(target=RENKO_TRIMA, args=[company_data['instrument_token']])
-                            renko_loop_initiator.start()
-                        elif (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 3] == "BUY") and \
-                                trd_portfolio[company_data['instrument_token']]['Direction'] != "Up" and \
-                                (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1] > RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 6]):
-                            renko_loop_initiator = threading.Thread(target=RENKO_TRIMA, args=[company_data['instrument_token']])
-                            renko_loop_initiator.start()
             else:
                 pass
     except Exception as e:
