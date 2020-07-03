@@ -28,8 +28,7 @@ candle_thread_running = ""
 renko_thread_running = ""
 day_profit_percent = 0
 
-trd_portfolio = {698627: {"Symbol": "USDINR20JULFUT", "max_quantity": 100, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0, 'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0},
-                 }
+trd_portfolio = {698627: {"Symbol": "USDINR20JULFUT", "max_quantity": 100, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0, 'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0}}
 
 
 ohlc = {}  # python dictionary to store the ohlc data in it
