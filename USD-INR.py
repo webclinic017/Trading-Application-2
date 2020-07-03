@@ -107,6 +107,10 @@ def attained_profit():
         attained_profit()
         traceback.print_exc()
 
+
+attained_profit()
+
+
 def quantity():
     global trd_portfolio
     try:
@@ -114,7 +118,7 @@ def quantity():
             if trd_portfolio[x]['LTP'] != 0:
                 mar = KiteConnect.margins(kite)
                 equity_mar = mar['equity']['net']
-                if (equity_mar / 2090) < 1:
+                if (equity_mar / 2090) * 2 < 1:
                     trd_portfolio[x]['Tradable_quantity'] = 0
                 else:
                     trd_portfolio[x]['Tradable_quantity'] = int(round(min(((equity_mar / 2090)), trd_portfolio[x]['max_quantity']), 0))
@@ -293,7 +297,7 @@ def history(stock):
             finalRenko['TMA'] = finalData_his['TMA']
             finalRenkodf = pd.DataFrame(finalRenko, index=None)
             RENKO_Final = RENKO_Final.append(finalRenkodf)
-            print(RENKO_Final)
+            #print(RENKO_Final)
 
             df['Symbol'] = stock
             df.reset_index(inplace=True)
@@ -303,7 +307,7 @@ def history(stock):
             df = df[['Symbol', 'Time', 'Open', 'High', 'Low', 'Close', 'TR', 'ATR', 'SMA', 'TMA']]
             # print(df.to_string())
             ohlc_final_1min = ohlc_final_1min.append(df)
-            print(ohlc_final_1min)
+            #print(ohlc_final_1min)
     except Exception as e:
         traceback.print_exc()
 
@@ -316,6 +320,8 @@ def calculate_ohlc_one_minute(company_data):
         if (str(((company_data["timestamp"]).replace(second=0))) != ohlc[company_data['instrument_token']][1]) and (ohlc[company_data['instrument_token']][1] != "Time"):
             ohlc_temp = pd.DataFrame([ohlc[company_data['instrument_token']]], columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
             HA_temp = pd.DataFrame([HA[company_data['instrument_token']]], columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
+            HA_Final = HA_Final.append(HA_temp)
+            print(HA_temp.to_string())
             #print(ohlc_temp.head(), ohlc_final_1min.head())
         # Calculating True Range
             if len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0:
@@ -384,15 +390,14 @@ def calculate_ohlc_one_minute(company_data):
 
         # adding the row into the final ohlc table
             ohlc_final_1min = ohlc_final_1min.append(ohlc_temp)
-            HA_Final = HA_Final.append(HA_temp)
             # print(ohlc_temp.to_string())
 
-            # making ohlc for new candle
-            ohlc[company_data['instrument_token']][2] = company_data['last_price']  # open
-            ohlc[company_data['instrument_token']][3] = company_data['last_price']  # high
-            ohlc[company_data['instrument_token']][4] = company_data['last_price']  # low
-            ohlc[company_data['instrument_token']][5] = company_data['last_price']  # close
-            ohlc[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]['Symbol']
+        # making ohlc for new candle
+        ohlc[company_data['instrument_token']][2] = company_data['last_price']  # open
+        ohlc[company_data['instrument_token']][3] = company_data['last_price']  # high
+        ohlc[company_data['instrument_token']][4] = company_data['last_price']  # low
+        ohlc[company_data['instrument_token']][5] = company_data['last_price']  # close
+        ohlc[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]['Symbol']
 
         if ohlc[company_data['instrument_token']][3] < company_data['last_price']:  # calculating high
             ohlc[company_data['instrument_token']][3] = company_data['last_price']
@@ -671,85 +676,78 @@ def target_order_status(orderid):
 
 def trigger():
     try:
-        while day_profit_percent < 10:
-            for x in trd_portfolio:
-                if (len(HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']]) >= 1):
-                    if (HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 2] == HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 3]) and (HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 2] > HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 5]):
-                        if trd_portfolio[x]['Positions'] > 0:
-                            kite.modify_order(variety="regular", order_id=trd_portfolio[x]['Target_order_id'],
-                                              order_type=kite.ORDER_TYPE_MARKET)
-                            time.sleep(2)
-                            trd_portfolio[x]['Positions'] = positions(x)
-                        elif trd_portfolio[x]['Positions'] == 0:
-                            if trd_portfolio[x]['Direction'] != "Down":
-                                if trd_portfolio[x]['Tradable_quantity'] > 0:
-                                    trd_portfolio[x]['Orderid'] = kite.place_order(variety="regular",
-                                                                                       exchange=kite.EXCHANGE_NSE,
-                                                                                       tradingsymbol=trd_portfolio[x][
-                                                                                           'Symbol'],
-                                                                                       transaction_type=kite.TRANSACTION_TYPE_SELL,
-                                                                                       quantity=trd_portfolio[x][
-                                                                                           'Tradable_quantity'],
-                                                                                       order_type=kite.ORDER_TYPE_MARKET,
-                                                                                       product=kite.PRODUCT_MIS)
-                                    print(trd_portfolio[x]['Orderid'])
-                                    time.sleep(2)
-                                    order_status(x, trd_portfolio[x]['Orderid'], 'SELL')
-                                    trd_portfolio[x]['Positions'] = positions(x)
-                    if (HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 2] ==
-                        HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 4]) and (
-                            HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 2] <
-                            HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 5]):
-                        if trd_portfolio[x]['Positions'] < 0:
-                            kite.modify_order(variety="regular", order_id=trd_portfolio[x]['Target_order_id'],
-                                              order_type=kite.ORDER_TYPE_MARKET)
-                            time.sleep(2)
-                            trd_portfolio[x]['Positions'] = positions(x)
-                        elif trd_portfolio[x]['Positions'] == 0:
-                            if trd_portfolio[x]['Direction'] != "Up":
-                                if trd_portfolio[x]['Tradable_quantity'] > 0:
-                                    trd_portfolio[x]['Orderid'] = kite.place_order(variety="regular",
-                                                                                       exchange=kite.EXCHANGE_NSE,
-                                                                                       tradingsymbol=trd_portfolio[x][
-                                                                                           'Symbol'],
-                                                                                       transaction_type=kite.TRANSACTION_TYPE_BUY,
-                                                                                       quantity=trd_portfolio[x][
-                                                                                           'Tradable_quantity'],
-                                                                                       order_type=kite.ORDER_TYPE_MARKET,
-                                                                                       product=kite.PRODUCT_MIS)
-                                    print(trd_portfolio[x]['Orderid'])
-                                    time.sleep(2)
-                                    order_status(x, trd_portfolio[x]['Orderid'], 'BUY')
-                                    trd_portfolio[x]['Positions'] = positions(x)
-                        if trd_portfolio[x]['Positions'] > 0:
-                            if trd_portfolio[x]['Target_order'] != "YES":
-                                trd_portfolio[x]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[x]['Symbol'],
-                                                 transaction_type=kite.TRANSACTION_TYPE_SELL, quantity=abs(trd_portfolio[x]['Positions']),
-                                                 order_type=kite.ORDER_TYPE_LIMIT, price=round(target(trd_portfolio[x]['Orderid'], 'Up'), 1), product=kite.PRODUCT_MIS)
-                                if target_order_status(trd_portfolio[x]['Target_order_id']) == "OPEN":
-                                    trd_portfolio[x]['Target_order'] = "YES"
-                        if trd_portfolio[x]['Positions'] < 0:
-                            if trd_portfolio[x]['Target_order'] != "YES":
-                                trd_portfolio[x]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[x]['Symbol'],
-                                                 transaction_type=kite.TRANSACTION_TYPE_BUY, quantity=abs(trd_portfolio[x]['Positions']),
-                                                 order_type=kite.ORDER_TYPE_LIMIT, price=round_down(target(trd_portfolio[x]['Orderid'], 'Down'), 1), product=kite.PRODUCT_MIS)
-                                if target_order_status(trd_portfolio[x]['Target_order_id']) == "OPEN":
-                                    trd_portfolio[x]['Target_order'] = "YES"
+        for x in trd_portfolio:
+            if (len(HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']]) >= 1):
+                if (HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 2] == HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 3]) and (HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 2] > HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 5]):
+                    if trd_portfolio[x]['Positions'] > 0:
+                        kite.modify_order(variety="regular", order_id=trd_portfolio[x]['Target_order_id'],
+                                          order_type=kite.ORDER_TYPE_MARKET)
+                        time.sleep(2)
+                        trd_portfolio[x]['Positions'] = positions(x)
+                    elif trd_portfolio[x]['Positions'] == 0:
+                        if trd_portfolio[x]['Direction'] != "Down":
+                            if trd_portfolio[x]['Tradable_quantity'] > 0:
+                                trd_portfolio[x]['Orderid'] = kite.place_order(variety="regular",
+                                                                                   exchange=kite.EXCHANGE_CDS,
+                                                                                   tradingsymbol=trd_portfolio[x][
+                                                                                       'Symbol'],
+                                                                                   transaction_type=kite.TRANSACTION_TYPE_SELL,
+                                                                                   quantity=trd_portfolio[x][
+                                                                                       'Tradable_quantity'],
+                                                                                   order_type=kite.ORDER_TYPE_MARKET,
+                                                                                   product=kite.PRODUCT_MIS)
+                                print(trd_portfolio[x]['Orderid'])
+                                time.sleep(2)
+                                order_status(x, trd_portfolio[x]['Orderid'], 'SELL')
+                                trd_portfolio[x]['Positions'] = positions(x)
+                if (HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 2] ==
+                    HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 4]) and (
+                        HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 2] <
+                        HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 5]):
+                    if trd_portfolio[x]['Positions'] < 0:
+                        kite.modify_order(variety="regular", order_id=trd_portfolio[x]['Target_order_id'],
+                                          order_type=kite.ORDER_TYPE_MARKET)
+                        time.sleep(2)
+                        trd_portfolio[x]['Positions'] = positions(x)
+                    elif trd_portfolio[x]['Positions'] == 0:
+                        if trd_portfolio[x]['Direction'] != "Up":
+                            if trd_portfolio[x]['Tradable_quantity'] > 0:
+                                trd_portfolio[x]['Orderid'] = kite.place_order(variety="regular",
+                                                                                   exchange=kite.EXCHANGE_CDS,
+                                                                                   tradingsymbol=trd_portfolio[x][
+                                                                                       'Symbol'],
+                                                                                   transaction_type=kite.TRANSACTION_TYPE_BUY,
+                                                                                   quantity=trd_portfolio[x][
+                                                                                       'Tradable_quantity'],
+                                                                                   order_type=kite.ORDER_TYPE_MARKET,
+                                                                                   product=kite.PRODUCT_MIS)
+                                print(trd_portfolio[x]['Orderid'])
+                                time.sleep(2)
+                                order_status(x, trd_portfolio[x]['Orderid'], 'BUY')
+                                trd_portfolio[x]['Positions'] = positions(x)
+                    if trd_portfolio[x]['Positions'] > 0:
+                        if trd_portfolio[x]['Target_order'] != "YES":
+                            trd_portfolio[x]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_CDS, tradingsymbol=trd_portfolio[x]['Symbol'],
+                                             transaction_type=kite.TRANSACTION_TYPE_SELL, quantity=abs(trd_portfolio[x]['Positions']),
+                                             order_type=kite.ORDER_TYPE_LIMIT, price=round(target(trd_portfolio[x]['Orderid'], 'Up'), 1), product=kite.PRODUCT_MIS)
+                            if target_order_status(trd_portfolio[x]['Target_order_id']) == "OPEN":
+                                trd_portfolio[x]['Target_order'] = "YES"
+                    if trd_portfolio[x]['Positions'] < 0:
+                        if trd_portfolio[x]['Target_order'] != "YES":
+                            trd_portfolio[x]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_CDS, tradingsymbol=trd_portfolio[x]['Symbol'],
+                                             transaction_type=kite.TRANSACTION_TYPE_BUY, quantity=abs(trd_portfolio[x]['Positions']),
+                                             order_type=kite.ORDER_TYPE_LIMIT, price=round_down(target(trd_portfolio[x]['Orderid'], 'Down'), 1), product=kite.PRODUCT_MIS)
+                            if target_order_status(trd_portfolio[x]['Target_order_id']) == "OPEN":
+                                trd_portfolio[x]['Target_order'] = "YES"
         quantity()
     except ReadTimeout:
-        trigger()
         traceback.print_exc()
         pass
     except exceptions.NetworkException:
-        trigger()
         traceback.print_exc()
         pass
     except Exception as e:
-        trigger()
         traceback.print_exc()
-
-order_trigger_loop_initiator = threading.Thread(target=trigger())
-order_trigger_loop_initiator.start()
 
 
 def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
@@ -765,6 +763,16 @@ def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
                     candle.start()
             else:
                 pass
+            if (len(HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']]) >= 1):
+                if (HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 2] == HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 3]) and (HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 2] > HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 5]):
+                    order_trigger_loop_initiator = threading.Thread(target=trigger())
+                    order_trigger_loop_initiator.start()
+                if (HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 2] ==
+                    HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 4]) and (
+                        HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 2] <
+                        HA_Final.loc[HA_Final.Symbol == trd_portfolio[x]['Symbol']].iloc[-1, 5]):
+                    order_trigger_loop_initiator = threading.Thread(target=trigger())
+                    order_trigger_loop_initiator.start()
     except Exception as e:
         traceback.print_exc()
 
