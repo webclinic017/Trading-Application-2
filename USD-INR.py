@@ -17,7 +17,7 @@ import sys
 
 api_k = "dysoztj41hntm1ma";  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94";  # api_secret
-access_token = "kFrtYYHrdA77u5jsDjTwKX4NMnK3ZHXJ"
+access_token = "LtJN4xqyKFGolebcXmUgJYJsF6U3rBPD"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -602,23 +602,23 @@ def calculate_ohlc_one_minute(company_data):
             if HA[company_data['instrument_token']][0] == "Symbol":
                 HA[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]['Symbol']
             HA[company_data['instrument_token']][1] = str(((company_data["timestamp"]).replace(second=0)))
-            HA[company_data['instrument_token']][2] = (ohlc[company_data['instrument_token']][2] +
-                                                       ohlc[company_data['instrument_token']][5]) / 2
-            HA[company_data['instrument_token']][3] = ohlc[company_data['instrument_token']][3]
-            HA[company_data['instrument_token']][4] = ohlc[company_data['instrument_token']][4]
-            HA[company_data['instrument_token']][5] = (ohlc[company_data['instrument_token']][2] +
+            HA[company_data['instrument_token']][2] = round((ohlc[company_data['instrument_token']][2] +
+                                                       ohlc[company_data['instrument_token']][5]) / 2,4)
+            HA[company_data['instrument_token']][3] = round(ohlc[company_data['instrument_token']][3],4)
+            HA[company_data['instrument_token']][4] = round(ohlc[company_data['instrument_token']][4],4)
+            HA[company_data['instrument_token']][5] = round((ohlc[company_data['instrument_token']][2] +
                                                        ohlc[company_data['instrument_token']][3] +
                                                        ohlc[company_data['instrument_token']][4] +
-                                                       ohlc[company_data['instrument_token']][5]) / 4
+                                                       ohlc[company_data['instrument_token']][5]) / 4,4)
         if (len(HA_Final.loc[
                         HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) >= 1):
             if HA[company_data['instrument_token']][0] == "Symbol":
                 HA[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]['Symbol']
             HA[company_data['instrument_token']][1] = str(((company_data["timestamp"]).replace(second=0)))
-            HA[company_data['instrument_token']][5] = (ohlc[company_data['instrument_token']][2] + ohlc[company_data['instrument_token']][3] + ohlc[company_data['instrument_token']][4] + ohlc[company_data['instrument_token']][5])/4
-            HA[company_data['instrument_token']][2] = (HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2] + HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 5])/2
-            HA[company_data['instrument_token']][3] = max(ohlc[company_data['instrument_token']][3], HA[company_data['instrument_token']][2], HA[company_data['instrument_token']][5])
-            HA[company_data['instrument_token']][4] = min(HA[company_data['instrument_token']][4], HA[company_data['instrument_token']][2], HA[company_data['instrument_token']][5])
+            HA[company_data['instrument_token']][5] = round((ohlc[company_data['instrument_token']][2] + ohlc[company_data['instrument_token']][3] + ohlc[company_data['instrument_token']][4] + ohlc[company_data['instrument_token']][5])/4,4)
+            HA[company_data['instrument_token']][2] = round((HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2] + HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 5])/2,4)
+            HA[company_data['instrument_token']][3] = round(max(ohlc[company_data['instrument_token']][3], HA[company_data['instrument_token']][2], HA[company_data['instrument_token']][5]),4)
+            HA[company_data['instrument_token']][4] = round(min(HA[company_data['instrument_token']][4], HA[company_data['instrument_token']][2], HA[company_data['instrument_token']][5]),4)
         candle_thread_running = "NO"
     except Exception as e:
         traceback.print_exc()
@@ -725,20 +725,20 @@ def trigger():
                                 time.sleep(2)
                                 order_status(x, trd_portfolio[x]['Orderid'], 'BUY')
                                 trd_portfolio[x]['Positions'] = positions(x)
-                    if trd_portfolio[x]['Positions'] > 0:
-                        if trd_portfolio[x]['Target_order'] != "YES":
-                            trd_portfolio[x]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_CDS, tradingsymbol=trd_portfolio[x]['Symbol'],
-                                             transaction_type=kite.TRANSACTION_TYPE_SELL, quantity=abs(trd_portfolio[x]['Positions']),
-                                             order_type=kite.ORDER_TYPE_LIMIT, price=round(target(trd_portfolio[x]['Orderid'], 'Up'), 1), product=kite.PRODUCT_MIS)
-                            if target_order_status(trd_portfolio[x]['Target_order_id']) == "OPEN":
-                                trd_portfolio[x]['Target_order'] = "YES"
-                    if trd_portfolio[x]['Positions'] < 0:
-                        if trd_portfolio[x]['Target_order'] != "YES":
-                            trd_portfolio[x]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_CDS, tradingsymbol=trd_portfolio[x]['Symbol'],
-                                             transaction_type=kite.TRANSACTION_TYPE_BUY, quantity=abs(trd_portfolio[x]['Positions']),
-                                             order_type=kite.ORDER_TYPE_LIMIT, price=round_down(target(trd_portfolio[x]['Orderid'], 'Down'), 1), product=kite.PRODUCT_MIS)
-                            if target_order_status(trd_portfolio[x]['Target_order_id']) == "OPEN":
-                                trd_portfolio[x]['Target_order'] = "YES"
+                if trd_portfolio[x]['Positions'] > 0:
+                    if trd_portfolio[x]['Target_order'] != "YES":
+                        trd_portfolio[x]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_CDS, tradingsymbol=trd_portfolio[x]['Symbol'],
+                                         transaction_type=kite.TRANSACTION_TYPE_SELL, quantity=abs(trd_portfolio[x]['Positions']),
+                                         order_type=kite.ORDER_TYPE_LIMIT, price=round(target(trd_portfolio[x]['Orderid'], 'Up'), 1), product=kite.PRODUCT_MIS)
+                        if target_order_status(trd_portfolio[x]['Target_order_id']) == "OPEN":
+                            trd_portfolio[x]['Target_order'] = "YES"
+                if trd_portfolio[x]['Positions'] < 0:
+                    if trd_portfolio[x]['Target_order'] != "YES":
+                        trd_portfolio[x]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_CDS, tradingsymbol=trd_portfolio[x]['Symbol'],
+                                         transaction_type=kite.TRANSACTION_TYPE_BUY, quantity=abs(trd_portfolio[x]['Positions']),
+                                         order_type=kite.ORDER_TYPE_LIMIT, price=round_down(target(trd_portfolio[x]['Orderid'], 'Down'), 1), product=kite.PRODUCT_MIS)
+                        if target_order_status(trd_portfolio[x]['Target_order_id']) == "OPEN":
+                            trd_portfolio[x]['Target_order'] = "YES"
         quantity()
     except ReadTimeout:
         traceback.print_exc()

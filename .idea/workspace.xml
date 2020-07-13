@@ -4,6 +4,7 @@
     <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/USD-INR.py" beforeDir="false" afterPath="$PROJECT_DIR$/USD-INR.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -459,7 +460,14 @@
       <option name="project" value="LOCAL" />
       <updated>1593762407485</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="updating with multiple stocks">
+      <created>1593775884117</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1593775884117</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -498,35 +506,85 @@
     <option name="LAST_COMMIT_MESSAGE" value="updating with multiple stocks" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="300" y="104" key="CommitChangelistDialog2" timestamp="1593762407074">
+    <state x="300" y="104" key="CommitChangelistDialog2" timestamp="1593775883657">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="300" y="104" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1593762407074" />
+    <state x="300" y="104" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1593775883657" />
     <state x="300" y="108" key="CommitChangelistDialog2/0.0.1920.1080@0.0.1920.1080" timestamp="1587350572854" />
-    <state width="1899" height="305" key="GridCell.Tab.0.bottom" timestamp="1593768414591">
+    <state width="1899" height="360" key="GridCell.Tab.0.bottom" timestamp="1594640205533">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="305" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1593768414591" />
+    <state width="1899" height="360" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1594640205533" />
     <state width="1899" height="336" key="GridCell.Tab.0.bottom/0.0.1920.1080@0.0.1920.1080" timestamp="1587993546422" />
-    <state width="1899" height="305" key="GridCell.Tab.0.center" timestamp="1593768414591">
+    <state width="1899" height="360" key="GridCell.Tab.0.center" timestamp="1594640205533">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="305" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1593768414591" />
+    <state width="1899" height="360" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1594640205533" />
     <state width="1899" height="336" key="GridCell.Tab.0.center/0.0.1920.1080@0.0.1920.1080" timestamp="1587993546422" />
-    <state width="1899" height="305" key="GridCell.Tab.0.left" timestamp="1593768414591">
+    <state width="1899" height="360" key="GridCell.Tab.0.left" timestamp="1594640205533">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="305" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1593768414591" />
+    <state width="1899" height="360" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1594640205533" />
     <state width="1899" height="336" key="GridCell.Tab.0.left/0.0.1920.1080@0.0.1920.1080" timestamp="1587993546422" />
-    <state width="1899" height="305" key="GridCell.Tab.0.right" timestamp="1593768414591">
+    <state width="1899" height="360" key="GridCell.Tab.0.right" timestamp="1594640205533">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="305" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1593768414591" />
+    <state width="1899" height="360" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1594640205533" />
     <state width="1899" height="336" key="GridCell.Tab.0.right/0.0.1920.1080@0.0.1920.1080" timestamp="1587993546422" />
-    <state x="552" y="263" key="Vcs.Push.Dialog.v2" timestamp="1593762410170">
+    <state width="1899" height="247" key="GridCell.Tab.1.bottom" timestamp="1593805875381">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="263" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1593762410170" />
+    <state width="1899" height="247" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1593805875381" />
+    <state width="1899" height="247" key="GridCell.Tab.1.center" timestamp="1593805875381">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="247" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1593805875381" />
+    <state width="1899" height="247" key="GridCell.Tab.1.left" timestamp="1593805875381">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="247" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1593805875381" />
+    <state width="1899" height="247" key="GridCell.Tab.1.right" timestamp="1593805875381">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1899" height="247" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1593805875381" />
+    <state x="552" y="263" key="Vcs.Push.Dialog.v2" timestamp="1593775890249">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="263" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1593775890249" />
     <state x="552" y="273" key="Vcs.Push.Dialog.v2/0.0.1920.1080@0.0.1920.1080" timestamp="1587350576492" />
+    <state width="968" height="528" key="XDebugger.FullValuePopup" timestamp="1593798895975">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="968" height="528" key="XDebugger.FullValuePopup/0.0.1920.1040@0.0.1920.1040" timestamp="1593798895975" />
+    <state x="524" y="249" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1593797044626">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="524" y="249" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1920.1040@0.0.1920.1040" timestamp="1593797044626" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/venv/Lib/site-packages/urllib3/util/wait.py</url>
+          <line>47</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/venv/Lib/site-packages/urllib3/util/wait.py</url>
+          <line>48</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/venv/Lib/site-packages/urllib3/util/wait.py</url>
+          <line>49</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/venv/Lib/site-packages/urllib3/util/wait.py</url>
+          <line>50</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
