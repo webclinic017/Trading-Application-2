@@ -1,8 +1,25 @@
 import requests
+import json
+import kiteconnect
+from kiteconnect import KiteTicker, KiteConnect
+import datetime
+from datasetup import *
+
 headers = {
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36'
+    'Authorization': 'token dysoztj41hntm1ma:'+access_token
 }
+
 with requests.session() as s:
-    url = "https://kite.zerodha.com/connect/login?api_key=dysoztj41hntm1ma"
-    r = s.get(url, headers=headers)
-    print(r.content)
+    url = "https://api.kite.trade/quote?i="
+    for x in trd_portfolio:
+        request_url = url+trd_portfolio[x]["Market"]+":"+trd_portfolio[x]["Symbol"]
+        r = s.get(request_url, headers=headers)
+        result = json.loads(r.content)
+        print("Lower Circuit Limit ",
+              result['data'][trd_portfolio[x]["Market"] + ":" + trd_portfolio[x]["Symbol"]]['lower_circuit_limit'])
+        trd_portfolio[x]['lower_circuit_limit'] = result['data'][trd_portfolio[x]["Market"] + ":" + trd_portfolio[x]["Symbol"]]['lower_circuit_limit']
+        print("Upper Circuit Limit ",
+              result['data'][trd_portfolio[x]["Market"] + ":" + trd_portfolio[x]["Symbol"]]['upper_circuit_limit'])
+        trd_portfolio[x]['upper_circuit_limit'] = result['data'][trd_portfolio[x]["Market"] + ":" + trd_portfolio[x]["Symbol"]]['upper_circuit_limit']
+
+print(trd_portfolio.values())

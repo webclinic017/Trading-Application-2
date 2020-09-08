@@ -658,7 +658,7 @@ def RENKO_TRIMA(company_data):
                                              transaction_type=kite.TRANSACTION_TYPE_SELL, quantity=abs(positions(company_data['instrument_token'])),
                                              order_type=kite.ORDER_TYPE_LIMIT, price=round(target(trd_portfolio[company_data['instrument_token']]['Orderid'], 'Up'), 1), product=kite.PRODUCT_MIS)
                             trd_portfolio[company_data['instrument_token']]['Target_order'] = "YES"
-                    if ((positions(company_data['instrument_token'])) < 0):
+                    if (positions(company_data['instrument_token'])) < 0:
                         if trd_portfolio[company_data['instrument_token']]['Target_order'] != "YES":
                             trd_portfolio[company_data['instrument_token']]['Target_order_id'] = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE, tradingsymbol=trd_portfolio[company_data['instrument_token']]['Symbol'],
                                              transaction_type=kite.TRANSACTION_TYPE_BUY, quantity=abs(positions(company_data['instrument_token'])),

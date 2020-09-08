@@ -1,0 +1,90 @@
+def target(orderid, direction):
+    global profit_Final, profit_temp
+    try:
+        day_profit = 0
+        carry_forward = 0
+        trade_profit = 0
+        orders = kite.orders()
+        for order in orders:
+            price = order['average_price']
+            print(price)
+            symbol = order['tradingsymbol']
+            print(symbol)
+            type = order['transaction_type']
+            print(type)
+            token = order['instrument_token']
+            print(token)
+            volume = order['quantity'] * 1000
+            print(volume)
+            status = order['status']
+            print(status)
+            if type == 'BUY' and status == 'COMPLETE':
+                profit[token][1] = price
+            elif type == 'SELL' and status == 'COMPLETE':
+                profit[token][2] = price
+            profit[token][0] = symbol
+            profit[token][4] = volume
+            if (profit[token][1] != 0) & (profit[token][2] != 0):
+                buy_brookerage = min((profit[token][1] * volume * 0.0003), 20)
+                print(buy_brookerage)
+                sell_brookerage = min((profit[token][2] * volume * 0.0003), 20)
+                print(sell_brookerage)
+                # stt_ctt = profit[token][2] * volume * 0.00025
+                buy_tran = profit[token][1] * volume * 0.000009
+                print(buy_tran)
+                sell_tran = profit[token][2] * volume * 0.000009
+                print(sell_tran)
+                gst = (buy_brookerage + sell_brookerage + buy_tran + sell_tran) * 0.18
+                print(gst)
+                sebi_total = round((profit[token][1] + profit[token][2]) * volume * 0.000001, 0)
+                print(sebi_total)
+                stamp_charges = profit[token][1] * volume * 0.000001
+                print(stamp_charges)
+                profit[token][5] = sebi_total + gst + sell_tran + buy_tran + buy_brookerage + sell_brookerage + stamp_charges
+                profit[token][3] = ((profit[token][2] - profit[token][1]) * volume) - profit[token][5]
+                profit[token][6] = profit[token][3] - profit[token][5]
+                profit_temp = pd.DataFrame([profit[token]],
+                                           columns=["Symbol", "SELL Price", "BUY Price", "Profit", "Volume", "Charges",
+                                                    "final_profit"])
+                profit_Final = profit_Final.append(profit_temp)
+                profit_Final.drop_duplicates(keep='first', inplace=True)
+                profit[token][1] = 0
+                profit[token][2] = 0
+        print(profit_Final.to_string())
+        for x in range(len(profit_Final)):
+            carry_forward = carry_forward + profit_Final.iloc[-(x + 1), 6]
+        print(carry_forward)
+
+        Order_data = kite.order_history(orderid)
+        for item in Order_data:
+            if item['status'] == "COMPLETE":
+                traded_price = item['average_price']
+                print(traded_price)
+                traded_quantity = item['quantity'] * 1000
+                print(traded_quantity)
+                Brokerage = min(((traded_price * traded_quantity) * 0.0003)*2, 40)
+                print(Brokerage)
+                # STT = (traded_price * traded_quantity) * (.03 / 100)
+                TNXChrgs = ((traded_price * traded_quantity) * 2) * .000009
+                print(TNXChrgs)
+                GST = (Brokerage + TNXChrgs) * 0.18
+                print(GST)
+                SEBIChrgs = ((traded_price * 2) * traded_quantity) * 0.000001
+                print(SEBIChrgs)
+                StampDuty = ((traded_price * 2) * traded_quantity) * 0.000001
+                print(StampDuty)
+                order_charges = Brokerage + TNXChrgs + GST + SEBIChrgs + StampDuty
+                print(order_charges)
+                if carry_forward < 0:
+                    target_amount = abs((order_charges * -2) + carry_forward) / traded_quantity
+                    print(target_amount)
+                else:
+                    target_amount = abs(order_charges * 2)/traded_quantity
+                    print(target_amount)
+                if direction == "Up":
+                    return ((traded_price + target_amount) - ((traded_price + target_amount) % .0025)) + 0.0025
+                elif direction == "Down":
+                    return (traded_price - target_amount) - ((traded_price - target_amount) % .0025)
+    except Exception as e:
+        traceback.print_exc()
+        target(orderid, direction)

@@ -42,7 +42,7 @@ def quantity(ltp):
     global order_quantity
     mar = KiteConnect.margins(self)
     equity_mar = mar['equity']['net']
-    maxquantity = min(equity_mar/ltp,5000)
+    maxquantity = min(equity_mar/ltp, 5000)
     multiplier = 0
     while (multiplier * 75) < maxquantity:
         multiplier = multiplier+1

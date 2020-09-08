@@ -799,12 +799,12 @@ def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
                         if (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 3] == "SELL") and \
                                 (trd_portfolio[company_data['instrument_token']]['Direction'] != "Down") and \
                                 (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1] < RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 6]):
-                            renko_loop_initiator = threading.Thread(target=RENKO_TRIMA, args=[company_data['instrument_token']])
+                            renko_loop_initiator = threading.Thread(target=RENKO_TRIMA, args=(company_data['instrument_token'],))
                             renko_loop_initiator.start()
                         elif (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 3] == "BUY") and \
                                 trd_portfolio[company_data['instrument_token']]['Direction'] != "Up" and \
                                 (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1] > RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 6]):
-                            renko_loop_initiator = threading.Thread(target=RENKO_TRIMA, args=[company_data['instrument_token']])
+                            renko_loop_initiator = threading.Thread(target=RENKO_TRIMA, args=(company_data['instrument_token'],))
                             renko_loop_initiator.start()
             else:
                 pass
