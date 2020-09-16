@@ -13,7 +13,7 @@ def circuit_limits():
             r = s.get(request_url, headers=headers)
             result = json.loads(r.content)
             # print(result)
-            trd_portfolio[entries]['lower_circuit_limit'] = result['data'][trd_portfolio[x]["Market"] + ":" + trd_portfolio[entries]["Symbol"]][
+            trd_portfolio[entries]['lower_circuit_limit'] = result['data'][trd_portfolio[entries]["Market"] + ":" + trd_portfolio[entries]["Symbol"]][
                     'lower_circuit_limit']
-            trd_portfolio[entries]['upper_circuit_limit'] = result['data'][trd_portfolio[x]["Market"] + ":" + trd_portfolio[entries]["Symbol"]][
+            trd_portfolio[entries]['upper_circuit_limit'] = result['data'][trd_portfolio[entries]["Market"] + ":" + trd_portfolio[entries]["Symbol"]][
                     'upper_circuit_limit']

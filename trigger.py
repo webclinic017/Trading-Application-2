@@ -180,8 +180,8 @@ def trigger(token):
         pass
 
 
-if __name__ == '__main__':
-    print("Trigger started")
-    while ((carry_forward/day_margin) * 100) < 2:
-        for instrument in trd_portfolio:
-            trigger(instrument)
+# if __name__ == '__main__':
+#     print("Trigger started")
+#     while ((carry_forward/day_margin) * 100) < 2:
+#         for instrument in trd_portfolio:
+#             trigger(instrument)

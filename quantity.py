@@ -15,28 +15,33 @@ from kiteconnect import KiteTicker
 from kiteconnect import exceptions
 from kiteconnect.exceptions import DataException
 from requests.exceptions import ReadTimeout
-from datasetup import *
+import datasetup as ds
 
 
 def quantity():
-    global trd_portfolio, day_margin
     try:
-        for items in trd_portfolio:
-            if trd_portfolio[items]['Segment'] == "Options":  # calculating quantity for options
-                maxquantity = min(day_margin / trd_portfolio[items]['LTP'], trd_portfolio[items]['max_quantity'])
+        temp_open_margin = KiteConnect.margins(ds.kite)
+        temp_day_margin = temp_open_margin['equity']['net']
+        for items in ds.trd_portfolio:
+            if ds.trd_portfolio[items]['Segment'] == "Options":  # calculating quantity for options
+                maxquantity = min(temp_day_margin / ds.trd_portfolio[items]['LTP'], ds.trd_portfolio[items]['max_quantity'])
                 multiplier = 0
-                while (multiplier * 75) < trd_portfolio[items]['max_quantity']:
+                while (multiplier * 75) < maxquantity: # ds.trd_portfolio[items]['max_quantity']:
                     multiplier = multiplier + 1
                 else:
-                    trd_portfolio[items]['Tradable_quantity'] = (multiplier - 1) * 75
-            elif trd_portfolio[items]['Segment'] == "Equity":  # calculating quantity for equities
-                if trd_portfolio[items]['LTP'] != 0:
-                    if ((day_margin * trd_portfolio[items]['margin_multiplier']) / (trd_portfolio[items]['LTP'] * trd_portfolio[items]['Quantity_multiplier'])) - trd_portfolio[items]['buffer_quantity'] < 1:
-                        trd_portfolio[items]['Tradable_quantity'] = 0
+                    ds.trd_portfolio[items]['Tradable_quantity'] = (multiplier - 1) * 75
+            elif ds.trd_portfolio[items]['Segment'] != "Options":  # calculating quantity for equities
+                if ds.trd_portfolio[items]['LTP'] != 0:
+                    if ((temp_day_margin * ds.trd_portfolio[items]['margin_multiplier']) / (ds.trd_portfolio[items]['LTP'] * ds.trd_portfolio[items]['Quantity_multiplier'])) - ds.trd_portfolio[items]['buffer_quantity'] < 1:
+                        ds.trd_portfolio[items]['Tradable_quantity'] = 0
+                        print("a")
                     else:
-                        trd_portfolio[items]['Tradable_quantity'] = int(round(min(((day_margin * trd_portfolio[items]['margin_multiplier']) / (trd_portfolio[items]['LTP'] * trd_portfolio[items][
-                            'Quantity_multiplier'])) - trd_portfolio[items]['buffer_quantity'],
-                                                                                  trd_portfolio[items]['max_quantity']), 0))
+                        ds.trd_portfolio[items]['Tradable_quantity'] = int(round(min(((ds.day_margin * ds.trd_portfolio[items]['margin_multiplier']) / (ds.trd_portfolio[items]['LTP'] * ds.trd_portfolio[items][
+                            'Quantity_multiplier'])) - ds.trd_portfolio[items]['buffer_quantity'],
+                                                                                  ds.trd_portfolio[items]['max_quantity']), 0))
+                        print("b", ds.trd_portfolio[items]['Tradable_quantity'])
+                        print(str(ds.day_margin) + "*" + str(ds.trd_portfolio[items]['margin_multiplier']) + "/" + str(ds.trd_portfolio[items]['LTP']) + "*" + str(ds.trd_portfolio[items][
+                            'Quantity_multiplier']) + "-" + str(ds.trd_portfolio[items]['buffer_quantity']), str(ds.trd_portfolio[items]['max_quantity']))
     except ReadTimeout:
         traceback.print_exc()
         print("positions read timeout exception")
