@@ -20,18 +20,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/final.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/Trading-Application.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Trading-Application.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2020-08-28.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/2020-09-03.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/2020-09-07.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Target.py" beforeDir="false" afterPath="$PROJECT_DIR$/Target.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/circuit_limits.py" beforeDir="false" afterPath="$PROJECT_DIR$/circuit_limits.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/datasetup.py" beforeDir="false" afterPath="$PROJECT_DIR$/datasetup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/postback.py" beforeDir="false" afterPath="$PROJECT_DIR$/postback.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/quantity.py" beforeDir="false" afterPath="$PROJECT_DIR$/quantity.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trigger.py" beforeDir="false" afterPath="$PROJECT_DIR$/trigger.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/usdinr.py" beforeDir="false" afterPath="$PROJECT_DIR$/usdinr.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +53,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="full.screen.before.presentation.mode" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../Ptactice" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="Errors" />
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/USD-INR.py" />
   </component>
   <component name="RecentsManager">
@@ -69,7 +61,7 @@
       <recent name="C:\Users\gkaranam\PycharmProjects\Trading-Application" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.usdinr (1)">
+  <component name="RunManager" selected="Python.trigger">
     <configuration name="Generate Access Token" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Trading-Application" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -112,48 +104,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="circuit_limits" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Trading-Application" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/circuit_limits.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="datasetup" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Trading-Application" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/datasetup.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="postback" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Trading-Application" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -167,6 +117,48 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/postback.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="ticks2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Trading-Application" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ticks2.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="trigger" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Trading-Application" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/trigger.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -198,11 +190,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.trigger" />
         <item itemvalue="Python.usdinr (1)" />
-        <item itemvalue="Python.datasetup" />
-        <item itemvalue="Python.Generate Access Token" />
         <item itemvalue="Python.postback" />
-        <item itemvalue="Python.circuit_limits" />
+        <item itemvalue="Python.Generate Access Token" />
+        <item itemvalue="Python.ticks2" />
       </list>
     </recent_temporary>
   </component>
@@ -505,14 +497,7 @@
       <option name="project" value="LOCAL" />
       <updated>1594640221750</updated>
     </task>
-    <task id="LOCAL-00042" summary="a lot of changes&#10;added postback&#10;updating positions and quantities based on updates from post back">
-      <created>1599542357582</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1599542357582</updated>
-    </task>
-    <option name="localTasksCounter" value="43" />
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -549,90 +534,81 @@
     <MESSAGE value="recent updates" />
     <MESSAGE value="recent updates where the call to RENKO_TRIMA is made from ticks only when the condition is met. with a following target order" />
     <MESSAGE value="updating with multiple stocks" />
-    <MESSAGE value="a lot of changes&#10;added postback&#10;updating positions and quantities based on updates from post back" />
-    <option name="LAST_COMMIT_MESSAGE" value="a lot of changes&#10;added postback&#10;updating positions and quantities based on updates from post back" />
+    <option name="LAST_COMMIT_MESSAGE" value="updating with multiple stocks" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="414" y="175" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1599557755320">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="414" y="175" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1599557755320" />
     <state x="730" y="322" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1595994278511">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="730" y="322" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1595994278511" />
-    <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1600228681460">
+    <state x="449" y="148" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1600768479473">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="449" y="148" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1536.824@0.0.1536.824" timestamp="1600768479473" />
+    <state x="300" y="104" key="CommitChangelistDialog2" timestamp="1594640221070">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="690" y="267" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1600228681460" />
-    <state x="300" y="104" key="CommitChangelistDialog2" timestamp="1599542355619">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="300" y="104" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1599542355619" />
+    <state x="300" y="104" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1594640221070" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1595907699885">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1595907699885" />
-    <state x="348" y="274" width="440" height="491" key="FileChooserDialogImpl" timestamp="1599558568716">
+    <state x="348" y="274" width="440" height="491" key="FileChooserDialogImpl" timestamp="1599492232435">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="348" y="274" width="440" height="491" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1599558568716" />
-    <state width="1899" height="326" key="GridCell.Tab.0.bottom" timestamp="1600231203694">
+    <state x="348" y="274" width="440" height="491" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1599492232435" />
+    <state width="1899" height="125" key="GridCell.Tab.0.bottom" timestamp="1599541878301">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="191" key="GridCell.Tab.0.bottom.inPresentationMode" timestamp="1595918262054">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="191" key="GridCell.Tab.0.bottom.inPresentationMode/0.0.1920.1040@0.0.1920.1040" timestamp="1595918262054" />
-    <state width="1899" height="326" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1600231203694" />
-    <state width="1899" height="326" key="GridCell.Tab.0.center" timestamp="1600231203694">
+    <state width="1899" height="125" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1599541878301" />
+    <state width="1899" height="125" key="GridCell.Tab.0.center" timestamp="1599541878300">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="191" key="GridCell.Tab.0.center.inPresentationMode" timestamp="1595918262054">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="191" key="GridCell.Tab.0.center.inPresentationMode/0.0.1920.1040@0.0.1920.1040" timestamp="1595918262054" />
-    <state width="1899" height="326" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1600231203694" />
-    <state width="1899" height="326" key="GridCell.Tab.0.left" timestamp="1600231203693">
+    <state width="1899" height="125" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1599541878300" />
+    <state width="1899" height="125" key="GridCell.Tab.0.left" timestamp="1599541878300">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="191" key="GridCell.Tab.0.left.inPresentationMode" timestamp="1595918262054">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="191" key="GridCell.Tab.0.left.inPresentationMode/0.0.1920.1040@0.0.1920.1040" timestamp="1595918262054" />
-    <state width="1899" height="326" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1600231203693" />
-    <state width="1899" height="326" key="GridCell.Tab.0.right" timestamp="1600231203694">
+    <state width="1899" height="125" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1599541878300" />
+    <state width="1899" height="125" key="GridCell.Tab.0.right" timestamp="1599541878300">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="191" key="GridCell.Tab.0.right.inPresentationMode" timestamp="1595918262054">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1899" height="191" key="GridCell.Tab.0.right.inPresentationMode/0.0.1920.1040@0.0.1920.1040" timestamp="1595918262054" />
-    <state width="1899" height="326" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1600231203694" />
-    <state width="1899" height="263" key="GridCell.Tab.1.bottom" timestamp="1600229147399">
+    <state width="1899" height="125" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1599541878300" />
+    <state width="1899" height="364" key="GridCell.Tab.1.bottom" timestamp="1599457336643">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="263" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1600229147399" />
-    <state width="1899" height="263" key="GridCell.Tab.1.center" timestamp="1600229147399">
+    <state width="1899" height="364" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1599457336643" />
+    <state width="1899" height="364" key="GridCell.Tab.1.center" timestamp="1599457336643">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="263" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1600229147399" />
-    <state width="1899" height="263" key="GridCell.Tab.1.left" timestamp="1600229147399">
+    <state width="1899" height="364" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1599457336643" />
+    <state width="1899" height="364" key="GridCell.Tab.1.left" timestamp="1599457336643">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="263" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1600229147399" />
-    <state width="1899" height="263" key="GridCell.Tab.1.right" timestamp="1600229147399">
+    <state width="1899" height="364" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1599457336643" />
+    <state width="1899" height="364" key="GridCell.Tab.1.right" timestamp="1599457336643">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="263" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1600229147399" />
-    <state x="461" y="165" key="SettingsEditor" timestamp="1599558940595">
+    <state width="1899" height="364" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1599457336643" />
+    <state x="552" y="263" key="Vcs.Push.Dialog.v2" timestamp="1595423989052">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="461" y="165" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1599558940595" />
-    <state x="552" y="263" key="Vcs.Push.Dialog.v2" timestamp="1600229164422">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="552" y="263" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1600229164422" />
+    <state x="552" y="263" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1595423989052" />
     <state width="968" height="528" key="XDebugger.FullValuePopup" timestamp="1596017841293">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -641,10 +617,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="440" y="20" width="1006" height="731" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1920.1040@0.0.1920.1040" timestamp="1596017602720" />
-    <state x="668" y="119" width="1111" height="801" key="find.popup" timestamp="1599855474810">
+    <state x="667" y="119" width="585" height="801" key="find.popup" timestamp="1598590989053">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="668" y="119" width="1111" height="801" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1599855474810" />
+    <state x="667" y="119" width="585" height="801" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1598590989053" />
     <state x="623" y="225" key="search.everywhere.popup" timestamp="1595494191493">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
