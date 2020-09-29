@@ -15,7 +15,7 @@ import threading
 
 api_k = "dysoztj41hntm1ma"  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94"  # api_secret
-access_token = "Tnir63yOjF9pMQUSEwsFSQmJkRrDFeic"
+access_token = "2lYGEf349hlFQ7xLj6RXKm1gzY7B9dwa"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -244,9 +244,6 @@ def index():
     if not os.path.exists(log_name()):
         open(log_name(), 'a+').close()
     return open(log_name()).read()
-
-
-app.run(debug=True, host='0.0.0.0', port=80)
 
 
 def calculate_ohlc_one_minute(company_data):
@@ -1019,6 +1016,7 @@ def target_order_status(orderid):
 
 def trigger(token):
     try:
+        global HA_Final, profit, trd_portfolio
         trigger_thread_running = "YES"
         if len(HA_Final.loc[HA_Final.Symbol == trd_portfolio[token]['Symbol']]) >= 1:
             if ((HA_Final.loc[HA_Final.Symbol == trd_portfolio[token]['Symbol']].iloc[-1, 2]) == (

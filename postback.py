@@ -1,8 +1,7 @@
-import quantity
 from flask import Flask, request
 import os
 import datetime
-from Target import target
+import final
 import json
 
 app = Flask(__name__)
@@ -20,12 +19,12 @@ def post():
     f = open(log_name(), 'a+')
     order_response = request.get_data()
     f.write(str(order_response) + '\n')
-    quantity.quantity()
+    final.quantity()
     structured_response = json.loads(order_response)
     print(structured_response['average_price'], structured_response['tradingsymbol'], structured_response['transaction_type'], structured_response['quantity'], structured_response['status'], structured_response['instrument_token'])
     # circuit_limits()
-    target(structured_response['average_price'], structured_response['tradingsymbol'], structured_response['transaction_type'], structured_response['quantity'], structured_response['status'], structured_response['instrument_token'])
-    quantity.quantity()
+    final.target(structured_response['average_price'], structured_response['tradingsymbol'], structured_response['transaction_type'], structured_response['quantity'], structured_response['status'], structured_response['instrument_token'])
+    final.quantity()
     f.close()
     return 'done'
 
