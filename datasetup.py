@@ -12,7 +12,7 @@ headers = {  # header for API request to update circuit limits
     'Authorization': 'token dysoztj41hntm1ma:' + access_token
 }
 
-opening_margin = KiteConnect.margins(kite)
+opening_margin = kite.margins(kite)
 day_margin = opening_margin['equity']['net']
 
 candle_thread_running = ""

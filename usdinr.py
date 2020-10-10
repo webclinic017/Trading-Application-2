@@ -181,6 +181,7 @@ def calculate_ohlc_one_minute(company_data):
             # adding the row into the final ohlc table
             ds.ohlc_final_1min = ds.ohlc_final_1min.append(ds.ohlc_temp)
             ds.HA_Final = ds.HA_Final.append(ds.HA_temp)
+            # code to add HA_Temp to sql database
             print(ds.HA_temp.to_string())
             # print(ohlc_temp.to_string())
 
