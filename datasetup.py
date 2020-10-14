@@ -12,18 +12,8 @@ headers = {  # header for API request to update circuit limits
     'Authorization': 'token dysoztj41hntm1ma:' + access_token
 }
 
-opening_margin = kite.margins(kite)
-day_margin = opening_margin['equity']['net']
-
-candle_thread_running = ""
-trigger_thread_running = ""
-day_profit_percent = 0
-last_order_id = 0
-carry_forward = 0
-last_order_type = ''
-last_order_status = ''
-tick_count = 0
-order_count = 0
+# opening_margin = kite.margins(kite)
+# day_margin = opening_margin['equity']['net']
 
 trd_portfolio = {
     4708097: {"Market": "NSE", "Segment": "Equity", "Symbol": "RBLBANK", "max_quantity": 100, 'Direction': "", 'Orderid': 0,
