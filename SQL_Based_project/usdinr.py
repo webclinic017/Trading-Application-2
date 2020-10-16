@@ -10,7 +10,18 @@ from circuit_limits import circuit_limits
 from requests.exceptions import ReadTimeout
 import pandas as pd
 import socket
+import mysql.connector
 # from trigger import *
+
+
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    passwd="password123",
+    database="testdb"
+)
+
+my_cursor = mydb.cursor()
 
 
 def calculate_ohlc_one_minute(company_data):
@@ -22,7 +33,6 @@ def calculate_ohlc_one_minute(company_data):
             ds.ohlc_temp = pd.DataFrame([ds.ohlc[company_data['instrument_token']]],
                                      columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA",
                                               "TMA"])
-            # print(ohlc_temp.head(), ohlc_final_1min.head())
             ds.HA_temp = pd.DataFrame([ds.HA[company_data['instrument_token']]],
                                    columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA",
                                             "TMA"])
@@ -180,10 +190,15 @@ def calculate_ohlc_one_minute(company_data):
 
             # adding the row into the final ohlc table
             ds.ohlc_final_1min = ds.ohlc_final_1min.append(ds.ohlc_temp)
+            print(ds.trd_portfolio[company_data['instrument_token']]['Symbol']+"_ohlc_final_1min",  ds.ohlc_temp.iloc[-1, 0],  ds.ohlc_temp.iloc[-1, 1],  ds.ohlc_temp.iloc[-1, 2], ds.ohlc_temp.iloc[-1, 3],  ds.ohlc_temp.iloc[-1, 4], ds.ohlc_temp.iloc[-1, 5], ds.ohlc_temp.iloc[-1, 6], ds.ohlc_temp.iloc[-1, 7], ds.ohlc_temp.iloc[-1, 8], ds.ohlc_temp.iloc[-1, 9])
+            # sql = "INSERT INTO %s (Symbol, Time, Open, High, Low, Close, TR, ATR, SMA, TMA) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            print("INSERT INTO " + str(ds.trd_portfolio[company_data['instrument_token']]['Symbol']) + "_ohlc_final_1min (Symbol, Time, Open, High, Low, Close, TR, ATR, SMA, TMA) values (" + str(ds.ohlc_temp.iloc[-1, 0]) + "," + str(ds.ohlc_temp.iloc[-1, 1]) + "," + str(ds.ohlc_temp.iloc[-1, 2]) + "," + str(ds.ohlc_temp.iloc[-1, 3]) + "," + str(ds.ohlc_temp.iloc[-1, 4]) + "," + str(ds.ohlc_temp.iloc[-1, 5]) + "," + str(ds.ohlc_temp.iloc[-1, 6]) + "," + str(ds.ohlc_temp.iloc[-1, 7]) + "," + str(ds.ohlc_temp.iloc[-1, 8]) + "," + str(ds.ohlc_temp.iloc[-1, 9]) + ")")
+            my_cursor.execute("INSERT INTO " + str(ds.trd_portfolio[company_data['instrument_token']]['Symbol']) + "_ohlc_final_1min values (\"" + str(ds.ohlc_temp.iloc[-1, 0]) + "\",\"" + str(ds.ohlc_temp.iloc[-1, 1]) + "\"," + str(ds.ohlc_temp.iloc[-1, 2]) + "," + str(ds.ohlc_temp.iloc[-1, 3]) + "," + str(ds.ohlc_temp.iloc[-1, 4]) + "," + str(ds.ohlc_temp.iloc[-1, 5]) + "," + str(ds.ohlc_temp.iloc[-1, 6]) + "," + str(ds.ohlc_temp.iloc[-1, 7]) + "," + str(ds.ohlc_temp.iloc[-1, 8]) + "," + str(ds.ohlc_temp.iloc[-1, 9]) + ")")
+            mydb.commit()
             ds.HA_Final = ds.HA_Final.append(ds.HA_temp)
             # code to add HA_Temp to sql database
             print(ds.HA_temp.to_string())
-            # print(ohlc_temp.to_string())
+            print(ds.ohlc_temp.to_string())
 
         # making ohlc for new candle
         ds.ohlc[company_data['instrument_token']][2] = company_data['last_price']  # open
@@ -985,18 +1000,18 @@ def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
                         company_data['last_trade_time'].time()) < ds.trd_portfolio[company_data['instrument_token']]['end_time']:
                     candle = threading.Thread(target=calculate_ohlc_one_minute, args=(company_data,))
                     candle.start()
-                    if ds.trd_portfolio[company_data['instrument_token']]['Trade'] == "YES":
-                        if ((ds.carry_forward / ds.day_margin) * 100) < 2:
-                            if ds.trigger_thread_running != 'YES':
-                                if len(ds.HA_Final.loc[
-                                           ds.HA_Final.Symbol == ds.trd_portfolio[company_data['instrument_token']][
-                                               'Symbol']]) >= 1:
-                                    if ds.HA_Final.loc[
-                                        ds.HA_Final.Symbol == ds.trd_portfolio[company_data['instrument_token']][
-                                            'Symbol']].iloc[-1, 8] != 0:
-                                        order_trigger_loop_initiator = threading.Thread(target=trigger, args=[
-                                                company_data['instrument_token']])
-                                        order_trigger_loop_initiator.start()
+                    # if ds.trd_portfolio[company_data['instrument_token']]['Trade'] == "YES":
+                    #     if ((ds.carry_forward / ds.day_margin) * 100) < 2:
+                    #         if ds.trigger_thread_running != 'YES':
+                    #             if len(ds.HA_Final.loc[
+                    #                        ds.HA_Final.Symbol == ds.trd_portfolio[company_data['instrument_token']][
+                    #                            'Symbol']]) >= 1:
+                    #                 if ds.HA_Final.loc[
+                    #                     ds.HA_Final.Symbol == ds.trd_portfolio[company_data['instrument_token']][
+                    #                         'Symbol']].iloc[-1, 8] != 0:
+                    #                     order_trigger_loop_initiator = threading.Thread(target=trigger, args=[
+                    #                             company_data['instrument_token']])
+                    #                     order_trigger_loop_initiator.start()
     except Exception as e:
         traceback.print_exc(e)
 

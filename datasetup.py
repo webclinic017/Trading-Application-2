@@ -4,7 +4,7 @@ import datetime
 
 api_k = "dysoztj41hntm1ma"  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94"  # api_secret
-access_token = "ybwbzq2nPydxn52ORdT6VoE4gyyKZe9N"
+access_token = "AseyEYXPapUvzuqlioXRL9k7vR4xYDnX"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -12,8 +12,8 @@ headers = {  # header for API request to update circuit limits
     'Authorization': 'token dysoztj41hntm1ma:' + access_token
 }
 
-# opening_margin = kite.margins(kite)
-# day_margin = opening_margin['equity']['net']
+opening_margin = kite.margins(kite)
+day_margin = opening_margin['equity']['net']
 
 trd_portfolio = {
     4708097: {"Market": "NSE", "Segment": "Equity", "Symbol": "RBLBANK", "max_quantity": 100, 'Direction': "", 'Orderid': 0,
@@ -53,3 +53,7 @@ for x in trd_portfolio:
     RENKO[x] = ["Symbol", 0, 0, "Signal", "None", 0, 0]
     HA[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0, 0, 0]
     profit[x] = ["Symbol", 0, 0, "Profit", 0, 0, 0]  # ["Symbol", "BUY Price", "SELL Price", "Profit", "Volume", "Charges", "final_profit"]
+
+
+def candle_thread_running():
+    return None

@@ -88,3 +88,5 @@ def target(orderid, direction):
     except Exception as e:
         traceback.print_exc()
         target(orderid, direction)
+
+(Symbol, Time, Open, High, Low, Close, TR, ATR, SMA, TMA)
