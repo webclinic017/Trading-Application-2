@@ -248,7 +248,7 @@ def index():
 
 def calculate_ohlc_one_minute(company_data):
     try:
-        global HA_Final, ohlc_final_1min, RENKO_Final
+        global HA_Final, ohlc_final_1min, RENKO_Final, candle_thread_running
         # below if condition is to check the data being received, and the data present are of the same minute or not
         candle_thread_running = "YES"
         if (str(((company_data["timestamp"]).replace(second=0))) != ohlc[company_data['instrument_token']][1]) and (
@@ -401,14 +401,11 @@ def calculate_ohlc_one_minute(company_data):
                          ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
                          -6, 8],
                      ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -7, 8],
+                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-7, 8],
                      ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -8, 8],
+                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-8, 8],
                      ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -9, 8]]
+                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-9, 8]]
                 ohlc_temp.iloc[-1, 9] = round((sum(c) / 10), 2)
             # TMA calculation complete for ohlc
 
@@ -418,12 +415,12 @@ def calculate_ohlc_one_minute(company_data):
             print(HA_temp.to_string())
             # print(ohlc_temp.to_string())
 
-        # making ohlc for new candle
-        ohlc[company_data['instrument_token']][2] = company_data['last_price']  # open
-        ohlc[company_data['instrument_token']][3] = company_data['last_price']  # high
-        ohlc[company_data['instrument_token']][4] = company_data['last_price']  # low
-        ohlc[company_data['instrument_token']][5] = company_data['last_price']  # close
-        ohlc[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]['Symbol']
+            # making ohlc for new candle
+            ohlc[company_data['instrument_token']][2] = company_data['last_price']  # open
+            ohlc[company_data['instrument_token']][3] = company_data['last_price']  # high
+            ohlc[company_data['instrument_token']][4] = company_data['last_price']  # low
+            ohlc[company_data['instrument_token']][5] = company_data['last_price']  # close
+            ohlc[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]['Symbol']
 
         if ohlc[company_data['instrument_token']][3] < company_data['last_price']:  # calculating high
             ohlc[company_data['instrument_token']][3] = company_data['last_price']
@@ -794,9 +791,7 @@ def calculate_ohlc_one_minute(company_data):
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[
                             RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]
                 if RENKO[company_data['instrument_token']][3] == "SELL":
-                    if company_data['last_price'] <= RENKO[company_data['instrument_token']][1] - ohlc_final_1min.loc[
-                        ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                        -1, 7]:
+                    if company_data['last_price'] <= RENKO[company_data['instrument_token']][1] - ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]:
                         RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] - \
                                                                      ohlc_final_1min.loc[ohlc_final_1min.Symbol ==
                                                                                          trd_portfolio[company_data[
