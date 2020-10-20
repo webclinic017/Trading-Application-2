@@ -14,7 +14,7 @@ my_cursor = mydb.cursor()
 
 api_k = "dysoztj41hntm1ma"  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94"  # api_secret
-access_token = "284EmHD7Nt8b2Z4dUORYbsNIKEvhv424"
+access_token = "jxyZg7GKruTDrxoEV9dXML070YL3XM29"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -67,8 +67,8 @@ ohlc = {}  # python dictionary to store the ohlc data in it
 ohlc_temp = pd.DataFrame(columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
 ohlc_final_1min = pd.DataFrame(columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
 RENKO = {}  # python dictionary to store the renko chart data in it
-RENKO_temp = pd.DataFrame(columns=["Symbol", "Open", "Close", "Signal", "Position", "SMA", "TMA"])
-RENKO_Final = pd.DataFrame(columns=["Symbol", "Open", "Close", "Signal", "Position", "SMA", "TMA"])
+RENKO_temp = pd.DataFrame(columns=["Symbol", "Open", "Close", "Direction", "Position", "SMA", "TMA"])
+RENKO_Final = pd.DataFrame(columns=["Symbol", "Open", "Close", "Direction", "Position", "SMA", "TMA"])
 HA = {}  # python dictionary to store the ohlc data in it
 HA_temp = pd.DataFrame(columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
 HA_Final = pd.DataFrame(columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
