@@ -20,9 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="first sql insert statement worked, need to add sql insert for every append.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/datasetup.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/datasetup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/sql queeries" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/sql queeries" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -212,13 +210,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1554405465942</updated>
-    </task>
-    <task id="LOCAL-00002" summary="cloned and modified ticks. did some corrections.">
-      <created>1554797720442</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1554797720443</updated>
     </task>
     <task id="LOCAL-00003" summary="cloned and modified ticks. did some corrections.">
       <created>1555484702792</created>
@@ -556,7 +547,14 @@
       <option name="project" value="LOCAL" />
       <updated>1603105257541</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="first sql insert statement worked, need to add sql insert for every append.">
+      <created>1603194928802</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1603194928802</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -674,11 +672,11 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="461" y="165" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1601451495559" />
-    <state x="552" y="263" key="Vcs.Push.Dialog.v2" timestamp="1603105262994">
+    <state x="552" y="263" key="Vcs.Push.Dialog.v2" timestamp="1603194946064">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="442" y="208" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1600844617380" />
-    <state x="552" y="263" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1603105262994" />
+    <state x="552" y="263" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1603194946064" />
     <state width="968" height="528" key="XDebugger.FullValuePopup" timestamp="1596017841293">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

@@ -11,16 +11,34 @@ SHOW DATABASES;
 USE testdb;
 SHOW TABLES;
 
-describe USDINR20OCTFUT_ohlc_final_1min;
+describe usdinr20octfut_renko_final;
 
 INSERT INTO USDINR20OCTFUT_ohlc_final_1min values ("ICICIBANK", "14:41:00", 172, 172, 172, 172, 0, 0, 0, 0);
 
 select * from RBLBANK_ohlc_final_1min;
 select * from RBLBANK_ohlc_final_1min;
-select * from USDINR20OCTFUT_ohlc_final_1min;
+select * from usdinr20octfut_renko_final;
 
-drop table users;
+drop table rblbank_renko_final;
 
 CREATE TABLE RBLBANK_HA_Final (Symbol VARCHAR(255), Time VARCHAR(255),Open decimal(10,4),High decimal(10,4),Low decimal(10,4),Close decimal(10,4),TR decimal(10,4),ATR decimal(10,4),SMA decimal(10,4),TMA decimal(10,4));
 
-INSERT INTO USDINR20OCTFUT_ohlc_final_1min (Symbol, Time, Open, High, Low, Close, TR, ATR, SMA, TMA) values ("USDINR20OCTFUT","2020-10-16 16:08:00",778453.3975,778485.3975,778748.3975,758453.3975,0.0,0,0,0)
+INSERT INTO USDINR20OCTFUT_ohlc_final_1min (Symbol, Time, Open, High, Low, Close, TR, ATR, SMA, TMA) values ("USDINR20OCTFUT","2020-10-16 16:08:00",778453.3975,778485.3975,778748.3975,758453.3975,0.0,0,0,0);
+
+alter table usdinr20octfut_renko_final drop ATR;
+
+alter table usdinr20octfut_renko_final add Direction varchar(255) after Close;
+
+create table icicibank_renko_final like usdinr20octfut_renko_final;
+
+/*icicibank_ha_final
+icicibank_ohlc_final_1min
+icicibank_renko_final
+rblbank_ha_final
+rblbank_ohlc_final_1min
+rblbank_renko_final
+usdinr20octfut_ha_final
+usdinr20octfut_ohlc_final_1min
+usdinr20octfut_renko_final*/
+
+select * from rblbank_ohlc_final_1min;
