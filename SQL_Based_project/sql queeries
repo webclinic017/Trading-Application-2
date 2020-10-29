@@ -11,13 +11,13 @@ SHOW DATABASES;
 USE testdb;
 SHOW TABLES;
 
-describe usdinr20octfut_renko_final;
+describe order_updates;
 
 INSERT INTO USDINR20OCTFUT_ohlc_final_1min values ("ICICIBANK", "14:41:00", 172, 172, 172, 172, 0, 0, 0, 0);
 
 select * from RBLBANK_ohlc_final_1min;
 select * from RBLBANK_ohlc_final_1min;
-select * from usdinr20octfut_renko_final;
+select * from usdinr20octfut_ohlc_final_1min;
 
 drop table rblbank_renko_final;
 
@@ -29,7 +29,7 @@ alter table usdinr20octfut_renko_final drop ATR;
 
 alter table usdinr20octfut_renko_final add Direction varchar(255) after Close;
 
-create table icicibank_renko_final like usdinr20octfut_renko_final;
+create table ORDER_UPDATES (Symbol VARCHAR(255), Ins_Token integer, Ord_Status VARCHAR(255), Trans_type VARCHAR(255), Avg_Price decimal(10,4), Quantity integer);
 
 /*icicibank_ha_final
 icicibank_ohlc_final_1min
@@ -41,4 +41,6 @@ usdinr20octfut_ha_final
 usdinr20octfut_ohlc_final_1min
 usdinr20octfut_renko_final*/
 
-select * from rblbank_ohlc_final_1min;
+select * from rblbank_renko_final;
+
+create table Processed_orders (OrderId integer);

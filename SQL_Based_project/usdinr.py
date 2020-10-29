@@ -215,12 +215,15 @@ def calculate_ohlc_one_minute(company_data):
             # print(ds.HA_temp.to_string())
             # print(ds.ohlc_temp.to_string())
 
-        # making ohlc for new candle
-        ds.ohlc[company_data['instrument_token']][2] = company_data['last_price']  # open
-        ds.ohlc[company_data['instrument_token']][3] = company_data['last_price']  # high
-        ds.ohlc[company_data['instrument_token']][4] = company_data['last_price']  # low
-        ds.ohlc[company_data['instrument_token']][5] = company_data['last_price']  # close
-        ds.ohlc[company_data['instrument_token']][0] = ds.trd_portfolio[company_data['instrument_token']]['Symbol']
+            # making ohlc for new candle
+            ds.ohlc[company_data['instrument_token']][2] = company_data['last_price']  # open
+            ds.ohlc[company_data['instrument_token']][3] = company_data['last_price']  # high
+            ds.ohlc[company_data['instrument_token']][4] = company_data['last_price']  # low
+            ds.ohlc[company_data['instrument_token']][5] = company_data['last_price']  # close
+            ds.ohlc[company_data['instrument_token']][0] = ds.trd_portfolio[company_data['instrument_token']]['Symbol']
+
+        if ds.ohlc[company_data['instrument_token']][2] == 0:  # assigning open for the first time
+            ds.ohlc[company_data['instrument_token']][2] = company_data['last_price']
 
         if ds.ohlc[company_data['instrument_token']][3] < company_data['last_price']:  # calculating high
             ds.ohlc[company_data['instrument_token']][3] = company_data['last_price']
@@ -231,6 +234,7 @@ def calculate_ohlc_one_minute(company_data):
 
         ds.ohlc[company_data['instrument_token']][5] = company_data['last_price']  # closing price
         ds.ohlc[company_data['instrument_token']][1] = str(((company_data["timestamp"]).replace(second=0)))
+        ds.ohlc[company_data['instrument_token']][0] = ds.trd_portfolio[company_data['instrument_token']]['Symbol']
 
         if (len(ds.HA_Final.loc[
                     ds.HA_Final.Symbol == ds.trd_portfolio[company_data['instrument_token']]['Symbol']]) < 1):
@@ -345,9 +349,9 @@ def calculate_ohlc_one_minute(company_data):
                         my_cursor.execute("INSERT INTO " + str(
                             ds.trd_portfolio[company_data['instrument_token']][
                                 'Symbol']) + "_RENKO_Final values (\"" + str(
-                            ds.RENKO_temp.iloc[-1, 0]) + "\",\"" + str(ds.RENKO_temp.iloc[-1, 1]) + "\"," + str(
-                            ds.RENKO_temp.iloc[-1, 2]) + "," + str(ds.RENKO_temp.iloc[-1, 3]) + "," + str(
-                            ds.RENKO_temp.iloc[-1, 4]) + "," + str(ds.RENKO_temp.iloc[-1, 5]) + "," + str(
+                            ds.RENKO_temp.iloc[-1, 0]) + "\"," + str(ds.RENKO_temp.iloc[-1, 1]) + "," + str(
+                            ds.RENKO_temp.iloc[-1, 2]) + ",\"" + str(ds.RENKO_temp.iloc[-1, 3]) + "\",\"" + str(
+                            ds.RENKO_temp.iloc[-1, 4]) + "\"," + str(ds.RENKO_temp.iloc[-1, 5]) + "," + str(
                             ds.RENKO_temp.iloc[-1, 6]) + ")")
                         mydb.commit()
                     elif company_data['last_price'] <= ds.RENKO[company_data['instrument_token']][1] - ds.ohlc_final_1min.loc[
@@ -426,9 +430,9 @@ def calculate_ohlc_one_minute(company_data):
                         my_cursor.execute("INSERT INTO " + str(
                             ds.trd_portfolio[company_data['instrument_token']][
                                 'Symbol']) + "_RENKO_Final values (\"" + str(
-                            ds.RENKO_temp.iloc[-1, 0]) + "\",\"" + str(ds.RENKO_temp.iloc[-1, 1]) + "\"," + str(
-                            ds.RENKO_temp.iloc[-1, 2]) + "," + str(ds.RENKO_temp.iloc[-1, 3]) + "," + str(
-                            ds.RENKO_temp.iloc[-1, 4]) + "," + str(ds.RENKO_temp.iloc[-1, 5]) + "," + str(
+                            ds.RENKO_temp.iloc[-1, 0]) + "\"," + str(ds.RENKO_temp.iloc[-1, 1]) + "," + str(
+                            ds.RENKO_temp.iloc[-1, 2]) + ",\"" + str(ds.RENKO_temp.iloc[-1, 3]) + "\",\"" + str(
+                            ds.RENKO_temp.iloc[-1, 4]) + "\"," + str(ds.RENKO_temp.iloc[-1, 5]) + "," + str(
                             ds.RENKO_temp.iloc[-1, 6]) + ")")
                         mydb.commit()
 
@@ -507,9 +511,9 @@ def calculate_ohlc_one_minute(company_data):
                         my_cursor.execute("INSERT INTO " + str(
                             ds.trd_portfolio[company_data['instrument_token']][
                                 'Symbol']) + "_RENKO_Final values (\"" + str(
-                            ds.RENKO_temp.iloc[-1, 0]) + "\",\"" + str(ds.RENKO_temp.iloc[-1, 1]) + "\"," + str(
-                            ds.RENKO_temp.iloc[-1, 2]) + "," + str(ds.RENKO_temp.iloc[-1, 3]) + "," + str(
-                            ds.RENKO_temp.iloc[-1, 4]) + "," + str(ds.RENKO_temp.iloc[-1, 5]) + "," + str(
+                            ds.RENKO_temp.iloc[-1, 0]) + "\"," + str(ds.RENKO_temp.iloc[-1, 1]) + "," + str(
+                            ds.RENKO_temp.iloc[-1, 2]) + ",\"" + str(ds.RENKO_temp.iloc[-1, 3]) + "\",\"" + str(
+                            ds.RENKO_temp.iloc[-1, 4]) + "\"," + str(ds.RENKO_temp.iloc[-1, 5]) + "," + str(
                             ds.RENKO_temp.iloc[-1, 6]) + ")")
                         mydb.commit()
                     elif company_data['last_price'] <= ds.RENKO[company_data['instrument_token']][1] - (ds.RENKO_Final.loc[
@@ -607,9 +611,9 @@ def calculate_ohlc_one_minute(company_data):
                         my_cursor.execute("INSERT INTO " + str(
                             ds.trd_portfolio[company_data['instrument_token']][
                                 'Symbol']) + "_RENKO_Final values (\"" + str(
-                            ds.RENKO_temp.iloc[-1, 0]) + "\",\"" + str(ds.RENKO_temp.iloc[-1, 1]) + "\"," + str(
-                            ds.RENKO_temp.iloc[-1, 2]) + "," + str(ds.RENKO_temp.iloc[-1, 3]) + "," + str(
-                            ds.RENKO_temp.iloc[-1, 4]) + "," + str(ds.RENKO_temp.iloc[-1, 5]) + "," + str(
+                            ds.RENKO_temp.iloc[-1, 0]) + "\"," + str(ds.RENKO_temp.iloc[-1, 1]) + "," + str(
+                            ds.RENKO_temp.iloc[-1, 2]) + ",\"" + str(ds.RENKO_temp.iloc[-1, 3]) + "\",\"" + str(
+                            ds.RENKO_temp.iloc[-1, 4]) + "\"," + str(ds.RENKO_temp.iloc[-1, 5]) + "," + str(
                             ds.RENKO_temp.iloc[-1, 6]) + ")")
                         mydb.commit()
                 if ds.RENKO[company_data['instrument_token']][3] == "SELL":
@@ -687,9 +691,9 @@ def calculate_ohlc_one_minute(company_data):
                         my_cursor.execute("INSERT INTO " + str(
                             ds.trd_portfolio[company_data['instrument_token']][
                                 'Symbol']) + "_RENKO_Final values (\"" + str(
-                            ds.RENKO_temp.iloc[-1, 0]) + "\",\"" + str(ds.RENKO_temp.iloc[-1, 1]) + "\"," + str(
-                            ds.RENKO_temp.iloc[-1, 2]) + "," + str(ds.RENKO_temp.iloc[-1, 3]) + "," + str(
-                            ds.RENKO_temp.iloc[-1, 4]) + "," + str(ds.RENKO_temp.iloc[-1, 5]) + "," + str(
+                            ds.RENKO_temp.iloc[-1, 0]) + "\"," + str(ds.RENKO_temp.iloc[-1, 1]) + "," + str(
+                            ds.RENKO_temp.iloc[-1, 2]) + ",\"" + str(ds.RENKO_temp.iloc[-1, 3]) + "\",\"" + str(
+                            ds.RENKO_temp.iloc[-1, 4]) + "\"," + str(ds.RENKO_temp.iloc[-1, 5]) + "," + str(
                             ds.RENKO_temp.iloc[-1, 6]) + ")")
                         mydb.commit()
                     elif company_data['last_price'] >= ds.RENKO[company_data['instrument_token']][1] + (ds.RENKO_Final.loc[
@@ -787,9 +791,9 @@ def calculate_ohlc_one_minute(company_data):
                         my_cursor.execute("INSERT INTO " + str(
                             ds.trd_portfolio[company_data['instrument_token']][
                                 'Symbol']) + "_RENKO_Final values (\"" + str(
-                            ds.RENKO_temp.iloc[-1, 0]) + "\",\"" + str(ds.RENKO_temp.iloc[-1, 1]) + "\"," + str(
-                            ds.RENKO_temp.iloc[-1, 2]) + "," + str(ds.RENKO_temp.iloc[-1, 3]) + "," + str(
-                            ds.RENKO_temp.iloc[-1, 4]) + "," + str(ds.RENKO_temp.iloc[-1, 5]) + "," + str(
+                            ds.RENKO_temp.iloc[-1, 0]) + "\"," + str(ds.RENKO_temp.iloc[-1, 1]) + "," + str(
+                            ds.RENKO_temp.iloc[-1, 2]) + ",\"" + str(ds.RENKO_temp.iloc[-1, 3]) + "\",\"" + str(
+                            ds.RENKO_temp.iloc[-1, 4]) + "\"," + str(ds.RENKO_temp.iloc[-1, 5]) + "," + str(
                             ds.RENKO_temp.iloc[-1, 6]) + ")")
                         mydb.commit()
         ds.candle_thread_running = "NO"
