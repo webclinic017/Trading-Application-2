@@ -1,12 +1,28 @@
 import traceback
-from datasetup import *
+# from datasetup import *
 import time
 from OpenSSL.SSL import WantReadError
 from kiteconnect import exceptions
 from kiteconnect.exceptions import DataException
 from requests.exceptions import ReadTimeout
 import math
-from subprocess import *
+import mysql.connector
+
+mydb = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    passwd="password123",
+    database="testdb"
+)
+
+my_cursor = mydb.cursor()
+
+
+def sum_all_of_stocks():
+    my_cursor.execute("select sum(open) from rblbank_renko_final")
+    total_quantity = my_cursor.fetchone()
+    return total_quantity[0]
+
 
 
 def round_down(n, decimals=0):
@@ -180,8 +196,17 @@ def trigger(token):
         pass
 
 
-# if __name__ == '__main__':
-#     print("Trigger started")
-#     while ((carry_forward/day_margin) * 100) < 2:
-#         for instrument in trd_portfolio:
-#             trigger(instrument)
+if __name__ == '__main__':
+    print("Trigger started")
+    sum_all_of_stocks()
+
+    # while ((carry_forward/day_margin) * 100) < 2:
+    #     my_cursor.execute("select * from order_updates")
+    #     records = my_cursor.fetchall()
+    #     if my_cursor.rowcount != 0:
+    #         target()
+    #     else:
+    #         trigger()
+
+    #     for instrument in trd_portfolio:
+    #         trigger(instrument)
