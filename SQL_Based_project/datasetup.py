@@ -14,7 +14,7 @@ my_cursor = mydb.cursor()
 
 api_k = "dysoztj41hntm1ma"  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94"  # api_secret
-access_token = "61fo8o55M7C46ZH8UpSsvI3aToc16kV8"
+access_token = "LcRFcmWioIOK3WPyFI3UZtTZgwIAWLcK"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
