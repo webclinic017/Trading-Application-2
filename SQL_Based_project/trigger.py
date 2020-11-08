@@ -100,12 +100,17 @@ def target_order_status(orderid):
         traceback.print_exc(e)
 
 
-def target(price, symbol, transacion_type, volume, status, instrument_token):
+def target():
     try:
         while ord_update_count() > 0:
             order_details = latest_order()
-            print(order_details[0], order_details[1], order_details[2], order_details[3], order_details[4])
-            print("values before target module exe starts: " + str(ds.profit[instrument_token]))
+            print(order_details[0], order_details[1], order_details[2], order_details[3], order_details[4], order_details[5])
+            price = order_details[4]
+            volume = order_details[5]
+            symbol = order_details[0]
+            instrument_token = order_details[1]
+            status = order_details[2]
+            transacion_type = order_details[3]
             volume = volume * ds.trd_portfolio[instrument_token]['Quantity_multiplier']
             if status == "COMPLETE":
                 ds.profit[instrument_token][0] = symbol
