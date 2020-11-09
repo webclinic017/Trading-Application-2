@@ -26,11 +26,12 @@ opening_margin = kite.margins(segment=None)
 print(opening_margin)
 day_margin = opening_margin['equity']['net']
 
+
+
 candle_thread_running = ""
 trigger_thread_running = ""
 day_profit_percent = 0
 last_order_id = 0
-carry_forward = 0
 last_order_type = ''
 last_order_status = ''
 tick_count = 0

@@ -11,7 +11,7 @@ SHOW DATABASES;
 USE testdb;
 SHOW TABLES;
 
-describe usdinr20octfut_renko_final;
+describe order_updates;
 
 INSERT INTO USDINR20OCTFUT_ohlc_final_1min values ("ICICIBANK", "14:41:00", 172, 172, 172, 172, 0, 0, 0, 0);
 
@@ -42,3 +42,11 @@ usdinr20octfut_ohlc_final_1min
 usdinr20octfut_renko_final*/
 
 select * from rblbank_renko_final;
+
+create table Processed_orders (OrderId integer);
+
+select count(*) from order_updates;
+
+select * from order_updates limit 1;
+
+delete from rblbank_renko_final limit 1;
