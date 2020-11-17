@@ -19,14 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="added sql insert statement for order updates which i receive through postback">
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2020-11-17.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/datasetup.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/datasetup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/postback.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/postback.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/trigger.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/trigger.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" afterDir="false" />
-    </list>
+    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="added all the required sql connections. now just need to code for quantity and trigger conditions in sql." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -215,13 +208,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1554405465942</updated>
-    </task>
-    <task id="LOCAL-00011" summary="changed from sbi to Nifty options. modified the quantity calculator.">
-      <created>1560831823800</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1560831823800</updated>
     </task>
     <task id="LOCAL-00012" summary="changed from sbi to Nifty options. modified the quantity calculator.">
       <created>1561018874815</created>
@@ -559,7 +545,14 @@
       <option name="project" value="LOCAL" />
       <updated>1604942826558</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="added all the required sql connections. now just need to code for quantity and trigger conditions in sql.">
+      <created>1605598735645</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1605598735646</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -599,7 +592,8 @@
     <MESSAGE value="adding sql" />
     <MESSAGE value="first sql insert statement worked, need to add sql insert for every append." />
     <MESSAGE value="added sql insert statement for order updates which i receive through postback" />
-    <option name="LAST_COMMIT_MESSAGE" value="added sql insert statement for order updates which i receive through postback" />
+    <MESSAGE value="added all the required sql connections. now just need to code for quantity and trigger conditions in sql." />
+    <option name="LAST_COMMIT_MESSAGE" value="added all the required sql connections. now just need to code for quantity and trigger conditions in sql." />
   </component>
   <component name="WindowStateProjectService">
     <state x="730" y="322" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1603105226121">
