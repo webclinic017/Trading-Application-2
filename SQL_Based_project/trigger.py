@@ -1,3 +1,4 @@
+import socket
 import traceback
 import time
 from OpenSSL.SSL import WantReadError
@@ -26,7 +27,72 @@ print(opening_margin)
 day_margin = opening_margin['equity']['net']
 
 
-def sum_all_of_stocks():
+def quantity():
+    try:
+        temp_open_margin = ds.KiteConnect.margins(ds.kite)
+        temp_day_margin = temp_open_margin['equity']['net']
+        for items in ds.trd_portfolio:
+            if ds.trd_portfolio[items]['Segment'] == "Options":  # calculating quantity for options
+                maxquantity = min(temp_day_margin / ds.trd_portfolio[items]['LTP'], ds.trd_portfolio[items]['max_quantity'])
+                multiplier = 0
+                while (multiplier * 75) < maxquantity: # ds.trd_portfolio[items]['max_quantity']:
+                    multiplier = multiplier + 1
+                else:
+                    ds.trd_portfolio[items]['Tradable_quantity'] = (multiplier - 1) * 75
+            elif ds.trd_portfolio[items]['Segment'] != "Options":  # calculating quantity for equities
+                if ds.trd_portfolio[items]['LTP'] != 0:
+                    if ((temp_day_margin * ds.trd_portfolio[items]['margin_multiplier']) / (ds.trd_portfolio[items]['LTP'] * ds.trd_portfolio[items]['Quantity_multiplier'])) - ds.trd_portfolio[items]['buffer_quantity'] < 1:
+                        ds.trd_portfolio[items]['Tradable_quantity'] = 0
+                        print("a")
+                    else:
+                        ds.trd_portfolio[items]['Tradable_quantity'] = int(round(min(((ds.day_margin * ds.trd_portfolio[items]['margin_multiplier']) / (ds.trd_portfolio[items]['LTP'] * ds.trd_portfolio[items][
+                            'Quantity_multiplier'])) - ds.trd_portfolio[items]['buffer_quantity'],
+                                                                                  ds.trd_portfolio[items]['max_quantity']), 0))
+                        print("b", ds.trd_portfolio[items]['Tradable_quantity'])
+                        print(str(ds.day_margin) + "*" + str(ds.trd_portfolio[items]['margin_multiplier']) + "/" + str(ds.trd_portfolio[items]['LTP']) + "*" + str(ds.trd_portfolio[items][
+                            'Quantity_multiplier']) + "-" + str(ds.trd_portfolio[items]['buffer_quantity']), str(ds.trd_portfolio[items]['max_quantity']))
+            my_cursor.execute("update trd_portfolio set Tradable_quantity = ds.trd_portfolio[items]['Tradable_quantity'] where token = ds.trd_portfolio[items]")
+    except ReadTimeout:
+        traceback.print_exc()
+        print("positions read timeout exception")
+        trigger_thread_running = "NO"
+        pass
+    except socket.timeout:
+        traceback.print_exc()
+        print("positions socket timeout exception")
+        trigger_thread_running = "NO"
+        pass
+    except TypeError:
+        traceback.print_exc()
+        trigger_thread_running = "NO"
+        pass
+    except TypeError:
+        traceback.print_exc()
+        trigger_thread_running = "NO"
+        pass
+    except exceptions.InputException:
+        traceback.print_exc()
+        trigger_thread_running = "NO"
+        pass
+    except ReadTimeout:
+        traceback.print_exc()
+        trigger_thread_running = "NO"
+        pass
+    except exceptions.NetworkException:
+        traceback.print_exc()
+        trigger_thread_running = "NO"
+        pass
+    except Exception as e:
+        traceback.print_exc(e)
+        trigger_thread_running = "NO"
+        pass
+    except WantReadError as e:
+        traceback.print_exc(e)
+        trigger_thread_running = "NO"
+        pass
+
+
+def sum_all_of_stocks(): # function to know the sum of all the stocks that are in place.
     my_cursor.execute("select sum(open) from rblbank_renko_final")
     total_quantity = my_cursor.fetchone()
     return total_quantity[0]
@@ -38,14 +104,13 @@ def ord_update_count():
     return records[0][0]
 
 
-def latest_order():
-    my_cursor.execute("select * from icicibank_ohlc_final_1min limit 1")
+def first_order():
+    my_cursor.execute("select * from order_updates limit 1")
     data = my_cursor.fetchone()
     return [data[0], data[1], data[2], data[3], data[4], data[5]]
 
 
-print(ord_update_count())
-print(latest_order())
+
 
 sum_of_quantity = sum_all_of_stocks()
 
@@ -104,14 +169,14 @@ def target_order_status(orderid):
 
 def del_processed_order():
     my_cursor.execute("delete from order_updates limit 1")
-    mydb.commit()
+    mydb.commit("select count(*) from processed ")
 
 
 def target():
     global carry_forward
     try:
         while ord_update_count() > 0:
-            order_details = latest_order()
+            order_details = first_order()
             print(order_details[0], order_details[1], order_details[2], order_details[3], order_details[4], order_details[5])
             price = order_details[4]
             volume = order_details[5]
@@ -186,7 +251,7 @@ def target():
                                     (traded_price - target_amount) % ds.trd_portfolio[entries]['tick_size']), ds.trd_portfolio[entries]['upper_circuit_limit'])
                         print("final target price" + str(ds.trd_portfolio[entries]['Target_amount']))
             del_processed_order()
-        usdinr.quantity()
+        quantity()
     except Exception as e:
         traceback.print_exc(e)
 
@@ -314,9 +379,10 @@ def trigger(token):
 
 
 if __name__ == '__main__':
-    while sum_of_quantity != 0 or ((carry_forward/day_margin) * 100) < 2:
-        for instrument in ds.trd_portfolio:
-            trigger(instrument)
+    while 10 > 2:
+        while ((carry_forward/day_margin) * 100) < 2:
+            for instrument in ds.trd_portfolio:
+                trigger(instrument)
     # while ((carry_forward/day_margin) * 100) < 2:
     #     my_cursor.execute("select * from order_updates")
     #     records = my_cursor.fetchall()

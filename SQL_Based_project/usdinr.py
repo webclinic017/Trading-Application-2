@@ -5,13 +5,13 @@ import time
 import threading
 import traceback
 import datasetup as ds
-from quantity import quantity
 from circuit_limits import circuit_limits
 from requests.exceptions import ReadTimeout
 import pandas as pd
 import socket
 import mysql.connector
 # from trigger import *
+from subprocess import *
 
 
 mydb = mysql.connector.connect(
@@ -189,7 +189,7 @@ def calculate_ohlc_one_minute(company_data):
             # TMA calculation complete for ohlc
 
             # adding the row into the final ohlc table
-            ds.ohlc_final_1min = ds.ohlc_final_1min.append(ds.ohlc_temp)
+            ds.ohlc_final_1min.append(ds.ohlc_temp)
             # print(ds.trd_portfolio[company_data['instrument_token']]['Symbol']+"_ohlc_final_1min",  ds.ohlc_temp.iloc[-1, 0],  ds.ohlc_temp.iloc[-1, 1],  ds.ohlc_temp.iloc[-1, 2], ds.ohlc_temp.iloc[-1, 3],  ds.ohlc_temp.iloc[-1, 4], ds.ohlc_temp.iloc[-1, 5], ds.ohlc_temp.iloc[-1, 6], ds.ohlc_temp.iloc[-1, 7], ds.ohlc_temp.iloc[-1, 8], ds.ohlc_temp.iloc[-1, 9])
             # sql = "INSERT INTO %s (Symbol, Time, Open, High, Low, Close, TR, ATR, SMA, TMA) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             # print("INSERT INTO " + str(ds.trd_portfolio[company_data['instrument_token']]['Symbol']) + "_ohlc_final_1min (Symbol, Time, Open, High, Low, Close, TR, ATR, SMA, TMA) values (" + str(ds.ohlc_temp.iloc[-1, 0]) + "," + str(ds.ohlc_temp.iloc[-1, 1]) + "," + str(ds.ohlc_temp.iloc[-1, 2]) + "," + str(ds.ohlc_temp.iloc[-1, 3]) + "," + str(ds.ohlc_temp.iloc[-1, 4]) + "," + str(ds.ohlc_temp.iloc[-1, 5]) + "," + str(ds.ohlc_temp.iloc[-1, 6]) + "," + str(ds.ohlc_temp.iloc[-1, 7]) + "," + str(ds.ohlc_temp.iloc[-1, 8]) + "," + str(ds.ohlc_temp.iloc[-1, 9]) + ")")
@@ -202,7 +202,7 @@ def calculate_ohlc_one_minute(company_data):
                 ds.ohlc_temp.iloc[-1, 6]) + "," + str(ds.ohlc_temp.iloc[-1, 7]) + "," + str(
                 ds.ohlc_temp.iloc[-1, 8]) + "," + str(ds.ohlc_temp.iloc[-1, 9]) + ")")
             mydb.commit()
-            ds.HA_Final = ds.HA_Final.append(ds.HA_temp)
+            ds.HA_Final.append(ds.HA_temp)
             print(ds.HA_temp.to_string())
             my_cursor.execute("INSERT INTO " + str(
                 ds.trd_portfolio[company_data['instrument_token']]['Symbol']) + "_HA_Final values (\"" + str(
@@ -341,7 +341,7 @@ def calculate_ohlc_one_minute(company_data):
                             ds.RENKO_temp.iloc[-1, 6] = round((sum(e) / 10), 2)
                         # TMA calculation complete
 
-                        ds.RENKO_Final = ds.RENKO_Final.append(ds.RENKO_temp, sort=False)
+                        ds.RENKO_Final.append(ds.RENKO_temp, sort=False)
                         print(ds.RENKO_temp.to_string())
                         print(ds.RENKO_Final.to_string())
                         ds.RENKO[company_data['instrument_token']][1] = ds.RENKO_Final.loc[
@@ -422,7 +422,7 @@ def calculate_ohlc_one_minute(company_data):
                             ds.RENKO_temp.iloc[-1, 6] = round((sum(e) / 10), 2)
                         # TMA calculation complete
 
-                        ds.RENKO_Final = ds.RENKO_Final.append(ds.RENKO_temp, sort=False)
+                        ds.RENKO_Final.append(ds.RENKO_temp, sort=False)
                         print(ds.RENKO_temp.to_string())
                         print(ds.RENKO_Final.to_string())
                         ds.RENKO[company_data['instrument_token']][1] = ds.RENKO_Final.loc[
@@ -503,7 +503,7 @@ def calculate_ohlc_one_minute(company_data):
                             ds.RENKO_temp.iloc[-1, 6] = round((sum(e) / 10), 2)
                         # TMA calculation complete
 
-                        ds.RENKO_Final = ds.RENKO_Final.append(ds.RENKO_temp, sort=False)
+                        ds.RENKO_Final.append(ds.RENKO_temp, sort=False)
                         print(ds.RENKO_temp.to_string())
                         print(ds.RENKO_Final.to_string())
                         ds.RENKO[company_data['instrument_token']][1] = ds.RENKO_Final.loc[
@@ -603,7 +603,7 @@ def calculate_ohlc_one_minute(company_data):
                             ds.RENKO_temp.iloc[-1, 6] = round((sum(e) / 10), 2)
                         # TMA calculation complete
 
-                        ds.RENKO_Final = ds.RENKO_Final.append(ds.RENKO_temp, sort=False)
+                        ds.RENKO_Final.append(ds.RENKO_temp, sort=False)
                         print(ds.RENKO_temp.to_string())
                         print(ds.RENKO_Final.to_string())
                         ds.RENKO[company_data['instrument_token']][1] = ds.RENKO_Final.loc[
@@ -683,7 +683,7 @@ def calculate_ohlc_one_minute(company_data):
                             ds.RENKO_temp.iloc[-1, 6] = round((sum(e) / 10), 2)
                         # TMA calculation complete
 
-                        ds.RENKO_Final = ds.RENKO_Final.append(ds.RENKO_temp, sort=False)
+                        ds.RENKO_Final.append(ds.RENKO_temp, sort=False)
                         print(ds.RENKO_temp.to_string())
                         print(ds.RENKO_Final.to_string())
                         ds.RENKO[company_data['instrument_token']][1] = ds.RENKO_Final.loc[
@@ -783,7 +783,7 @@ def calculate_ohlc_one_minute(company_data):
                             ds.RENKO_temp.iloc[-1, 6] = round((sum(e) / 10), 2)
                         # TMA calculation complete
 
-                        ds.RENKO_Final = ds.RENKO_Final.append(ds.RENKO_temp, sort=False)
+                        ds.RENKO_Final.append(ds.RENKO_temp, sort=False)
                         print(ds.RENKO_temp.to_string())
                         print(ds.RENKO_Final.to_string())
                         ds.RENKO[company_data['instrument_token']][1] = ds.RENKO_Final.loc[
@@ -825,6 +825,7 @@ def quantity():
                         print("b", ds.trd_portfolio[items]['Tradable_quantity'])
                         print(str(ds.day_margin) + "*" + str(ds.trd_portfolio[items]['margin_multiplier']) + "/" + str(ds.trd_portfolio[items]['LTP']) + "*" + str(ds.trd_portfolio[items][
                             'Quantity_multiplier']) + "-" + str(ds.trd_portfolio[items]['buffer_quantity']), str(ds.trd_portfolio[items]['max_quantity']))
+            my_cursor.execute("update trd_portfolio set Tradable_quantity = ds.trd_portfolio[items]['Tradable_quantity'] where token = ds.trd_portfolio[items]")
     except ReadTimeout:
         traceback.print_exc()
         print("positions read timeout exception")

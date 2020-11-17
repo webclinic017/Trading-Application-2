@@ -1,7 +1,6 @@
 from flask import Flask, request
 import os
 import datetime
-import final
 import json
 import mysql.connector
 

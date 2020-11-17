@@ -14,7 +14,7 @@ my_cursor = mydb.cursor()
 
 api_k = "dysoztj41hntm1ma"  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94"  # api_secret
-access_token = "LcRFcmWioIOK3WPyFI3UZtTZgwIAWLcK"
+access_token = "Mo6CL23jgeb0aWxNT4Qr4aC7ZbLgDum3"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -23,7 +23,7 @@ headers = {  # header for API request to update circuit limits
 }
 
 opening_margin = kite.margins(segment=None)
-print(opening_margin)
+# print(opening_margin)
 day_margin = opening_margin['equity']['net']
 
 
