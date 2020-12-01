@@ -1,5 +1,5 @@
 from OpenSSL.SSL import WantReadError
-from kiteconnect import exceptions, KiteConnect
+from kiteconnect import exceptions, KiteConnect, KiteTicker
 import math
 import time
 import threading
@@ -13,6 +13,12 @@ import mysql.connector
 # from trigger import *
 from subprocess import *
 
+
+api_k = "dysoztj41hntm1ma"  # api_key
+api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94"  # api_secret
+access_token = "GpUiZbCxKvAxB5alVXI9HxwktP0A9n7J"
+kws = KiteTicker(api_k, access_token)
+kite = KiteConnect(api_key=api_k, access_token=access_token)
 
 mydb = mysql.connector.connect(
     host="localhost",
@@ -803,8 +809,9 @@ def calculate_ohlc_one_minute(company_data):
 
 def quantity():
     try:
-        temp_open_margin = KiteConnect.margins(ds.kite)
+        temp_open_margin = KiteConnect.margins(kite)
         temp_day_margin = temp_open_margin['equity']['net']
+        print(temp_day_margin)
         for items in ds.trd_portfolio:
             if ds.trd_portfolio[items]['Segment'] == "Options":  # calculating quantity for options
                 maxquantity = min(temp_day_margin / ds.trd_portfolio[items]['LTP'], ds.trd_portfolio[items]['max_quantity'])
@@ -823,8 +830,8 @@ def quantity():
                             'Quantity_multiplier'])) - ds.trd_portfolio[items]['buffer_quantity'],
                                                                                   ds.trd_portfolio[items]['max_quantity']), 0))
                         print("b", ds.trd_portfolio[items]['Tradable_quantity'])
-                        print(str(ds.day_margin) + "*" + str(ds.trd_portfolio[items]['margin_multiplier']) + "/" + str(ds.trd_portfolio[items]['LTP']) + "*" + str(ds.trd_portfolio[items][
-                            'Quantity_multiplier']) + "-" + str(ds.trd_portfolio[items]['buffer_quantity']), str(ds.trd_portfolio[items]['max_quantity']))
+                        # print(str(ds.day_margin) + "*" + str(ds.trd_portfolio[items]['margin_multiplier']) + "/" + str(ds.trd_portfolio[items]['LTP']) + "*" + str(ds.trd_portfolio[items][
+                        #     'Quantity_multiplier']) + "-" + str(ds.trd_portfolio[items]['buffer_quantity']), str(ds.trd_portfolio[items]['max_quantity']))
             my_cursor.execute("update trd_portfolio set Tradable_quantity = ds.trd_portfolio[items]['Tradable_quantity'] where token = ds.trd_portfolio[items]")
     except ReadTimeout:
         traceback.print_exc()
@@ -876,7 +883,7 @@ def round_down(n, decimals=0):
 
 def order_status(token, orderid, trade_type):
     try:
-        order_details = ds.kite.order_history(orderid)
+        order_details = kite.order_history(orderid)
         for item in order_details:
             if item['status'] == "COMPLETE":
                 if trade_type == 'SELL':
@@ -902,7 +909,7 @@ def order_status(token, orderid, trade_type):
 
 def target_order_status(orderid):
     try:
-        details = ds.kite.order_history(orderid)
+        details = kite.order_history(orderid)
         for item in details:
             if item['status'] == "OPEN":
                 return "OPEN"
@@ -930,24 +937,24 @@ def trigger(token):
                     ds.HA_Final.loc[ds.HA_Final.Symbol == ds.trd_portfolio[token]['Symbol']].iloc[-1, 5])):
                 print("quantity validation before ordering", str(ds.profit[token][4]))
                 if ds.profit[token][4] > 0:
-                    ds.kite.modify_order(variety="regular", order_id=ds.trd_portfolio[token]['Target_order_id'],
-                                      order_type=ds.kite.ORDER_TYPE_MARKET)
+                    kite.modify_order(variety="regular", order_id=ds.trd_portfolio[token]['Target_order_id'],
+                                      order_type=kite.ORDER_TYPE_MARKET)
                     time.sleep(3)
                     print("exiting current positions")
                 elif ds.profit[token][4] == 0:
                     if ds.trd_portfolio[token]['Direction'] != "Down":
                         if ds.trd_portfolio[token]['Tradable_quantity'] > 0:
                             print("Fresh order")
-                            ds.trd_portfolio[token]['Orderid'] = ds.kite.place_order(variety="regular",
+                            ds.trd_portfolio[token]['Orderid'] = kite.place_order(variety="regular",
                                                                                exchange=ds.trd_portfolio[token][
                                                                                    'exchange'],
                                                                                tradingsymbol=ds.trd_portfolio[token][
                                                                                    'Symbol'],
-                                                                               transaction_type=ds.kite.TRANSACTION_TYPE_SELL,
+                                                                               transaction_type=kite.TRANSACTION_TYPE_SELL,
                                                                                quantity=ds.trd_portfolio[token][
                                                                                    'Tradable_quantity'],
-                                                                               order_type=ds.kite.ORDER_TYPE_MARKET,
-                                                                               product=ds.kite.PRODUCT_MIS)
+                                                                               order_type=kite.ORDER_TYPE_MARKET,
+                                                                               product=kite.PRODUCT_MIS)
                             print(ds.trd_portfolio[token]['Orderid'])
                             time.sleep(3)
                             order_status(token, ds.trd_portfolio[token]['Orderid'], 'SELL')
@@ -960,24 +967,24 @@ def trigger(token):
                     ds.HA_Final.loc[ds.HA_Final.Symbol == ds.trd_portfolio[token]['Symbol']].iloc[-1, 5])):
                 print("quantity validation before ordering", str(ds.profit[token][4]))
                 if ds.profit[token][4] < 0:
-                    ds.kite.modify_order(variety="regular", order_id=ds.trd_portfolio[token]['Target_order_id'],
-                                      order_type=ds.kite.ORDER_TYPE_MARKET)
+                    kite.modify_order(variety="regular", order_id=ds.trd_portfolio[token]['Target_order_id'],
+                                      order_type=kite.ORDER_TYPE_MARKET)
                     time.sleep(2)
                     print("exiting current positions")
                 elif ds.profit[token][4] == 0:
                     if ds.trd_portfolio[token]['Direction'] != "Up":
                         if ds.trd_portfolio[token]['Tradable_quantity'] > 0:
                             print("Fresh order")
-                            ds.trd_portfolio[token]['Orderid'] = ds.kite.place_order(variety="regular",
+                            ds.trd_portfolio[token]['Orderid'] = kite.place_order(variety="regular",
                                                                                exchange=ds.trd_portfolio[token][
                                                                                    'exchange'],
                                                                                tradingsymbol=ds.trd_portfolio[token][
                                                                                    'Symbol'],
-                                                                               transaction_type=ds.kite.TRANSACTION_TYPE_BUY,
+                                                                               transaction_type=kite.TRANSACTION_TYPE_BUY,
                                                                                quantity=ds.trd_portfolio[token][
                                                                                    'Tradable_quantity'],
-                                                                               order_type=ds.kite.ORDER_TYPE_MARKET,
-                                                                               product=ds.kite.PRODUCT_MIS)
+                                                                               order_type=kite.ORDER_TYPE_MARKET,
+                                                                               product=kite.PRODUCT_MIS)
                             print(ds.trd_portfolio[token]['Orderid'])
                             time.sleep(2)
                             order_status(token, ds.trd_portfolio[token]['Orderid'], 'BUY')
@@ -986,33 +993,33 @@ def trigger(token):
             print(ds.profit[token])
             if ds.profit[token][4] > 0:
                 if ds.trd_portfolio[token]['Target_order'] != "YES":
-                    ds.trd_portfolio[token]['Target_order_id'] = ds.kite.place_order(variety="regular",
+                    ds.trd_portfolio[token]['Target_order_id'] = kite.place_order(variety="regular",
                                                                                exchange=ds.trd_portfolio[token][
                                                                                    'exchange'],
                                                                                tradingsymbol=ds.trd_portfolio[token][
                                                                                    'Symbol'],
-                                                                               transaction_type=ds.kite.TRANSACTION_TYPE_SELL,
+                                                                               transaction_type=kite.TRANSACTION_TYPE_SELL,
                                                                                quantity=abs(
                                                                                    ds.trd_portfolio[token]['Positions']),
-                                                                               order_type=ds.kite.ORDER_TYPE_LIMIT,
+                                                                               order_type=kite.ORDER_TYPE_LIMIT,
                                                                                price=round(
-                                                                                   ds.trd_portfolio[token]['Target_amount'], 4), product=ds.kite.PRODUCT_MIS)
+                                                                                   ds.trd_portfolio[token]['Target_amount'], 4), product=kite.PRODUCT_MIS)
                     if target_order_status(ds.trd_portfolio[token]['Target_order_id']) == "OPEN":
                         ds.trd_portfolio[token]['Target_order'] = "YES"
             if ds.profit[token][4] < 0:
                 if ds.trd_portfolio[token]['Target_order'] != "YES":
-                    ds.trd_portfolio[token]['Target_order_id'] = ds.kite.place_order(variety="regular",
+                    ds.trd_portfolio[token]['Target_order_id'] = kite.place_order(variety="regular",
                                                                                exchange=ds.trd_portfolio[token][
                                                                                    'exchange'],
                                                                                tradingsymbol=ds.trd_portfolio[token][
                                                                                    'Symbol'],
-                                                                               transaction_type=ds.kite.TRANSACTION_TYPE_BUY,
+                                                                               transaction_type=kite.TRANSACTION_TYPE_BUY,
                                                                                quantity=abs(
                                                                                    ds.trd_portfolio[token]['Positions']),
-                                                                               order_type=ds.kite.ORDER_TYPE_LIMIT,
+                                                                               order_type=kite.ORDER_TYPE_LIMIT,
                                                                                price=round_down(
                                                                                    ds.trd_portfolio[token]['Target_amount'], 4),
-                                                                               product=ds.kite.PRODUCT_MIS)
+                                                                               product=kite.PRODUCT_MIS)
                     if target_order_status(ds.trd_portfolio[token]['Target_order_id']) == "OPEN":
                         ds.trd_portfolio[token]['Target_order'] = "YES"
         ds.trigger_thread_running = "NO"
@@ -1048,6 +1055,7 @@ def trigger(token):
 def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
     try:
         for company_data in ticks:
+            print(company_data['instrument_token'], ds.trd_portfolio[company_data['instrument_token']]['LTP'])
             if ds.trd_portfolio[company_data['instrument_token']]['LTP'] == 0:
                 ds.trd_portfolio[company_data['instrument_token']]['LTP'] = company_data['last_price']
                 quantity()

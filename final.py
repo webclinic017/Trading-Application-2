@@ -15,7 +15,7 @@ import threading
 
 api_k = "dysoztj41hntm1ma"  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94"  # api_secret
-access_token = "2lYGEf349hlFQ7xLj6RXKm1gzY7B9dwa"
+access_token = "GpUiZbCxKvAxB5alVXI9HxwktP0A9n7J"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -103,14 +103,14 @@ def quantity():
                 if trd_portfolio[items]['LTP'] != 0:
                     if ((temp_day_margin * trd_portfolio[items]['margin_multiplier']) / (trd_portfolio[items]['LTP'] * trd_portfolio[items]['Quantity_multiplier'])) - trd_portfolio[items]['buffer_quantity'] < 1:
                         trd_portfolio[items]['Tradable_quantity'] = 0
-                        print("a")
+                        # print("a")
                     else:
                         trd_portfolio[items]['Tradable_quantity'] = int(round(min(((day_margin * trd_portfolio[items]['margin_multiplier']) / (trd_portfolio[items]['LTP'] * trd_portfolio[items][
                             'Quantity_multiplier'])) - trd_portfolio[items]['buffer_quantity'],
                                                                                   trd_portfolio[items]['max_quantity']), 0))
-                        print("b", trd_portfolio[items]['Tradable_quantity'])
-                        print(str(day_margin) + "*" + str(trd_portfolio[items]['margin_multiplier']) + "/" + str(trd_portfolio[items]['LTP']) + "*" + str(trd_portfolio[items][
-                            'Quantity_multiplier']) + "-" + str(trd_portfolio[items]['buffer_quantity']), str(trd_portfolio[items]['max_quantity']))
+                        # print("b", trd_portfolio[items]['Tradable_quantity'])
+                        # print(str(day_margin) + "*" + str(trd_portfolio[items]['margin_multiplier']) + "/" + str(trd_portfolio[items]['LTP']) + "*" + str(trd_portfolio[items][
+                        #     'Quantity_multiplier']) + "-" + str(trd_portfolio[items]['buffer_quantity']), str(trd_portfolio[items]['max_quantity']))
     except ReadTimeout:
         traceback.print_exc()
         print("positions read timeout exception")

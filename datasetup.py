@@ -4,7 +4,7 @@ import datetime
 
 api_k = "dysoztj41hntm1ma"  # api_key
 api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94"  # api_secret
-access_token = "AseyEYXPapUvzuqlioXRL9k7vR4xYDnX"
+access_token = "7HxjGWRwvuAjVhe1PhBdy39plpnKvDH1"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -12,7 +12,7 @@ headers = {  # header for API request to update circuit limits
     'Authorization': 'token dysoztj41hntm1ma:' + access_token
 }
 
-opening_margin = kite.margins(kite)
+opening_margin = kite.margins(segment=None)
 day_margin = opening_margin['equity']['net']
 
 trd_portfolio = {

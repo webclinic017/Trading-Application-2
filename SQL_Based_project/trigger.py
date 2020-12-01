@@ -23,7 +23,7 @@ carry_forward = 0
 my_cursor = mydb.cursor()
 
 opening_margin = ds.kite.margins(segment=None)
-print(opening_margin)
+# print(opening_margin)
 day_margin = opening_margin['equity']['net']
 
 
@@ -43,14 +43,14 @@ def quantity():
                 if ds.trd_portfolio[items]['LTP'] != 0:
                     if ((temp_day_margin * ds.trd_portfolio[items]['margin_multiplier']) / (ds.trd_portfolio[items]['LTP'] * ds.trd_portfolio[items]['Quantity_multiplier'])) - ds.trd_portfolio[items]['buffer_quantity'] < 1:
                         ds.trd_portfolio[items]['Tradable_quantity'] = 0
-                        print("a")
+                        # print("a")
                     else:
                         ds.trd_portfolio[items]['Tradable_quantity'] = int(round(min(((ds.day_margin * ds.trd_portfolio[items]['margin_multiplier']) / (ds.trd_portfolio[items]['LTP'] * ds.trd_portfolio[items][
                             'Quantity_multiplier'])) - ds.trd_portfolio[items]['buffer_quantity'],
                                                                                   ds.trd_portfolio[items]['max_quantity']), 0))
-                        print("b", ds.trd_portfolio[items]['Tradable_quantity'])
-                        print(str(ds.day_margin) + "*" + str(ds.trd_portfolio[items]['margin_multiplier']) + "/" + str(ds.trd_portfolio[items]['LTP']) + "*" + str(ds.trd_portfolio[items][
-                            'Quantity_multiplier']) + "-" + str(ds.trd_portfolio[items]['buffer_quantity']), str(ds.trd_portfolio[items]['max_quantity']))
+                        # print("b", ds.trd_portfolio[items]['Tradable_quantity'])
+                        # print(str(ds.day_margin) + "*" + str(ds.trd_portfolio[items]['margin_multiplier']) + "/" + str(ds.trd_portfolio[items]['LTP']) + "*" + str(ds.trd_portfolio[items][
+                        #     'Quantity_multiplier']) + "-" + str(ds.trd_portfolio[items]['buffer_quantity']), str(ds.trd_portfolio[items]['max_quantity']))
             my_cursor.execute("update trd_portfolio set Tradable_quantity = ds.trd_portfolio[items]['Tradable_quantity'] where token = ds.trd_portfolio[items]")
     except ReadTimeout:
         traceback.print_exc()
