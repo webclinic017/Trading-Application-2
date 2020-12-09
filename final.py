@@ -14,8 +14,8 @@ import time
 import threading
 
 api_k = "dysoztj41hntm1ma"  # api_key
-api_s = "rzgyg4edlvcurw4vp83jl5io9b610x94"  # api_secret
-access_token = "GpUiZbCxKvAxB5alVXI9HxwktP0A9n7J"
+api_s = "e9u4vp3t8jx9opnmg7rkyuwhpghgim6c"  # api_secret
+access_token = "RgymcFrk6aMq0iM7wo7b245I8kxvfry9"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -1142,7 +1142,7 @@ def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
         for company_data in ticks:
             if trd_portfolio[company_data['instrument_token']]['LTP'] == 0:
                 trd_portfolio[company_data['instrument_token']]['LTP'] = company_data['last_price']
-                quantity()
+                # quantity()
             else:
                 trd_portfolio[company_data['instrument_token']]['LTP'] = company_data['last_price']
             if candle_thread_running != "YES":
@@ -1150,18 +1150,18 @@ def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
                         company_data['last_trade_time'].time()) < trd_portfolio[company_data['instrument_token']]['end_time']:
                     candle = threading.Thread(target=calculate_ohlc_one_minute, args=(company_data,))
                     candle.start()
-                    if trd_portfolio[company_data['instrument_token']]['Trade'] == "YES":
-                        if ((carry_forward / day_margin) * 100) < 2:
-                            if trigger_thread_running != 'YES':
-                                if len(HA_Final.loc[
-                                           HA_Final.Symbol == trd_portfolio[company_data['instrument_token']][
-                                               'Symbol']]) >= 1:
-                                    if HA_Final.loc[
-                                        HA_Final.Symbol == trd_portfolio[company_data['instrument_token']][
-                                            'Symbol']].iloc[-1, 8] != 0:
-                                        order_trigger_loop_initiator = threading.Thread(target=trigger, args=[
-                                                company_data['instrument_token']])
-                                        order_trigger_loop_initiator.start()
+                    # if trd_portfolio[company_data['instrument_token']]['Trade'] == "YES":
+                    #     if ((carry_forward / day_margin) * 100) < 2:
+                    #         if trigger_thread_running != 'YES':
+                    #             if len(HA_Final.loc[
+                    #                        HA_Final.Symbol == trd_portfolio[company_data['instrument_token']][
+                    #                            'Symbol']]) >= 1:
+                    #                 if HA_Final.loc[
+                    #                     HA_Final.Symbol == trd_portfolio[company_data['instrument_token']][
+                    #                         'Symbol']].iloc[-1, 8] != 0:
+                    #                     order_trigger_loop_initiator = threading.Thread(target=trigger, args=[
+                    #                             company_data['instrument_token']])
+                    #                     order_trigger_loop_initiator.start()
     except Exception as e:
         traceback.print_exc(e)
 
