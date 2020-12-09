@@ -19,18 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="added all the required sql connections. now just need to code for quantity and trigger conditions in sql.">
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2020-12-02.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2020-12-08.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Generate Access Token.py" beforeDir="false" afterPath="$PROJECT_DIR$/Generate Access Token.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/datasetup.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/datasetup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/notes" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/notes" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/trigger.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/trigger.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/final.py" beforeDir="false" afterPath="$PROJECT_DIR$/final.py" afterDir="false" />
-    </list>
+    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="few more updates with sql integration" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -219,13 +208,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1554405465942</updated>
-    </task>
-    <task id="LOCAL-00013" summary="update the positions function to return 0 if no position for subscribed stock while we have other stocks.">
-      <created>1561630907381</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1561630907381</updated>
     </task>
     <task id="LOCAL-00014" summary="Made changes to the positions quantity for optoins code and also renamed for options.">
       <created>1562236401837</created>
@@ -563,7 +545,14 @@
       <option name="project" value="LOCAL" />
       <updated>1605599489915</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="few more updates with sql integration">
+      <created>1607508343353</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1607508343354</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -604,6 +593,7 @@
     <MESSAGE value="first sql insert statement worked, need to add sql insert for every append." />
     <MESSAGE value="added sql insert statement for order updates which i receive through postback" />
     <MESSAGE value="added all the required sql connections. now just need to code for quantity and trigger conditions in sql." />
-    <option name="LAST_COMMIT_MESSAGE" value="added all the required sql connections. now just need to code for quantity and trigger conditions in sql." />
+    <MESSAGE value="few more updates with sql integration" />
+    <option name="LAST_COMMIT_MESSAGE" value="few more updates with sql integration" />
   </component>
 </project>
