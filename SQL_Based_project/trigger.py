@@ -33,9 +33,15 @@ for x in ds.trd_portfolio:
     profit[x] = ["Symbol", 0, 0, "Profit", 0, 0, 0]  # ["Symbol", "BUY Price", "SELL Price", "Profit", "Volume", "Charges", "final_profit"]
 
 
+def get_previous_close(items):
+    my_cursor.execute("select Close from " + str(ds.trd_portfolio[items]['Symbol']) + "_ohlc_final_1min order by time DESC limit 1;")
+    data = my_cursor.fetchall()
+    return float(data[0][0])
+
+
 def quantity():
     try:
-        temp_open_margin = ds.KiteConnect.margins(segment=None)
+        temp_open_margin = ds.KiteConnect.margins(ds.kite)
         temp_day_margin = temp_open_margin['equity']['net']
         for items in ds.trd_portfolio:
             if ds.trd_portfolio[items]['Segment'] == "Options":  # calculating quantity for options
@@ -46,18 +52,18 @@ def quantity():
                 else:
                     ds.trd_portfolio[items]['Tradable_quantity'] = (multiplier - 1) * 75
             elif ds.trd_portfolio[items]['Segment'] != "Options":  # calculating quantity for equities
-                if ds.trd_portfolio[items]['LTP'] != 0:
-                    if ((temp_day_margin * ds.trd_portfolio[items]['margin_multiplier']) / (ds.trd_portfolio[items]['LTP'] * ds.trd_portfolio[items]['Quantity_multiplier'])) - ds.trd_portfolio[items]['buffer_quantity'] < 1:
+                previous_close = get_previous_close(items)
+                if previous_close != 0:
+                    if ((temp_day_margin * ds.trd_portfolio[items]['margin_multiplier']) / (previous_close * ds.trd_portfolio[items]['Quantity_multiplier'])) - ds.trd_portfolio[items]['buffer_quantity'] < 1:
                         ds.trd_portfolio[items]['Tradable_quantity'] = 0
                         print("a")
                     else:
-                        ds.trd_portfolio[items]['Tradable_quantity'] = int(round(min(((day_margin * ds.trd_portfolio[items]['margin_multiplier']) / (ds.trd_portfolio[items]['LTP'] * ds.trd_portfolio[items][
+                        ds.trd_portfolio[items]['Tradable_quantity'] = int(round(min(((day_margin * ds.trd_portfolio[items]['margin_multiplier']) / (previous_close * ds.trd_portfolio[items][
                             'Quantity_multiplier'])) - ds.trd_portfolio[items]['buffer_quantity'],
                                                                                   ds.trd_portfolio[items]['max_quantity']), 0))
                         print("b", ds.trd_portfolio[items]['Tradable_quantity'])
-                        # print(str(day_margin) + "*" + str(ds.trd_portfolio[items]['margin_multiplier']) + "/" + str(ds.trd_portfolio[items]['LTP']) + "*" + str(ds.trd_portfolio[items][
-                        #     'Quantity_multiplier']) + "-" + str(ds.trd_portfolio[items]['buffer_quantity']), str(ds.trd_portfolio[items]['max_quantity']))
-            my_cursor.execute("update ds.trd_portfolio set Tradable_quantity = ds.trd_portfolio[items]['Tradable_quantity'] where token = ds.trd_portfolio[items]")
+            my_cursor.execute("update trd_portfolio set Tradable_quantity = " + str(ds.trd_portfolio[items]['Tradable_quantity']) + " where token = " + str(items))
+            mydb.commit()
     except ReadTimeout:
         traceback.print_exc()
         print("positions read timeout exception")
@@ -274,7 +280,9 @@ def trigger(token):
                 validation_row = latest_row(ds.trd_portfolio[token]['Symbol'])
                 if (validation_row[0] == (validation_row[1])) and (validation_row[0] >
                         validation_row[3]) and (validation_row[4] > (validation_row[3])):
+                    print("condition true")
                     if profit[token][4] > 0:
+                        print(profit[token][4])
                         ds.kite.modify_order(variety="regular", order_id=ds.trd_portfolio[token]['Target_order_id'],
                                           order_type=ds.kite.ORDER_TYPE_MARKET)
                         time.sleep(3)
@@ -381,6 +389,7 @@ def trigger(token):
 
 
 if __name__ == '__main__':
+    quantity()
     while 10 > 2:
         while ((carry_forward/day_margin) * 100) < 2:
             for instrument in ds.trd_portfolio:

@@ -14,15 +14,16 @@ import mysql.connector
 
 api_k = "dysoztj41hntm1ma"  # api_key
 api_s = "e9u4vp3t8jx9opnmg7rkyuwhpghgim6c"  # api_secret
-access_token = "ZRNpk3pbBW9eho8HjcjnMR790cN9D7B4"
+access_token = "GahlDfxNomH2P64fh73Ymu3C5qUxeqQ6"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
 mydb = mysql.connector.connect(
-    host="localhost",
+    host="127.0.0.1",
     user="root",
     passwd="password123",
-    database="testdb"
+    database="testdb",
+    port=3306
 )
 
 my_cursor = mydb.cursor()
@@ -36,7 +37,7 @@ trd_portfolio = {
               'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003, 'margin_multiplier': 5,
               'exchange': kite.EXCHANGE_NSE, 'buffer_quantity': 5, 'round_value': 2, 'Trade': "YES", 'tick_size': .05,
               'start_time': datetime.time(9, 29, 10), 'end_time': datetime.time(15, 15, 10), "lower_circuit_limit": 0,
-              "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0},
+              "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0, 'OHLC_Thread_Running': 'NO'},
     1270529: {"Market": "NSE", "Segment": "Equity", "Symbol": "ICICIBANK", "max_quantity": 100, 'Direction': "", 'Orderid': 0,
               'Target_order': '',
               'Target_order_id': 0, 'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050,
@@ -44,7 +45,7 @@ trd_portfolio = {
               'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003, 'margin_multiplier': 5,
               'exchange': kite.EXCHANGE_NSE, 'buffer_quantity': 5, 'round_value': 2, 'Trade': "YES", 'tick_size': .05,
               'start_time': datetime.time(9, 29, 10), 'end_time': datetime.time(15, 15, 10), "lower_circuit_limit": 0,
-              "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0}
+              "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0, 'OHLC_Thread_Running': 'NO'}
 }
 
 ohlc = {}  # python dictionary to store the ohlc data in it
@@ -58,8 +59,7 @@ HA_temp = pd.DataFrame(columns=["Symbol", "Time", "Open", "High", "Low", "Close"
 HA_Final = pd.DataFrame(columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
 
 for x in trd_portfolio:
-    ohlc[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0, 0,
-               0]  # [Symbol, Traded Time, Open, High, Low, Close, True Range, Average True Range, Simple Moving Average, Triangular moving average, positions ]
+    ohlc[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0, 0, 0]  # [Symbol, Traded Time, Open, High, Low, Close, True Range, Average True Range, Simple Moving Average, Triangular moving average, positions ]
     RENKO[x] = ["Symbol", 0, 0, "Signal", "None", 0, 0]
     HA[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0, 0, 0]
 
@@ -68,194 +68,42 @@ def calculate_ohlc_one_minute(company_data):
     global candle_thread_running, ohlc_temp, HA_temp, RENKO_temp, ohlc_final_1min, ohlc, HA_Final, HA, RENKO, RENKO_Final
     try:
         # below if condition is to check the data being received, and the data present are of the same minute or not
-        candle_thread_running = "YES"
+        trd_portfolio[company_data['instrument_token']]['OHLC_Thread_Running'] = "YES"
         if (str(((company_data["timestamp"]).replace(second=0))) != ohlc[company_data['instrument_token']][1]) and (
                 ohlc[company_data['instrument_token']][1] != "Time"):
-            ohlc_temp = pd.DataFrame([ohlc[company_data['instrument_token']]],
-                                     columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA",
-                                              "TMA"])
-            HA_temp = pd.DataFrame([HA[company_data['instrument_token']]],
-                                   columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA",
-                                            "TMA"])
-
-            # Calculating SMA for Heiken Ashi. Only SMA Calculation for Henken Ashi
-            if len(HA_Final.loc[
-                       HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) < 13:
-                HA_temp.iloc[-1, 8] = 0
-            elif len(HA_Final.loc[
-                         HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) >= 13:
-                z = [HA_temp.iloc[-1, 5],
-                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -1, 5],
-                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -2, 5],
-                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -3, 5],
-                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -4, 5],
-                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -5, 5],
-                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -6, 5],
-                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -7, 5],
-                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -8, 5],
-                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -9, 5],
-                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -10, 5],
-                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -11, 5],
-                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -12, 5]]
-                HA_temp.iloc[-1, 8] = round(sum(z) / 13, 4)
-            # SMA Calculation complete for Heiken Ashi
-
-            # Calculating True Range
-            if len(ohlc_final_1min.loc[
-                       ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0:
-                ohlc_temp.iloc[-1, 6] = round(max((abs((ohlc_temp.iloc[-1, 3]) - (ohlc_temp.iloc[-1, 4])),
-                                                   abs((ohlc_temp.iloc[-1, 3]) - (ohlc_final_1min.loc[
-                                                       ohlc_final_1min.Symbol ==
-                                                       trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                                                       -1, 4])),
-                                                   abs((ohlc_temp.iloc[-1, 4]) - (ohlc_final_1min.loc[
-                                                       ohlc_final_1min.Symbol ==
-                                                       trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                                                       -1, 4])))), 2)
-            else:
-                ohlc_temp.iloc[-1, 6] = round(abs((ohlc_temp.iloc[-1, 3]) - (ohlc_temp.iloc[-1, 4])), 2)
-            # True Range Calculation complete for ohlc
-
-            # Calculating ATR for ohlc
-            if len(ohlc_final_1min.loc[
-                       ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) < 13:
-                ohlc_temp.iloc[-1, 7] = 0
-
-            elif len(ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) >= 13:
-                '''ohlc_temp.iloc[-1, 7] = round(((ohlc_final_1min.loc[ohlc_final_1min.Symbol ==
-                                                                    trd_portfolio[company_data['instrument_token']][
-                                                                        'Symbol']].iloc[-1, 7] * 13) + ohlc_temp.iloc[
-                                                   -1, 6]) / 14, 2)'''
-                a = [ohlc_temp.iloc[-1, 6], ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 6],
-                     ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-2, 6],
-                     ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-3, 6],
-                     ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-4, 6],
-                     ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-5, 6],
-                     ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-6, 6],
-                     ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-7, 6],
-                     ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-8, 6],
-                     ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-9, 6],
-                     ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-10, 6],
-                     ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-11, 6],
-                     ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-12, 6]]
-                ohlc_temp.iloc[-1, 7] = round(sum(a)/13, 2)
-
-            elif len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 13:
-                ohlc_temp.iloc[-1, 7] = round(((ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]*13) + ohlc_temp.iloc[-1, 6])/14, 2)
-            # ATR Calculation complete for ohlc
-
-            # Calculating SMA for ohlc
-            if len(ohlc_final_1min.loc[
-                       ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) < 10:
-                ohlc_temp.iloc[-1, 8] = 0
-                # print(len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]))
-            elif len(ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) >= 10:
-                b = [ohlc_temp.iloc[-1, 5],
-                     ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -1, 5],
-                     ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -2, 5],
-                     ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -3, 5],
-                     ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -4, 5],
-                     ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -5, 5],
-                     ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -6, 5],
-                     ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -7, 5],
-                     ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -8, 5],
-                     ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -9, 5]]
-                ohlc_temp.iloc[-1, 8] = round(sum(b) / 10, 2)
-                # print(len(ohlc_final_1min.loc[
-                #        ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]))
-            # SMA Calculation complete for ohlc
-
-            # Calculating Triangular moving average for ohlc
-            if len(ohlc_final_1min.loc[
-                       ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) < 19:
-                ohlc_temp.iloc[-1, 9] = 0
-            elif len(ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) >= 19:
-                c = [ohlc_temp.iloc[-1, 8],
-                     ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -1, 8],
-                     ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -2, 8],
-                     ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -3, 8],
-                     ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -4, 8],
-                     ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -5, 8],
-                     ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -6, 8],
-                     ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -7, 8],
-                     ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -8, 8],
-                     ohlc_final_1min.loc[
-                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                         -9, 8]]
-                ohlc_temp.iloc[-1, 9] = round((sum(c) / 10), 2)
-            # TMA calculation complete for ohlc
+            # ohlc_temp = pd.DataFrame([ohlc[company_data['instrument_token']]],
+            #                          columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA",
+            #                                   "TMA"])
+            # HA_temp = pd.DataFrame([HA[company_data['instrument_token']]],
+            #                        columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA",
+            #                                 "TMA"])
 
             # adding the row into the final ohlc table
-            ohlc_final_1min = ohlc_final_1min.append(ohlc_temp)
+            ohlc_final_1min = ohlc_final_1min.append(ohlc[company_data['instrument_token']], ignore_index=True)
+            print("INSERT INTO " + str(
+                trd_portfolio[company_data['instrument_token']]['Symbol']) + "_ohlc_final_1min values (\"" + str(
+                ohlc[company_data['instrument_token']][0]) + "\",\"" + str(ohlc[company_data['instrument_token']][1]) + "\"," + str(
+                ohlc[company_data['instrument_token']][2]) + "," + str(ohlc[company_data['instrument_token']][3]) + "," + str(
+                ohlc[company_data['instrument_token']][4]) + "," + str(ohlc[company_data['instrument_token']][5]) + "," + str(
+                ohlc[company_data['instrument_token']][6]) + "," + str(ohlc[company_data['instrument_token']][7]) + "," + str(
+                ohlc[company_data['instrument_token']][8]) + "," + str(ohlc[company_data['instrument_token']][9]) + ")")
             my_cursor.execute("INSERT INTO " + str(
                 trd_portfolio[company_data['instrument_token']]['Symbol']) + "_ohlc_final_1min values (\"" + str(
-                ohlc_temp.iloc[-1, 0]) + "\",\"" + str(ohlc_temp.iloc[-1, 1]) + "\"," + str(
-                ohlc_temp.iloc[-1, 2]) + "," + str(ohlc_temp.iloc[-1, 3]) + "," + str(
-                ohlc_temp.iloc[-1, 4]) + "," + str(ohlc_temp.iloc[-1, 5]) + "," + str(
-                ohlc_temp.iloc[-1, 6]) + "," + str(ohlc_temp.iloc[-1, 7]) + "," + str(
-                ohlc_temp.iloc[-1, 8]) + "," + str(ohlc_temp.iloc[-1, 9]) + ")")
+                ohlc[company_data['instrument_token']][0]) + "\",\"" + str(ohlc[company_data['instrument_token']][1]) + "\"," + str(
+                ohlc[company_data['instrument_token']][2]) + "," + str(ohlc[company_data['instrument_token']][3]) + "," + str(
+                ohlc[company_data['instrument_token']][4]) + "," + str(ohlc[company_data['instrument_token']][5]) + "," + str(
+                ohlc[company_data['instrument_token']][6]) + "," + str(ohlc[company_data['instrument_token']][7]) + "," + str(
+                ohlc[company_data['instrument_token']][8]) + "," + str(ohlc[company_data['instrument_token']][9]) + ")")
             mydb.commit()
-            HA_Final = HA_Final.append(HA_temp)
-            print(HA_temp.to_string())
+            HA_Final = HA_Final.append(HA[company_data['instrument_token']], ignore_index=True)
             my_cursor.execute("INSERT INTO " + str(
                 trd_portfolio[company_data['instrument_token']]['Symbol']) + "_HA_Final values (\"" + str(
-                HA_temp.iloc[-1, 0]) + "\",\"" + str(HA_temp.iloc[-1, 1]) + "\"," + str(
-                HA_temp.iloc[-1, 2]) + "," + str(HA_temp.iloc[-1, 3]) + "," + str(
-                HA_temp.iloc[-1, 4]) + "," + str(HA_temp.iloc[-1, 5]) + "," + str(
-                HA_temp.iloc[-1, 6]) + "," + str(HA_temp.iloc[-1, 7]) + "," + str(
-                HA_temp.iloc[-1, 8]) + "," + str(HA_temp.iloc[-1, 9]) + ")")
+                HA[company_data['instrument_token']][0]) + "\",\"" + str(HA[company_data['instrument_token']][1]) + "\"," + str(
+                HA[company_data['instrument_token']][2]) + "," + str(HA[company_data['instrument_token']][3]) + "," + str(
+                HA[company_data['instrument_token']][4]) + "," + str(HA[company_data['instrument_token']][5]) + "," + str(
+                HA[company_data['instrument_token']][6]) + "," + str(HA[company_data['instrument_token']][7]) + "," + str(
+                HA[company_data['instrument_token']][8]) + "," + str(HA[company_data['instrument_token']][9]) + ")")
             mydb.commit()
-            # print(HA_temp.to_string())
-            print(ohlc_temp.to_string())
 
             # making ohlc for new candle
             ohlc[company_data['instrument_token']][2] = company_data['last_price']  # open
@@ -277,6 +125,157 @@ def calculate_ohlc_one_minute(company_data):
         ohlc[company_data['instrument_token']][5] = company_data['last_price']  # closing price
         ohlc[company_data['instrument_token']][1] = str(((company_data["timestamp"]).replace(second=0)))
         ohlc[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]['Symbol']
+
+        # Calculating True Range
+        if len(ohlc_final_1min.loc[
+                   ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0:
+            ohlc[company_data['instrument_token']][6] = round(
+                max((abs((ohlc[company_data['instrument_token']][3]) - (ohlc[company_data['instrument_token']][4])),
+                     abs((ohlc[company_data['instrument_token']][3]) - (ohlc_final_1min.loc[
+                         ohlc_final_1min.Symbol ==
+                         trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                         -1, 4])),
+                     abs((ohlc[company_data['instrument_token']][4]) - (ohlc_final_1min.loc[
+                         ohlc_final_1min.Symbol ==
+                         trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                         -1, 4])))), 2)
+        else:
+            ohlc[company_data['instrument_token']][6] = round(abs((ohlc[company_data['instrument_token']][3]) - (ohlc[company_data['instrument_token']][4])), 2)
+        # True Range Calculation complete for ohlc
+
+        # Calculating ATR for ohlc
+        if len(ohlc_final_1min.loc[
+                   ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) < 13:
+            ohlc[company_data['instrument_token']][7] = 0
+
+        elif len(ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) >= 13:
+            '''ohlc_temp.iloc[-1, 7] = round(((ohlc_final_1min.loc[ohlc_final_1min.Symbol ==
+                                                                trd_portfolio[company_data['instrument_token']][
+                                                                    'Symbol']].iloc[-1, 7] * 13) + ohlc_temp.iloc[
+                                               -1, 6]) / 14, 2)'''
+            a = [ohlc[company_data['instrument_token']][6], ohlc_final_1min.loc[
+                ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 6],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -2, 6],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -3, 6],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -4, 6],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -5, 6],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -6, 6],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -7, 6],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -8, 6],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -9, 6],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -10, 6],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -11, 6],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -12, 6]]
+            ohlc[company_data['instrument_token']][7] = round(sum(a) / 13, 2)
+
+        elif len(ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 13:
+            ohlc[company_data['instrument_token']][7] = round(((ohlc_final_1min.loc[ohlc_final_1min.Symbol ==
+                                                                                    trd_portfolio[company_data[
+                                                                                        'instrument_token']][
+                                                                                        'Symbol']].iloc[-1, 7] * 13) +
+                                                               ohlc[company_data['instrument_token']][6]) / 14, 2)
+        # ATR Calculation complete for ohlc
+
+        # Calculating SMA for ohlc
+        if len(ohlc_final_1min.loc[
+                   ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) < 10:
+            ohlc[company_data['instrument_token']][8] = 0
+            # print(len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]))
+        elif len(ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) >= 10:
+            b = [ohlc[company_data['instrument_token']][5],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -1, 5],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -2, 5],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -3, 5],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -4, 5],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -5, 5],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -6, 5],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -7, 5],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -8, 5],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -9, 5]]
+            ohlc[company_data['instrument_token']][8] = round(sum(b) / 10, 2)
+            # print(len(ohlc_final_1min.loc[
+            #        ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]))
+        # SMA Calculation complete for ohlc
+
+        # Calculating Triangular moving average for ohlc
+        if len(ohlc_final_1min.loc[
+                   ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) < 19:
+            ohlc[company_data['instrument_token']][9] = 0
+        elif len(ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) >= 19:
+            c = [ohlc[company_data['instrument_token']][8],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -1, 8],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -2, 8],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -3, 8],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -4, 8],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -5, 8],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -6, 8],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -7, 8],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -8, 8],
+                 ohlc_final_1min.loc[
+                     ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -9, 8]]
+            ohlc[company_data['instrument_token']][9] = round((sum(c) / 10), 2)
+        # TMA calculation complete for ohlc
 
         if (len(HA_Final.loc[
                     HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) < 1):
@@ -312,6 +311,40 @@ def calculate_ohlc_one_minute(company_data):
             HA[company_data['instrument_token']][4] = round(
                 min(ohlc[company_data['instrument_token']][4], HA[company_data['instrument_token']][2],
                     HA[company_data['instrument_token']][5]), 4)
+
+        # Calculating SMA for Heiken Ashi. Only SMA Calculation for Henken Ashi
+        if len(HA_Final.loc[
+                   HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) < 13:
+            HA[company_data['instrument_token']][8] = 0
+        elif len(HA_Final.loc[
+                     HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) >= 13:
+            z = [HA_temp.iloc[-1, 5],
+                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -1, 5],
+                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -2, 5],
+                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -3, 5],
+                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -4, 5],
+                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -5, 5],
+                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -6, 5],
+                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -7, 5],
+                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -8, 5],
+                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -9, 5],
+                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -10, 5],
+                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -11, 5],
+                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                     -12, 5]]
+            HA[company_data['instrument_token']][8] = round(sum(z) / 13, 4)
+        # SMA Calculation complete for Heiken Ashi
 
         # starting to calculate the RENKO table
         if len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0:  # or (len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0):  # checking if there is atleast 1 candle in OHLC Dataframe or RENKO Dataframe
@@ -829,19 +862,17 @@ def calculate_ohlc_one_minute(company_data):
                             RENKO_temp.iloc[-1, 4]) + "\"," + str(RENKO_temp.iloc[-1, 5]) + "," + str(
                             RENKO_temp.iloc[-1, 6]) + ")")
                         mydb.commit()
-        candle_thread_running = "NO"
+        trd_portfolio[company_data['instrument_token']]['OHLC_Thread_Running'] = "NO"
     except Exception as e:
         traceback.print_exc(e)
+        trd_portfolio[company_data['instrument_token']]['OHLC_Thread_Running'] = "NO"
 
 
 def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
     try:
         for company_data in ticks:
-            if trd_portfolio[company_data['instrument_token']]['LTP'] == 0:
-                trd_portfolio[company_data['instrument_token']]['LTP'] = company_data['last_price']
-            else:
-                trd_portfolio[company_data['instrument_token']]['LTP'] = company_data['last_price']
-            if candle_thread_running != "YES":
+            trd_portfolio[company_data['instrument_token']]['LTP'] = company_data['last_price']
+            if trd_portfolio[company_data['instrument_token']]['OHLC_Thread_Running'] == "NO":
                 if trd_portfolio[company_data['instrument_token']]['start_time'] < (
                         company_data['last_trade_time'].time()) < trd_portfolio[company_data['instrument_token']]['end_time']:
                     candle = threading.Thread(target=calculate_ohlc_one_minute, args=(company_data,))

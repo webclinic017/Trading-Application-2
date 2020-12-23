@@ -19,7 +19,12 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="few more updates with sql integration" />
+    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="few more updates with sql integration">
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2020-12-10.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/trigger.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/trigger.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -60,7 +65,7 @@
       <recent name="C:\Users\win10\PycharmProjects\Trading-Application" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.trigger">
+  <component name="RunManager" selected="Python.usdinr">
     <configuration name="Generate Access Token" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Trading-Application" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -189,9 +194,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.trigger" />
         <item itemvalue="Python.usdinr" />
         <item itemvalue="Python.Generate Access Token" />
+        <item itemvalue="Python.trigger" />
         <item itemvalue="Python.postback" />
         <item itemvalue="Python.final" />
       </list>
@@ -595,5 +600,16 @@
     <MESSAGE value="added all the required sql connections. now just need to code for quantity and trigger conditions in sql." />
     <MESSAGE value="few more updates with sql integration" />
     <option name="LAST_COMMIT_MESSAGE" value="few more updates with sql integration" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/SQL_Based_project/trigger.py</url>
+          <line>391</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
