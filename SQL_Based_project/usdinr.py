@@ -1,4 +1,5 @@
-# from OpenSSL.SSL import WantReadError
+import OpenSSL
+from OpenSSL.SSL import WantReadError
 # from kiteconnect import exceptions
 from kiteconnect import KiteTicker, KiteConnect
 import math
@@ -14,7 +15,7 @@ import mysql.connector
 
 api_k = "dysoztj41hntm1ma"  # api_key
 api_s = "e9u4vp3t8jx9opnmg7rkyuwhpghgim6c"  # api_secret
-access_token = "GahlDfxNomH2P64fh73Ymu3C5qUxeqQ6"
+access_token = "yjX6W6KZkq4rdIqc7cVCl3Ky6G2a4bW6"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -23,21 +24,14 @@ mydb = mysql.connector.connect(
     user="root",
     passwd="password123",
     database="testdb",
-    port=3306
+    port=3306,
+    connect_timeout=100000
 )
 
 my_cursor = mydb.cursor()
 candle_thread_running = ""
 
 trd_portfolio = {
-    4708097: {"Market": "NSE", "Segment": "Equity", "Symbol": "RBLBANK", "max_quantity": 100, 'Direction': "", 'Orderid': 0,
-              'Target_order': '',
-              'Target_order_id': 0, 'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050,
-              'Quantity_multiplier': 1, 'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003, 'stt_ctt': 0.00025,
-              'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003, 'margin_multiplier': 5,
-              'exchange': kite.EXCHANGE_NSE, 'buffer_quantity': 5, 'round_value': 2, 'Trade': "YES", 'tick_size': .05,
-              'start_time': datetime.time(9, 29, 10), 'end_time': datetime.time(15, 15, 10), "lower_circuit_limit": 0,
-              "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0, 'OHLC_Thread_Running': 'NO'},
     1270529: {"Market": "NSE", "Segment": "Equity", "Symbol": "ICICIBANK", "max_quantity": 100, 'Direction': "", 'Orderid': 0,
               'Target_order': '',
               'Target_order_id': 0, 'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050,
@@ -52,15 +46,15 @@ ohlc = {}  # python dictionary to store the ohlc data in it
 ohlc_temp = pd.DataFrame(columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
 ohlc_final_1min = pd.DataFrame(columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
 RENKO = {}  # python dictionary to store the renko chart data in it
-RENKO_temp = pd.DataFrame(columns=["Symbol", "Open", "Close", "Direction", "Position", "SMA", "TMA"])
-RENKO_Final = pd.DataFrame(columns=["Symbol", "Open", "Close", "Direction", "Position", "SMA", "TMA"])
+RENKO_temp = pd.DataFrame(columns=["Symbol", "Open", "Close", "Direction", "Position", "SMA", "TMA", "Time"])
+RENKO_Final = pd.DataFrame(columns=["Symbol", "Open", "Close", "Direction", "Position", "SMA", "TMA", "Time"])
 HA = {}  # python dictionary to store the ohlc data in it
 HA_temp = pd.DataFrame(columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
 HA_Final = pd.DataFrame(columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA"])
 
 for x in trd_portfolio:
     ohlc[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0, 0, 0]  # [Symbol, Traded Time, Open, High, Low, Close, True Range, Average True Range, Simple Moving Average, Triangular moving average, positions ]
-    RENKO[x] = ["Symbol", 0, 0, "Signal", "None", 0, 0]
+    RENKO[x] = ["Symbol", 0, 0, "Signal", "None", 0, 0, "Time"]
     HA[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0, 0, 0]
 
 
@@ -78,31 +72,60 @@ def calculate_ohlc_one_minute(company_data):
             #                        columns=["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA",
             #                                 "TMA"])
 
+            # Calculating SMA for Heiken Ashi. Only SMA Calculation for Henken Ashi
+            if len(HA_Final.loc[
+                       HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) < 13:
+                HA[company_data['instrument_token']][8] = 0
+            elif len(HA_Final.loc[
+                         HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) >= 13:
+                z = [HA[company_data['instrument_token']][5],
+                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                         -1, 5],
+                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                         -2, 5],
+                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                         -3, 5],
+                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                         -4, 5],
+                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                         -5, 5],
+                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                         -6, 5],
+                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                         -7, 5],
+                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                         -8, 5],
+                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                         -9, 5],
+                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                         -10, 5],
+                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                         -11, 5],
+                     HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
+                         -12, 5]]
+                HA[company_data['instrument_token']][8] = round(sum(z) / 13, 4)
+            # SMA Calculation complete for Heiken Ashi
+
             # adding the row into the final ohlc table
-            ohlc_final_1min = ohlc_final_1min.append(ohlc[company_data['instrument_token']], ignore_index=True)
-            print("INSERT INTO " + str(
-                trd_portfolio[company_data['instrument_token']]['Symbol']) + "_ohlc_final_1min values (\"" + str(
-                ohlc[company_data['instrument_token']][0]) + "\",\"" + str(ohlc[company_data['instrument_token']][1]) + "\"," + str(
-                ohlc[company_data['instrument_token']][2]) + "," + str(ohlc[company_data['instrument_token']][3]) + "," + str(
-                ohlc[company_data['instrument_token']][4]) + "," + str(ohlc[company_data['instrument_token']][5]) + "," + str(
-                ohlc[company_data['instrument_token']][6]) + "," + str(ohlc[company_data['instrument_token']][7]) + "," + str(
-                ohlc[company_data['instrument_token']][8]) + "," + str(ohlc[company_data['instrument_token']][9]) + ")")
+            # ohlc_final_1min = ohlc_final_1min.append(ohlc[company_data['instrument_token']], ignore_index=True)
+            ohlc_final_1min.loc[ohlc[company_data['instrument_token']][1], :] = ohlc[company_data['instrument_token']]
             my_cursor.execute("INSERT INTO " + str(
                 trd_portfolio[company_data['instrument_token']]['Symbol']) + "_ohlc_final_1min values (\"" + str(
                 ohlc[company_data['instrument_token']][0]) + "\",\"" + str(ohlc[company_data['instrument_token']][1]) + "\"," + str(
                 ohlc[company_data['instrument_token']][2]) + "," + str(ohlc[company_data['instrument_token']][3]) + "," + str(
                 ohlc[company_data['instrument_token']][4]) + "," + str(ohlc[company_data['instrument_token']][5]) + "," + str(
                 ohlc[company_data['instrument_token']][6]) + "," + str(ohlc[company_data['instrument_token']][7]) + "," + str(
-                ohlc[company_data['instrument_token']][8]) + "," + str(ohlc[company_data['instrument_token']][9]) + ")")
+                ohlc[company_data['instrument_token']][8]) + "," + str(ohlc[company_data['instrument_token']][9]) + ");")
             mydb.commit()
-            HA_Final = HA_Final.append(HA[company_data['instrument_token']], ignore_index=True)
+            HA_Final.loc[HA[company_data['instrument_token']][1], :] = HA[company_data['instrument_token']]
+            # HA_Final = HA_Final.append(HA[company_data['instrument_token']], ignore_index=True)
             my_cursor.execute("INSERT INTO " + str(
                 trd_portfolio[company_data['instrument_token']]['Symbol']) + "_HA_Final values (\"" + str(
                 HA[company_data['instrument_token']][0]) + "\",\"" + str(HA[company_data['instrument_token']][1]) + "\"," + str(
                 HA[company_data['instrument_token']][2]) + "," + str(HA[company_data['instrument_token']][3]) + "," + str(
                 HA[company_data['instrument_token']][4]) + "," + str(HA[company_data['instrument_token']][5]) + "," + str(
                 HA[company_data['instrument_token']][6]) + "," + str(HA[company_data['instrument_token']][7]) + "," + str(
-                HA[company_data['instrument_token']][8]) + "," + str(HA[company_data['instrument_token']][9]) + ")")
+                HA[company_data['instrument_token']][8]) + "," + str(HA[company_data['instrument_token']][9]) + ");")
             mydb.commit()
 
             # making ohlc for new candle
@@ -312,40 +335,6 @@ def calculate_ohlc_one_minute(company_data):
                 min(ohlc[company_data['instrument_token']][4], HA[company_data['instrument_token']][2],
                     HA[company_data['instrument_token']][5]), 4)
 
-        # Calculating SMA for Heiken Ashi. Only SMA Calculation for Henken Ashi
-        if len(HA_Final.loc[
-                   HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) < 13:
-            HA[company_data['instrument_token']][8] = 0
-        elif len(HA_Final.loc[
-                     HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) >= 13:
-            z = [HA_temp.iloc[-1, 5],
-                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                     -1, 5],
-                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                     -2, 5],
-                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                     -3, 5],
-                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                     -4, 5],
-                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                     -5, 5],
-                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                     -6, 5],
-                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                     -7, 5],
-                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                     -8, 5],
-                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                     -9, 5],
-                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                     -10, 5],
-                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                     -11, 5],
-                 HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                     -12, 5]]
-            HA[company_data['instrument_token']][8] = round(sum(z) / 13, 4)
-        # SMA Calculation complete for Heiken Ashi
-
         # starting to calculate the RENKO table
         if len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0:  # or (len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0):  # checking if there is atleast 1 candle in OHLC Dataframe or RENKO Dataframe
             if ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7] != 0:  # or (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7] != [0, 'NaN']):  #checking that we do not have the ATR value as 0
@@ -359,7 +348,8 @@ def calculate_ohlc_one_minute(company_data):
                     if company_data['last_price'] >= ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7] + RENKO[company_data['instrument_token']][1]:
                         RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] + ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "BUY"
-                        RENKO_temp = pd.DataFrame([RENKO[company_data['instrument_token']]], columns=["Symbol", "Open", "Close", "Direction", "Position", "SMA", "TMA"])
+                        RENKO[company_data['instrument_token']][1] = str(((company_data["timestamp"]).replace(second=0)))
+                        RENKO_temp = pd.DataFrame([RENKO[company_data['instrument_token']]], columns=["Symbol", "Open", "Close", "Direction", "Position", "SMA", "TMA", "Time"])
 
                         # Calculating SMA
                         if len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) <= 9:
@@ -435,9 +425,11 @@ def calculate_ohlc_one_minute(company_data):
                                                                                              'instrument_token']][
                                                                                              'Symbol']].iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "SELL"
+                        RENKO[company_data['instrument_token']][1] = str(
+                            ((company_data["timestamp"]).replace(second=0)))
                         RENKO_temp = pd.DataFrame([RENKO[company_data['instrument_token']]],
                                                   columns=["Symbol", "Open", "Close", "Direction", "Position", "SMA",
-                                                           "TMA"])
+                                                           "TMA", "Time"])
                         # Calculating SMA
                         if len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']][
                             'Symbol']]) <= 9:
@@ -514,6 +506,8 @@ def calculate_ohlc_one_minute(company_data):
                                                                                              'instrument_token']][
                                                                                              'Symbol']].iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "BUY"
+                        RENKO[company_data['instrument_token']][1] = str(
+                            ((company_data["timestamp"]).replace(second=0)))
                         RENKO_temp = pd.DataFrame([RENKO[company_data['instrument_token']]],
                                                   columns=["Symbol", "Open", "Close", "Direction", "Position", "SMA",
                                                            "TMA"])
@@ -613,6 +607,8 @@ def calculate_ohlc_one_minute(company_data):
                                                                                              'instrument_token']][
                                                                                              'Symbol']].iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "SELL"
+                        RENKO[company_data['instrument_token']][1] = str(
+                            ((company_data["timestamp"]).replace(second=0)))
                         RENKO_temp = pd.DataFrame([RENKO[company_data['instrument_token']]],
                                                   columns=["Symbol", "Open", "Close", "Direction", "Position", "SMA",
                                                            "TMA"])
@@ -692,6 +688,8 @@ def calculate_ohlc_one_minute(company_data):
                                                                                              'instrument_token']][
                                                                                              'Symbol']].iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "SELL"
+                        RENKO[company_data['instrument_token']][1] = str(
+                            ((company_data["timestamp"]).replace(second=0)))
                         RENKO_temp = pd.DataFrame([RENKO[company_data['instrument_token']]],
                                                   columns=["Symbol", "Open", "Close", "Direction", "Position", "SMA",
                                                            "TMA"])
@@ -791,6 +789,8 @@ def calculate_ohlc_one_minute(company_data):
                                                                                              'instrument_token']][
                                                                                              'Symbol']].iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "BUY"
+                        RENKO[company_data['instrument_token']][1] = str(
+                            ((company_data["timestamp"]).replace(second=0)))
                         RENKO_temp = pd.DataFrame([RENKO[company_data['instrument_token']]],
                                                   columns=["Symbol", "Open", "Close", "Direction", "Position", "SMA",
                                                            "TMA"])

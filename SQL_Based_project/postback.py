@@ -29,9 +29,11 @@ def post():
     order_response = request.get_data()
     f.write(str(order_response) + '\n')
     structured_response = json.loads(order_response)
-    if structured_response['average_price'] == "COMPLETE":
+    print(structured_response)
+    if structured_response['status'] == "COMPLETE":
         print(structured_response['average_price'], structured_response['tradingsymbol'], structured_response['transaction_type'], structured_response['quantity'], structured_response['status'], structured_response['instrument_token'])
         # circuit_limits()
+        print("INSERT INTO order_updates values (\"" + str(structured_response['tradingsymbol']) + "\"," + str(structured_response['instrument_token']) + ",\"" + str(structured_response['status']) + "\",\"" + str(structured_response['transaction_type']) + "\"," + str(structured_response['average_price']) + "," + str(structured_response['quantity']) + ")")
         my_cursor.execute("INSERT INTO order_updates values (\"" + str(structured_response['tradingsymbol']) + "\"," + str(structured_response['instrument_token']) + ",\"" + str(structured_response['status']) + "\",\"" + str(structured_response['transaction_type']) + "\"," + str(structured_response['average_price']) + "," + str(structured_response['quantity']) + ")")
         mydb.commit()
     f.close()
