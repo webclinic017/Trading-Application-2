@@ -20,16 +20,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="ohlc and ha minute calculations moved to dictionary, sql giving issues">
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/1.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-01-15.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-01-18.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-01-20.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-01-21.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-01-22.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/testssl_cpy.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/notes" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/notes" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/postback.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/postback.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1.sql" beforeDir="false" afterPath="$PROJECT_DIR$/1.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/trigger.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/trigger.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" afterDir="false" />
     </list>
@@ -69,7 +61,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="full.screen.before.presentation.mode" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/SQL_Based_project" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/USD-INR.py" />
   </component>
   <component name="RecentsManager">
@@ -81,7 +73,7 @@
       <recent name="C:\Users\win10\PycharmProjects\Trading-Application" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.trigger">
+  <component name="RunManager" selected="Python.usdinr">
     <configuration name="1" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Trading-Application" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -210,10 +202,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.trigger" />
-        <item itemvalue="Python.postback" />
         <item itemvalue="Python.usdinr" />
         <item itemvalue="Python.Generate Access Token" />
+        <item itemvalue="Python.trigger" />
+        <item itemvalue="Python.postback" />
         <item itemvalue="Python.1" />
       </list>
     </recent_temporary>
@@ -229,13 +221,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1554405465942</updated>
-    </task>
-    <task id="LOCAL-00015" summary="Modified tick file to work for equity. on directional decision strategy. Next update would be to exit positions at previous ordered price + ATR">
-      <created>1564643665401</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1564643665401</updated>
     </task>
     <task id="LOCAL-00016" summary="lot of changes. Trying to get historical data.">
       <created>1567668126381</created>
@@ -573,7 +558,14 @@
       <option name="project" value="LOCAL" />
       <updated>1608734951671</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="ohlc and ha minute calculations moved to dictionary, sql giving issues">
+      <created>1611666072323</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1611666072323</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -616,21 +608,5 @@
     <MESSAGE value="few more updates with sql integration" />
     <MESSAGE value="ohlc and ha minute calculations moved to dictionary, sql giving issues" />
     <option name="LAST_COMMIT_MESSAGE" value="ohlc and ha minute calculations moved to dictionary, sql giving issues" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/SQL_Based_project/trigger.py</url>
-          <line>195</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/SQL_Based_project/usdinr.py</url>
-          <line>349</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

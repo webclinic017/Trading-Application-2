@@ -1,21 +1,23 @@
 CREATE TABLE miscs (day_margin integer, candle_thread_running boolean);
 
-CREATE TABLE trd_portfolio (token integer, Market VARCHAR(255), Segment VARCHAR(255), Symbol VARCHAR(255), max_quantity integer, Direction VARCHAR(255), Orderid integer, Target_order integer, Target_order_id, Positions integer, Tradable_quantity integer, LTP integer, Per_Unit_Cost integer, Quantity_multiplier integer, buy_brokerage integer, sell_brokerage integer, stt_ctt integer, buy_tran integer, sell_tran integer, gst integer, stamp integer, margin_multiplier integer, kite_exchange VARCHAR(255), buffer_quantity integer, round_value integer, Trade VARCHAR(255), tick_size integer, start_time, end_time, lower_circuit_limit integer, upper_circuit_limit integer, Target_amount integer, Options_lot_size integer)
+CREATE TABLE trd_portfolio (token integer, Market VARCHAR(255), Segment VARCHAR(255), Symbol VARCHAR(255), max_quantity integer, Direction VARCHAR(255), Orderid integer, Target_order varchar(10), Target_order_id integer, Positions integer, Tradable_quantity integer, LTP decimal(10, 4), Per_Unit_Cost decimal(10, 4), Quantity_multiplier decimal(10, 4), buy_brokerage decimal(10, 4), sell_brokerage decimal(10, 4), stt_ctt decimal(10, 4), buy_tran decimal(10, 4), sell_tran decimal(10, 4), gst decimal(10, 4), stamp decimal(10, 4), margin_multiplier decimal(10, 4), kite_exchange VARCHAR(255), buffer_quantity integer, round_value integer, Trade VARCHAR(255), tick_size decimal(10, 4), start_time VARCHAR(255), end_time VARCHAR(255), lower_circuit_limit decimal(10, 4), upper_circuit_limit decimal(10, 4), Target_amount decimal(10, 4), Options_lot_size integer);
 
-CREATE TABLE RBLBANK_ohlc_final_1min (Symbol VARCHAR(255), Time VARCHAR(255),Open integer,High integer,Low integer,Close integer,TR integer,ATR integer,SMA integer,TMA integer)
+CREATE TABLE RBLBANK_ohlc_final_1min (Symbol VARCHAR(255), Time VARCHAR(255),Open integer,High integer,Low integer,Close integer,TR integer,ATR integer,SMA integer,TMA integer);
 
-CREATE TABLE ICICIBANK_ohlc_final_1min (Symbol VARCHAR(255), Time VARCHAR(255),Open integer,High integer,Low integer,Close integer,TR integer,ATR integer,SMA integer,TMA integer)
+CREATE TABLE ICICIBANK_ohlc_final_1min (Symbol VARCHAR(255), Time VARCHAR(255),Open integer,High integer,Low integer,Close integer,TR integer,ATR integer,SMA integer,TMA integer);
 
 SHOW DATABASES;
 
 USE testdb;
 SHOW TABLES;
 
-describe order_updates;
+describe icicibank_renko_final;
 
-INSERT INTO USDINR20OCTFUT_ohlc_final_1min values ("ICICIBANK", "14:41:00", 172, 172, 172, 172, 0, 0, 0, 0);
+alter table order_updates modify column Avg_Price float;
 
-select * from RBLBANK_ohlc_final_1min;
+INSERT INTO trd_portfolio (OHLC_Thread_Running) values ("NO");
+
+select * from trd_portfolio;
 select * from RBLBANK_ohlc_final_1min;
 select * from usdinr20octfut_ohlc_final_1min;
 
@@ -27,26 +29,43 @@ INSERT INTO USDINR20OCTFUT_ohlc_final_1min (Symbol, Time, Open, High, Low, Close
 
 alter table usdinr20octfut_renko_final drop ATR;
 
-alter table usdinr20octfut_renko_final add Direction varchar(255) after Close;
+alter table rblbank_renko_final add Time varchar(20) after TMA;
 
 create table ORDER_UPDATES (Symbol VARCHAR(255), Ins_Token integer, Ord_Status VARCHAR(255), Trans_type VARCHAR(255), Avg_Price decimal(10,4), Quantity integer);
 
 /*icicibank_ha_final
 icicibank_ohlc_final_1min
 icicibank_renko_final
+miscs
+order_updates
+processed_orders
 rblbank_ha_final
 rblbank_ohlc_final_1min
 rblbank_renko_final
+trd_portfolio
 usdinr20octfut_ha_final
 usdinr20octfut_ohlc_final_1min
-usdinr20octfut_renko_final*/
+usdinr20octfut_renko_final
+ */
 
-select * from rblbank_renko_final;
+select * from icicibank_ha_final order by time desc limit 1;
 
 create table Processed_orders (OrderId integer);
 
 select count(*) from order_updates;
 
-select * from order_updates limit 1;
+select * from icicibank_ohlc_final_1min;
 
-delete from rblbank_renko_final limit 1;
+delete from order_updates;
+
+insert into trd_portfolio values (1270529, "NSE", "Equity", "ICICIBANK", 100, "", 0, "", 0, 0, 0, 0, 1050, 1, 0.0003, 0.0003, 0.00025, 0.0000325, 0.0000325, 0.18, 0.00003, 5, "kite.EXCHANGE_NSE", 5, 2, "YES", .05, "9, 29, 10", "15, 15, 10", 0, 0, 0, 0);
+
+update trd_portfolio set OHLC_Thread_Running = "NO";
+
+INSERT INTO RBLBANK_ohlc_final_1min values ("RBLBANK","2020-12-23 10:59:00",216.35,216.45,216.1,216.25,0.35,0,0,0);
+
+show variables like '%timeout%';
+
+SET @@GLOBAL.net_write_timeout=300;
+
+select * from order_updates;

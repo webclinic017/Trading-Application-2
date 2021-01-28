@@ -34,7 +34,7 @@ for x in ds.trd_portfolio:
 
 
 def get_previous_close(items):
-    my_cursor.execute("select Close from " + str(ds.trd_portfolio[items]['Symbol']) + "_ohlc_final_1min order by time DESC limit 1;")
+    my_cursor.execute("select Close from " + str(ds.trd_portfolio[items]['Symbol']) + "_renko_final order by time DESC limit 1;")
     data = my_cursor.fetchall()
     return float(data[0][0])
 
@@ -104,7 +104,7 @@ def ord_update_count():
 
 
 def length_table(stock):
-    my_cursor.execute("select count(*) from " + str(stock) + "_ha_final")
+    my_cursor.execute("select count(*) from " + str(stock) + "_renko_final")
     records = my_cursor.fetchall()
     mydb.commit()
     return records[0][0]
@@ -179,10 +179,10 @@ def first_order():
 
 
 def latest_row(stock):
-    my_cursor.execute("select * from " + str(stock) + "_ha_final order by time DESC limit 1;")
+    my_cursor.execute("select * from " + str(stock) + "_renko_final order by time DESC limit 1;")
     data = my_cursor.fetchone()
     mydb.commit()
-    return [data[2], data[3], data[4], data[5], data[8]]
+    return [data[2], data[3], data[5]]
 
 
 def del_processed_order():
