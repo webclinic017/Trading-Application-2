@@ -19,7 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="Updated Renko to use dictionary instead of temp, Renko SMA not getting calculated">
+    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="made sma &amp; tma of renko as common method.&#10;reduced the number lines to 327">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" afterDir="false" />
     </list>
@@ -219,13 +219,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1554405465942</updated>
-    </task>
-    <task id="LOCAL-00017" summary="lot of changes. Trying to get historical data.">
-      <created>1567729973831</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1567729973831</updated>
     </task>
     <task id="LOCAL-00018" summary="lot of changes. Trying to get historical data.">
       <created>1567746308746</created>
@@ -563,7 +556,14 @@
       <option name="project" value="LOCAL" />
       <updated>1611843711723</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="made sma &amp; tma of renko as common method.&#10;reduced the number lines to 327">
+      <created>1611864369081</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1611864369081</updated>
+    </task>
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -580,7 +580,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Added read timeout exception catch. Probably should not see the readtimeout error message from now." />
     <MESSAGE value="changed from sbi to Nifty options. modified the quantity calculator." />
     <MESSAGE value="update the positions function to return 0 if no position for subscribed stock while we have other stocks." />
     <MESSAGE value="Made changes to the positions quantity for optoins code and also renamed for options." />
@@ -605,6 +604,7 @@
     <MESSAGE value="few more updates with sql integration" />
     <MESSAGE value="ohlc and ha minute calculations moved to dictionary, sql giving issues" />
     <MESSAGE value="Updated Renko to use dictionary instead of temp, Renko SMA not getting calculated" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated Renko to use dictionary instead of temp, Renko SMA not getting calculated" />
+    <MESSAGE value="made sma &amp; tma of renko as common method.&#10;reduced the number lines to 327" />
+    <option name="LAST_COMMIT_MESSAGE" value="made sma &amp; tma of renko as common method.&#10;reduced the number lines to 327" />
   </component>
 </project>

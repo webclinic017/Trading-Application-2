@@ -7,7 +7,7 @@ import mysql.connector
 
 api_k = "dysoztj41hntm1ma"  # api_key
 api_s = "e9u4vp3t8jx9opnmg7rkyuwhpghgim6c"  # api_secret
-access_token = "cUPiB1Js2HN28FD0aLMmX1Biyhm1lidO"
+access_token = "pM5PXV4n5y1EA2kCgfEQaPoei5gzKddr"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -271,6 +271,7 @@ def calculate_ohlc_one_minute(company_data):
                         RENKO[company_data['instrument_token']][3] = "SELL"
                         RENKO[company_data['instrument_token']][7] = str(company_data["timestamp"])
                         sma_tma_renko(company_data['instrument_token'])
+                        RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]
                 ########################################################
                 if RENKO[company_data['instrument_token']][3] == "BUY":
                     if company_data['last_price'] >= RENKO[company_data['instrument_token']][1] + ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]:
@@ -278,12 +279,14 @@ def calculate_ohlc_one_minute(company_data):
                         RENKO[company_data['instrument_token']][3] = "BUY"
                         RENKO[company_data['instrument_token']][7] = str(company_data["timestamp"])
                         sma_tma_renko(company_data['instrument_token'])
+                        RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]
                     elif company_data['last_price'] <= RENKO[company_data['instrument_token']][1] - (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2] - RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1]) - ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]:
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1]
                         RENKO[company_data['instrument_token']][2] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1] - ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "SELL"
                         RENKO[company_data['instrument_token']][7] = str(company_data["timestamp"])
                         sma_tma_renko(company_data['instrument_token'])
+                        RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]
                 ########################################################
                 if RENKO[company_data['instrument_token']][3] == "SELL":
                     if company_data['last_price'] <= RENKO[company_data['instrument_token']][1] - ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]:
@@ -291,12 +294,14 @@ def calculate_ohlc_one_minute(company_data):
                         RENKO[company_data['instrument_token']][3] = "SELL"
                         RENKO[company_data['instrument_token']][7] = str(company_data["timestamp"])
                         sma_tma_renko(company_data['instrument_token'])
+                        RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]
                     elif company_data['last_price'] >= RENKO[company_data['instrument_token']][1] + (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1] - RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]) + ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]:
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1]
                         RENKO[company_data['instrument_token']][2] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1] + ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]
                         RENKO[company_data['instrument_token']][3] = "BUY"
                         RENKO[company_data['instrument_token']][7] = str(company_data["timestamp"])
                         sma_tma_renko(company_data['instrument_token'])
+                        RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]
         trd_portfolio[company_data['instrument_token']]['OHLC_Thread_Running'] = "NO"
     except Exception as e:
         traceback.print_exc(e)
