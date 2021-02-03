@@ -286,88 +286,86 @@ def trigger(token):
             target()
         else:
             trigger_thread_running = "YES"
-            if length_table(ds.trd_portfolio[token]['Symbol']) >= 1:  # length of the HA final table
+            if length_table(ds.trd_portfolio[token]['Symbol']) >= 1:  # length of the RENKO final table
                 validation_row = latest_row(ds.trd_portfolio[token]['Symbol'])
                 # print(validation_row[0], validation_row[1], validation_row[2], validation_row[3], validation_row[4])
-                if (validation_row[0] == (validation_row[1])) and (validation_row[0] >
-                        validation_row[3]) and (validation_row[4] > (validation_row[3])):
+                if validation_row[2] != 0:
+                    if validation_row[1] == "SELL" and validation_row[2] > (validation_row[0]):
+                        if profit[token][4] > 0:
+                            print(profit[token][4])
+                            ds.kite.modify_order(variety="regular", order_id=ds.trd_portfolio[token]['Target_order_id'],
+                                              order_type=ds.kite.ORDER_TYPE_MARKET)
+                            time.sleep(3)
+                        elif profit[token][4] == 0:
+                            if ds.trd_portfolio[token]['Direction'] != "Down":
+                                if ds.trd_portfolio[token]['Tradable_quantity'] > 0:
+                                    ds.trd_portfolio[token]['Orderid'] = ds.kite.place_order(variety="regular",
+                                                                                       exchange=ds.trd_portfolio[token][
+                                                                                           'exchange'],
+                                                                                       tradingsymbol=ds.trd_portfolio[token][
+                                                                                           'Symbol'],
+                                                                                       transaction_type=ds.kite.TRANSACTION_TYPE_SELL,
+                                                                                       quantity=ds.trd_portfolio[token][
+                                                                                           'Tradable_quantity'],
+                                                                                       order_type=ds.kite.ORDER_TYPE_MARKET,
+                                                                                       product=ds.kite.PRODUCT_MIS)
+                                    print(ds.trd_portfolio[token]['Orderid'])
+                                    time.sleep(3)
+                                    order_status(token, ds.trd_portfolio[token]['Orderid'], 'SELL')
+                    # BUY Condition
+                    if validation_row[1] == "BUY" and validation_row[2] < (validation_row[0]):
+                        if profit[token][4] < 0:
+                            ds.kite.modify_order(variety="regular", order_id=ds.trd_portfolio[token]['Target_order_id'],
+                                              order_type=ds.kite.ORDER_TYPE_MARKET)
+                            time.sleep(2)
+                        elif profit[token][4] == 0:
+                            if ds.trd_portfolio[token]['Direction'] != "Up":
+                                if ds.trd_portfolio[token]['Tradable_quantity'] > 0:
+                                    ds.trd_portfolio[token]['Orderid'] = ds.kite.place_order(variety="regular",
+                                                                                       exchange=ds.trd_portfolio[token][
+                                                                                           'exchange'],
+                                                                                       tradingsymbol=ds.trd_portfolio[token][
+                                                                                           'Symbol'],
+                                                                                       transaction_type=ds.kite.TRANSACTION_TYPE_BUY,
+                                                                                       quantity=ds.trd_portfolio[token][
+                                                                                           'Tradable_quantity'],
+                                                                                       order_type=ds.kite.ORDER_TYPE_MARKET,
+                                                                                       product=ds.kite.PRODUCT_MIS)
+                                    print(ds.trd_portfolio[token]['Orderid'])
+                                    time.sleep(2)
+                                    order_status(token, ds.trd_portfolio[token]['Orderid'], 'BUY')
+                    # Below ones are target orders
                     if profit[token][4] > 0:
-                        print(profit[token][4])
-                        ds.kite.modify_order(variety="regular", order_id=ds.trd_portfolio[token]['Target_order_id'],
-                                          order_type=ds.kite.ORDER_TYPE_MARKET)
-                        time.sleep(3)
-                    elif profit[token][4] == 0:
-                        if ds.trd_portfolio[token]['Direction'] != "Down":
-                            if ds.trd_portfolio[token]['Tradable_quantity'] > 0:
-                                ds.trd_portfolio[token]['Orderid'] = ds.kite.place_order(variety="regular",
-                                                                                   exchange=ds.trd_portfolio[token][
-                                                                                       'exchange'],
-                                                                                   tradingsymbol=ds.trd_portfolio[token][
-                                                                                       'Symbol'],
-                                                                                   transaction_type=ds.kite.TRANSACTION_TYPE_SELL,
-                                                                                   quantity=ds.trd_portfolio[token][
-                                                                                       'Tradable_quantity'],
-                                                                                   order_type=ds.kite.ORDER_TYPE_MARKET,
-                                                                                   product=ds.kite.PRODUCT_MIS)
-                                print(ds.trd_portfolio[token]['Orderid'])
-                                time.sleep(3)
-                                order_status(token, ds.trd_portfolio[token]['Orderid'], 'SELL')
-                # BUY Condition
-                if (validation_row[0] ==
-                    validation_row[2]) and (validation_row[0] < validation_row[3]) and (validation_row[4] < (
-                        validation_row[3])):
+                        if ds.trd_portfolio[token]['Target_order'] != "YES":
+                            ds.trd_portfolio[token]['Target_order_id'] = ds.kite.place_order(variety="regular",
+                                                                                       exchange=ds.trd_portfolio[token][
+                                                                                           'exchange'],
+                                                                                       tradingsymbol=ds.trd_portfolio[token][
+                                                                                           'Symbol'],
+                                                                                       transaction_type=ds.kite.TRANSACTION_TYPE_SELL,
+                                                                                       quantity=max(abs(
+                                                                                           ds.trd_portfolio[token]['Positions']), abs(profit[token][4])),
+                                                                                       order_type=ds.kite.ORDER_TYPE_LIMIT,
+                                                                                       price=round(
+                                                                                           ds.trd_portfolio[token]['Target_amount'], 4), product=ds.kite.PRODUCT_MIS)
+                            if target_order_status(ds.trd_portfolio[token]['Target_order_id']) == "OPEN":
+                                ds.trd_portfolio[token]['Target_order'] = "YES"
                     if profit[token][4] < 0:
-                        ds.kite.modify_order(variety="regular", order_id=ds.trd_portfolio[token]['Target_order_id'],
-                                          order_type=ds.kite.ORDER_TYPE_MARKET)
-                        time.sleep(2)
-                    elif profit[token][4] == 0:
-                        if ds.trd_portfolio[token]['Direction'] != "Up":
-                            if ds.trd_portfolio[token]['Tradable_quantity'] > 0:
-                                ds.trd_portfolio[token]['Orderid'] = ds.kite.place_order(variety="regular",
-                                                                                   exchange=ds.trd_portfolio[token][
-                                                                                       'exchange'],
-                                                                                   tradingsymbol=ds.trd_portfolio[token][
-                                                                                       'Symbol'],
-                                                                                   transaction_type=ds.kite.TRANSACTION_TYPE_BUY,
-                                                                                   quantity=ds.trd_portfolio[token][
-                                                                                       'Tradable_quantity'],
-                                                                                   order_type=ds.kite.ORDER_TYPE_MARKET,
-                                                                                   product=ds.kite.PRODUCT_MIS)
-                                print(ds.trd_portfolio[token]['Orderid'])
-                                time.sleep(2)
-                                order_status(token, ds.trd_portfolio[token]['Orderid'], 'BUY')
-                # Below ones are target orders
-                if profit[token][4] > 0:
-                    if ds.trd_portfolio[token]['Target_order'] != "YES":
-                        ds.trd_portfolio[token]['Target_order_id'] = ds.kite.place_order(variety="regular",
-                                                                                   exchange=ds.trd_portfolio[token][
-                                                                                       'exchange'],
-                                                                                   tradingsymbol=ds.trd_portfolio[token][
-                                                                                       'Symbol'],
-                                                                                   transaction_type=ds.kite.TRANSACTION_TYPE_SELL,
-                                                                                   quantity=max(abs(
-                                                                                       ds.trd_portfolio[token]['Positions']), abs(profit[token][4])),
-                                                                                   order_type=ds.kite.ORDER_TYPE_LIMIT,
-                                                                                   price=round(
-                                                                                       ds.trd_portfolio[token]['Target_amount'], 4), product=ds.kite.PRODUCT_MIS)
-                        if target_order_status(ds.trd_portfolio[token]['Target_order_id']) == "OPEN":
-                            ds.trd_portfolio[token]['Target_order'] = "YES"
-                if profit[token][4] < 0:
-                    if ds.trd_portfolio[token]['Target_order'] != "YES":
-                        ds.trd_portfolio[token]['Target_order_id'] = ds.kite.place_order(variety="regular",
-                                                                                   exchange=ds.trd_portfolio[token][
-                                                                                       'exchange'],
-                                                                                   tradingsymbol=ds.trd_portfolio[token][
-                                                                                       'Symbol'],
-                                                                                   transaction_type=ds.kite.TRANSACTION_TYPE_BUY,
-                                                                                   quantity=max(abs(
-                                                                                       ds.trd_portfolio[token]['Positions']), abs(profit[token][4])),
-                                                                                   order_type=ds.kite.ORDER_TYPE_LIMIT,
-                                                                                   price=round_down(
-                                                                                       ds.trd_portfolio[token]['Target_amount'], 4),
-                                                                                   product=ds.kite.PRODUCT_MIS)
-                        if target_order_status(ds.trd_portfolio[token]['Target_order_id']) == "OPEN":
-                            ds.trd_portfolio[token]['Target_order'] = "YES"
+                        if ds.trd_portfolio[token]['Target_order'] != "YES":
+                            ds.trd_portfolio[token]['Target_order_id'] = ds.kite.place_order(variety="regular",
+                                                                                       exchange=ds.trd_portfolio[token][
+                                                                                           'exchange'],
+                                                                                       tradingsymbol=ds.trd_portfolio[token][
+                                                                                           'Symbol'],
+                                                                                       transaction_type=ds.kite.TRANSACTION_TYPE_BUY,
+                                                                                       quantity=max(abs(
+                                                                                           ds.trd_portfolio[token]['Positions']), abs(profit[token][4])),
+                                                                                       order_type=ds.kite.ORDER_TYPE_LIMIT,
+                                                                                       price=round_down(
+                                                                                           ds.trd_portfolio[token]['Target_amount'], 4),
+                                                                                       product=ds.kite.PRODUCT_MIS)
+                            if target_order_status(ds.trd_portfolio[token]['Target_order_id']) == "OPEN":
+                                ds.trd_portfolio[token]['Target_order'] = "YES"
             trigger_thread_running = "NO"
     except TypeError:
         traceback.print_exc()

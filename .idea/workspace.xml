@@ -19,8 +19,12 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="made sma &amp; tma of renko as common method.&#10;reduced the number lines to 327">
+    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="Fixed the Renko calculating issue. Somehow the SME gets started to calculate after around 13 rows. Need to fix this issue, but before that need to modify trigger and add multiple threads for multiple stocks">
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-02-02.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-02-03.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1.sql" beforeDir="false" afterPath="$PROJECT_DIR$/1.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/trigger.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/trigger.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -71,7 +75,7 @@
       <recent name="C:\Users\win10\PycharmProjects\Trading-Application" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.usdinr">
+  <component name="RunManager" selected="Python.trigger">
     <configuration name="1" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Trading-Application" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -200,10 +204,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.usdinr" />
-        <item itemvalue="Python.Generate Access Token" />
         <item itemvalue="Python.trigger" />
         <item itemvalue="Python.postback" />
+        <item itemvalue="Python.usdinr" />
+        <item itemvalue="Python.Generate Access Token" />
         <item itemvalue="Python.1" />
       </list>
     </recent_temporary>
@@ -219,13 +223,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1554405465942</updated>
-    </task>
-    <task id="LOCAL-00018" summary="lot of changes. Trying to get historical data.">
-      <created>1567746308746</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1567746308746</updated>
     </task>
     <task id="LOCAL-00019" summary="modified equity scenario to egt historical data from Alpha Vantage">
       <created>1568887335221</created>
@@ -563,7 +560,14 @@
       <option name="project" value="LOCAL" />
       <updated>1611864369081</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="Fixed the Renko calculating issue. Somehow the SME gets started to calculate after around 13 rows. Need to fix this issue, but before that need to modify trigger and add multiple threads for multiple stocks">
+      <created>1611915461107</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1611915461107</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -580,7 +584,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="changed from sbi to Nifty options. modified the quantity calculator." />
     <MESSAGE value="update the positions function to return 0 if no position for subscribed stock while we have other stocks." />
     <MESSAGE value="Made changes to the positions quantity for optoins code and also renamed for options." />
     <MESSAGE value="Modified tick file to work for equity. on directional decision strategy. Next update would be to exit positions at previous ordered price + ATR" />
@@ -605,6 +608,7 @@
     <MESSAGE value="ohlc and ha minute calculations moved to dictionary, sql giving issues" />
     <MESSAGE value="Updated Renko to use dictionary instead of temp, Renko SMA not getting calculated" />
     <MESSAGE value="made sma &amp; tma of renko as common method.&#10;reduced the number lines to 327" />
-    <option name="LAST_COMMIT_MESSAGE" value="made sma &amp; tma of renko as common method.&#10;reduced the number lines to 327" />
+    <MESSAGE value="Fixed the Renko calculating issue. Somehow the SME gets started to calculate after around 13 rows. Need to fix this issue, but before that need to modify trigger and add multiple threads for multiple stocks" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed the Renko calculating issue. Somehow the SME gets started to calculate after around 13 rows. Need to fix this issue, but before that need to modify trigger and add multiple threads for multiple stocks" />
   </component>
 </project>

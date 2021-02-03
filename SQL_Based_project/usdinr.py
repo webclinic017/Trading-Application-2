@@ -7,7 +7,7 @@ import mysql.connector
 
 api_k = "dysoztj41hntm1ma"  # api_key
 api_s = "e9u4vp3t8jx9opnmg7rkyuwhpghgim6c"  # api_secret
-access_token = "pM5PXV4n5y1EA2kCgfEQaPoei5gzKddr"
+access_token = "JeqV9ZNkZKn307sjUPGepcKbw8bypLZl"
 kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 
@@ -51,6 +51,7 @@ for x in trd_portfolio:
 
 
 def sma_tma_renko(token):
+    trd_portfolio[token]['OHLC_Thread_Running'] = "YES"
     # Calculating SMA
     if len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[token]['Symbol']]) <= 9:
         RENKO[token][5] = 0
@@ -88,6 +89,7 @@ def sma_tma_renko(token):
                       "\"," + str(RENKO[token][1]) + "," + str(RENKO[token][2]) + ",\"" + str(RENKO[token][3]) + "\",\"" + str(RENKO[token][4]) + "\"," +
                       str(RENKO[token][5]) + "," + str(RENKO[token][6]) + ",\"" + str(RENKO[token][7]) + "\")")
     mydb.commit()
+    trd_portfolio[token]['OHLC_Thread_Running'] = "NO"
 
 
 def calculate_ohlc_one_minute(company_data):

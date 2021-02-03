@@ -17,9 +17,10 @@ alter table order_updates modify column Avg_Price float;
 
 INSERT INTO trd_portfolio (OHLC_Thread_Running) values ("NO");
 
-select * from trd_portfolio;
-select * from RBLBANK_ohlc_final_1min;
-select * from usdinr20octfut_ohlc_final_1min;
+select * from icicibank_renko_final order by time desc limit 30;
+select * from order_updates;
+
+delete from icicibank_renko_final where Time in ('%2021-02-01%');
 
 drop table rblbank_renko_final;
 
