@@ -34,7 +34,7 @@ for x in ds.trd_portfolio:
 
 
 def get_previous_close(items):
-    my_cursor.execute("select Close from " + str(ds.trd_portfolio[items]['Symbol']) + "_renko_final order by time DESC limit 1;")
+    my_cursor.execute("select Close from " + str(ds.trd_portfolio[items]['Symbol']) + "_ohlc_final_1min order by time DESC limit 1;")
     data = my_cursor.fetchall()
     return float(data[0][0])
 
