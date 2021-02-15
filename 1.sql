@@ -13,14 +13,15 @@ SHOW TABLES;
 
 describe icicibank_renko_final;
 
-alter table order_updates modify column Avg_Price float;
+
 
 INSERT INTO trd_portfolio (OHLC_Thread_Running) values ("NO");
 
-select * from icicibank_renko_final order by time desc limit 30;
+select * from icicibank_ohlc_final_1min order by time desc limit 20 ;
+select * from icicibank_renko_final order by time desc limit 20;
 select * from order_updates;
 
-delete from icicibank_renko_final where Time in ('%2021-02-01%');
+delete from rblbank_renko_final;
 
 drop table rblbank_renko_final;
 
@@ -29,7 +30,7 @@ CREATE TABLE RBLBANK_HA_Final (Symbol VARCHAR(255), Time VARCHAR(255),Open decim
 INSERT INTO USDINR20OCTFUT_ohlc_final_1min (Symbol, Time, Open, High, Low, Close, TR, ATR, SMA, TMA) values ("USDINR20OCTFUT","2020-10-16 16:08:00",778453.3975,778485.3975,778748.3975,758453.3975,0.0,0,0,0);
 
 alter table usdinr20octfut_renko_final drop ATR;
-
+alter table icicibank_renko_final modify column TMA float;
 alter table rblbank_renko_final add Time varchar(20) after TMA;
 
 create table ORDER_UPDATES (Symbol VARCHAR(255), Ins_Token integer, Ord_Status VARCHAR(255), Trans_type VARCHAR(255), Avg_Price decimal(10,4), Quantity integer);
@@ -57,7 +58,7 @@ select count(*) from order_updates;
 
 select * from icicibank_ohlc_final_1min;
 
-delete from order_updates;
+delete from icicibank_renko_final;
 
 insert into trd_portfolio values (1270529, "NSE", "Equity", "ICICIBANK", 100, "", 0, "", 0, 0, 0, 0, 1050, 1, 0.0003, 0.0003, 0.00025, 0.0000325, 0.0000325, 0.18, 0.00003, 5, "kite.EXCHANGE_NSE", 5, 2, "YES", .05, "9, 29, 10", "15, 15, 10", 0, 0, 0, 0);
 

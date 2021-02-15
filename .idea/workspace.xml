@@ -19,25 +19,12 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="atlast, code working for icici and making trades peacefully.">
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-02-04.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-02-08.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-02-09.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/Gen-Access-tkn.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/access-token.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/chromedriver.exe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/ngrok.exe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/ngrok_run.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/postback.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/access-token.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/chromedriver.exe" afterDir="false" />
+    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="moved the renko temp code back to avoid multiple entries">
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-02-10.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Generate Access Token.py" beforeDir="false" afterPath="$PROJECT_DIR$/Generate Access Token.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/datasetup.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/datasetup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/notes" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/notes" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/test.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/testssl_cpy.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/trigger.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/trigger.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1.sql" beforeDir="false" afterPath="$PROJECT_DIR$/1.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/1.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/access-token.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/access-token.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -90,7 +77,28 @@
       <recent name="C:\Users\win10\PycharmProjects\Trading-Application" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.trigger">
+  <component name="RunManager" selected="Python.1">
+    <configuration name="1" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Trading-Application" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/SQL_Based_project" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/SQL_Based_project/1.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="Gen-Access-tkn" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Trading-Application" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -104,27 +112,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/SQL_Based_project/Gen-Access-tkn.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Generate Access Token" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Trading-Application" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Generate Access Token.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -219,11 +206,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.trigger" />
-        <item itemvalue="Python.postback" />
+        <item itemvalue="Python.1" />
         <item itemvalue="Python.usdinr" />
         <item itemvalue="Python.Gen-Access-tkn" />
-        <item itemvalue="Python.Generate Access Token" />
+        <item itemvalue="Python.postback" />
+        <item itemvalue="Python.trigger" />
       </list>
     </recent_temporary>
   </component>
@@ -238,13 +225,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1554405465942</updated>
-    </task>
-    <task id="LOCAL-00020" summary="updated the calculate 1 min to refer to multiple stocks.">
-      <created>1571412239862</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1571412239862</updated>
     </task>
     <task id="LOCAL-00021" summary="updates by teja.">
       <created>1571801364795</created>
@@ -582,7 +562,14 @@
       <option name="project" value="LOCAL" />
       <updated>1612346307253</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="moved the renko temp code back to avoid multiple entries">
+      <created>1612933778745</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1612933778746</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -599,7 +586,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Made changes to the positions quantity for optoins code and also renamed for options." />
     <MESSAGE value="Modified tick file to work for equity. on directional decision strategy. Next update would be to exit positions at previous ordered price + ATR" />
     <MESSAGE value="lot of changes. Trying to get historical data." />
     <MESSAGE value="modified equity scenario to egt historical data from Alpha Vantage" />
@@ -624,6 +610,7 @@
     <MESSAGE value="made sma &amp; tma of renko as common method.&#10;reduced the number lines to 327" />
     <MESSAGE value="Fixed the Renko calculating issue. Somehow the SME gets started to calculate after around 13 rows. Need to fix this issue, but before that need to modify trigger and add multiple threads for multiple stocks" />
     <MESSAGE value="atlast, code working for icici and making trades peacefully." />
-    <option name="LAST_COMMIT_MESSAGE" value="atlast, code working for icici and making trades peacefully." />
+    <MESSAGE value="moved the renko temp code back to avoid multiple entries" />
+    <option name="LAST_COMMIT_MESSAGE" value="moved the renko temp code back to avoid multiple entries" />
   </component>
 </project>
