@@ -3,9 +3,13 @@ from kiteconnect import KiteTicker
 import traceback
 from selenium import webdriver
 from time import sleep
+import os
 
 request_tkn = ''
 access_tkn = ''
+postback_url = ''
+
+# os.system("start cmd")
 
 
 def parse_url_string(url):
@@ -69,8 +73,20 @@ file_object = open("access-token.txt", "w+")
 file_object.write(access_tkn)
 file_object.close()
 
-ngrok_file = open("postback.txt", "r")
-postback_url = ngrok_file.read() + str("/post")
+
+def get_postback_url():
+    global postback_url
+    get_pburl = webdriver.Chrome()
+    get_pburl.get("http://localhost:4040/")
+    get_pburl.maximize_window()
+    sleep(2)
+    temp_postback_url = get_pburl.find_element_by_css_selector("#app > div > div > div > div > ul > li:nth-child(2) > a")
+    postback_url_temp = temp_postback_url.get_attribute('href')
+    postback_url = str(postback_url_temp)+"post"
+    print(postback_url)
+
+
+get_postback_url()
 
 
 def ngrok_postback_url_update():

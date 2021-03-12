@@ -19,13 +19,35 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="moved the renko temp code back to avoid multiple entries">
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-02-10.txt" afterDir="false" />
+    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="made a renko_temp in the trade portfolio within trd_portfolio, created multiple mysql in trd portfolio">
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-02-17.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-02-18.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-02-22.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-02-23.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-02-24.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-02-25.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-02-26.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-03-01.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-03-02.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-03-03.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-03-04.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-03-05.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-03-08.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-03-09.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-03-10.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/app.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/circuit_limits.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/1.sql" beforeDir="false" afterPath="$PROJECT_DIR$/1.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/1.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/Gen-Access-tkn.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/Gen-Access-tkn.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/access-token.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/access-token.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/datasetup.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/datasetup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/postback.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/postback.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/postback.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/postback.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/trigger.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/trigger.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/access-token.txt" beforeDir="false" afterPath="$PROJECT_DIR$/access-token.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +99,7 @@
       <recent name="C:\Users\win10\PycharmProjects\Trading-Application" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.1">
+  <component name="RunManager" selected="Python.usdinr">
     <configuration name="1" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Trading-Application" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -206,11 +228,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.1" />
         <item itemvalue="Python.usdinr" />
         <item itemvalue="Python.Gen-Access-tkn" />
         <item itemvalue="Python.postback" />
         <item itemvalue="Python.trigger" />
+        <item itemvalue="Python.1" />
       </list>
     </recent_temporary>
   </component>
@@ -225,13 +247,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1554405465942</updated>
-    </task>
-    <task id="LOCAL-00021" summary="updates by teja.">
-      <created>1571801364795</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1571801364795</updated>
     </task>
     <task id="LOCAL-00022" summary="updates by teja.">
       <created>1572514985705</created>
@@ -569,7 +584,14 @@
       <option name="project" value="LOCAL" />
       <updated>1612933778746</updated>
     </task>
-    <option name="localTasksCounter" value="70" />
+    <task id="LOCAL-00070" summary="made a renko_temp in the trade portfolio within trd_portfolio, created multiple mysql in trd portfolio">
+      <created>1613397058286</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1613397058287</updated>
+    </task>
+    <option name="localTasksCounter" value="71" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -586,7 +608,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Modified tick file to work for equity. on directional decision strategy. Next update would be to exit positions at previous ordered price + ATR" />
     <MESSAGE value="lot of changes. Trying to get historical data." />
     <MESSAGE value="modified equity scenario to egt historical data from Alpha Vantage" />
     <MESSAGE value="updated the calculate 1 min to refer to multiple stocks." />
@@ -611,6 +632,7 @@
     <MESSAGE value="Fixed the Renko calculating issue. Somehow the SME gets started to calculate after around 13 rows. Need to fix this issue, but before that need to modify trigger and add multiple threads for multiple stocks" />
     <MESSAGE value="atlast, code working for icici and making trades peacefully." />
     <MESSAGE value="moved the renko temp code back to avoid multiple entries" />
-    <option name="LAST_COMMIT_MESSAGE" value="moved the renko temp code back to avoid multiple entries" />
+    <MESSAGE value="made a renko_temp in the trade portfolio within trd_portfolio, created multiple mysql in trd portfolio" />
+    <option name="LAST_COMMIT_MESSAGE" value="made a renko_temp in the trade portfolio within trd_portfolio, created multiple mysql in trd portfolio" />
   </component>
 </project>
