@@ -7,9 +7,9 @@ import datetime
 import pandas as pd
 import mysql.connector
 
-if calendar.day_name[datetime.date.today().weekday()] in ['Saturday', 'Sunday']:
-    print("holiday")
-    os.system("shutdown /s /t 1")
+# if calendar.day_name[datetime.date.today().weekday()] in ['Saturday', 'Sunday']:
+#     print("holiday")
+#     os.system("shutdown /s /t 1")
 
 acc_token = open("access-token.txt", "r")
 
