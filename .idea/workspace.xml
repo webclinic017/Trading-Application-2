@@ -19,15 +19,16 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="somehow everything working fine. but strategy failing, so small changes again">
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-03-12.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-03-15.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-03-16.txt" afterDir="false" />
+    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="somehow everything working fine. but strategy failing, so a check in before making big changes">
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-03-17.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/Renko.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/apollo.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/ashok.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/1.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/1.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/access-token.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/access-token.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/app.log" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/app.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/trigger.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/trigger.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,7 +80,7 @@
       <recent name="C:\Users\win10\PycharmProjects\Trading-Application" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.Gen-Access-tkn">
+  <component name="RunManager" selected="Python.1">
     <configuration name="1" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Trading-Application" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -208,11 +209,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.Gen-Access-tkn" />
+        <item itemvalue="Python.1" />
         <item itemvalue="Python.trigger" />
         <item itemvalue="Python.usdinr" />
+        <item itemvalue="Python.Gen-Access-tkn" />
         <item itemvalue="Python.postback" />
-        <item itemvalue="Python.1" />
       </list>
     </recent_temporary>
   </component>
@@ -227,13 +228,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1554405465942</updated>
-    </task>
-    <task id="LOCAL-00023" summary="updates as on 11/05/2019. Not much of code difference. excpet for i parsed the order history response to dict.">
-      <created>1572894370333</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1572894370333</updated>
     </task>
     <task id="LOCAL-00024" summary="finished the code for multiple stocks. now just need to fix the history data integration with live data.. ('_&lt;)">
       <created>1573041756379</created>
@@ -571,7 +565,14 @@
       <option name="project" value="LOCAL" />
       <updated>1615521763173</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="somehow everything working fine. but strategy failing, so a check in before making big changes">
+      <created>1615919427779</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1615919427779</updated>
+    </task>
+    <option name="localTasksCounter" value="73" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -588,7 +589,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="modified equity scenario to egt historical data from Alpha Vantage" />
     <MESSAGE value="updated the calculate 1 min to refer to multiple stocks." />
     <MESSAGE value="updates by teja." />
     <MESSAGE value="updates as on 11/05/2019. Not much of code difference. excpet for i parsed the order history response to dict." />
@@ -613,6 +613,7 @@
     <MESSAGE value="moved the renko temp code back to avoid multiple entries" />
     <MESSAGE value="made a renko_temp in the trade portfolio within trd_portfolio, created multiple mysql in trd portfolio" />
     <MESSAGE value="somehow everything working fine. but strategy failing, so small changes again" />
-    <option name="LAST_COMMIT_MESSAGE" value="somehow everything working fine. but strategy failing, so small changes again" />
+    <MESSAGE value="somehow everything working fine. but strategy failing, so a check in before making big changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="somehow everything working fine. but strategy failing, so a check in before making big changes" />
   </component>
 </project>

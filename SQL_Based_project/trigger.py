@@ -341,6 +341,7 @@ def trigger():
                 if length_table(ds.trd_portfolio[token]['Symbol']) >= 1:  # length of the RENKO final table
                     validation_row = latest_row(ds.trd_portfolio[token]['Symbol'])
                     # print(validation_row[0], validation_row[1], validation_row[2], validation_row[3], validation_row[4])
+                    # entry orders
                     if profit[token][4] == 0:
                         if validation_row[0] == "BUY" and validation_row[1] == "SELL" and validation_row[2] > ds.trd_portfolio[token]['LTP']:
                             if ds.trd_portfolio[token]['Direction'] != "Down":
@@ -384,21 +385,26 @@ def trigger():
                                     time.sleep(2)
                                     quantity()
                                     order_status(token, ds.trd_portfolio[token]['Orderid'], 'BUY')
+                    # exit orders
                     elif profit[token][4] > 0 and validation_row[1] == "SELL":
                         print(profit[token][4])
-                        logging.info(profit[token][4])
-                        ds.kite.modify_order(variety="regular", order_id=ds.trd_portfolio[token]['Target_order_id'],
-                                             order_type=ds.kite.ORDER_TYPE_MARKET)
+                        ds.kite.place_order(variety="regular", exchange=ds.trd_portfolio[token]['exchange'],
+                            tradingsymbol=ds.trd_portfolio[token]['Symbol'],transaction_type=ds.kite.TRANSACTION_TYPE_SELL,quantity=abs(profit[token][4]),
+                            order_type=ds.kite.ORDER_TYPE_MARKET,product=ds.kite.PRODUCT_MIS)
+                        print(ds.trd_portfolio[token]['Orderid'])
+                        logging.info(ds.trd_portfolio[token]['Orderid'])
                         time.sleep(2)
                         quantity()
                     elif profit[token][4] < 0 and validation_row[1] == "BUY":
                         print(profit[token][4])
-                        logging.info(profit[token][4])
-                        ds.kite.modify_order(variety="regular", order_id=ds.trd_portfolio[token]['Target_order_id'],
-                                             order_type=ds.kite.ORDER_TYPE_MARKET)
+                        ds.kite.place_order(variety="regular", exchange=ds.trd_portfolio[token]['exchange'],
+                            tradingsymbol=ds.trd_portfolio[token]['Symbol'], transaction_type=ds.kite.TRANSACTION_TYPE_BUY,quantity=abs(profit[token][4]),
+                            order_type=ds.kite.ORDER_TYPE_MARKET, product=ds.kite.PRODUCT_MIS)
+                        print(ds.trd_portfolio[token]['Orderid'])
+                        logging.info(ds.trd_portfolio[token]['Orderid'])
                         time.sleep(2)
                         quantity()
-                    # Below ones are target orders
+                    '''# Below ones are target orders
                     if profit[token][4] > 0 and ds.trd_portfolio[token]['Target_order'] != "YES":
                         ds.trd_portfolio[token]['Target_order_id'] = ds.kite.place_order(variety="regular",
                                                                                    exchange=ds.trd_portfolio[token][
@@ -431,7 +437,7 @@ def trigger():
                         if target_order_status(ds.trd_portfolio[token]['Target_order_id']) == "OPEN":
                             ds.trd_portfolio[token]['Target_order'] = "YES"
                             quantity()
-                            time.sleep(2)
+                            time.sleep(2)'''
         trigger_thread_running = "NO"
     except (TypeError, exceptions.InputException, ReadTimeout, exceptions.NetworkException, AttributeError):
         traceback.print_exc()
@@ -449,11 +455,11 @@ def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
     try:
         for company_data in ticks:
             ds.trd_portfolio[company_data['instrument_token']]['LTP'] = company_data['last_price']
-            if ((carry_forward / day_margin) * 100) < 4:
+            if ((carry_forward / day_margin) * 100) < 10:
                 if trigger_thread_running == "NO":
                     trigger_thread = threading.Thread(target=trigger)
                     trigger_thread.start()
-            if ((carry_forward / day_margin) * 100) > 4:
+            if ((carry_forward / day_margin) * 100) > 10:
                 print("target reached")
                 logging.info("target reached")
     except Exception as e:
