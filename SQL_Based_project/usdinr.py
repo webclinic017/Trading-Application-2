@@ -29,63 +29,63 @@ trd_portfolio = {
     1270529: {"Market": "NSE", "Segment": "Equity", "Symbol": "ICICIBANK", "max_quantity": 1300, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
               'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1, 'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
               'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003, 'margin_multiplier': 8, 'exchange': kite.EXCHANGE_NSE,
-              'buffer_quantity': 5, 'round_value': 2, 'Trade': "YES", 'tick_size': .05, 'start_time': datetime.time(9, 15, 10), 'end_time': datetime.time(15, 30, 30),
+              'buffer_quantity': 5, 'round_value': 2, 'Trade': "YES", 'tick_size': .05, 'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 30, 30),
               "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0, 'OHLC_Thread_Running': 'NO', 'DB':'', 'SQL': '',
-              'RENKO_temp':pd.DataFrame(columns=RENKO_temp_columns), 'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns),'ha_temp': pd.DataFrame(columns=ha_temp_columns)},
+              'RENKO_temp':pd.DataFrame(columns=RENKO_temp_columns), 'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns),'ha_temp': pd.DataFrame(columns=ha_temp_columns), 'brick_size':0},
     4708097: {"Market": "NSE", "Segment": "Equity", "Symbol": "RBLBANK", "max_quantity": 2500, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
               'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1, 'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
               'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003, 'margin_multiplier': 5, 'exchange': kite.EXCHANGE_NSE,
-              'buffer_quantity': 5, 'round_value': 2, 'Trade': "YES", 'tick_size': .05, 'start_time': datetime.time(9, 15, 10), 'end_time': datetime.time(15, 15, 10),
+              'buffer_quantity': 5, 'round_value': 2, 'Trade': "YES", 'tick_size': .05, 'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
               "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0, 'OHLC_Thread_Running': 'NO', 'DB':'', 'SQL': '',
-              'RENKO_temp':pd.DataFrame(columns=RENKO_temp_columns), 'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns)},
+              'RENKO_temp':pd.DataFrame(columns=RENKO_temp_columns), 'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns), 'brick_size':0},
     779521: {"Market": "NSE", "Segment": "Equity", "Symbol": "SBIN", "max_quantity": 1400, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
               'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1, 'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
               'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003, 'margin_multiplier': 5, 'exchange': kite.EXCHANGE_NSE,
-              'buffer_quantity': 5, 'round_value': 2, 'Trade': "YES", 'tick_size': .05, 'start_time': datetime.time(9, 15, 10), 'end_time': datetime.time(15, 15, 10),
+              'buffer_quantity': 5, 'round_value': 2, 'Trade': "NO", 'tick_size': .05, 'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
               "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0, 'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
-              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns), 'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns)},
+              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns), 'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns), 'brick_size':0},
     41729: {"Market": "NSE", "Segment": "Equity", "Symbol": "APOLLOTYRE", "max_quantity": 3400, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
               'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1, 'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
               'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003, 'margin_multiplier': 8, 'exchange': kite.EXCHANGE_NSE,
-              'buffer_quantity': 5, 'round_value': 2, 'Trade': "YES", 'tick_size': .05, 'start_time': datetime.time(9, 15, 10), 'end_time': datetime.time(15, 15, 10),
+              'buffer_quantity': 5, 'round_value': 2, 'Trade': "NO", 'tick_size': .05, 'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
               "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0, 'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
-              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns), 'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns)},
+              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns), 'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns), 'brick_size':0},
     54273: {"Market": "NSE", "Segment": "Equity", "Symbol": "ASHOKLEY", "max_quantity": 4500, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
               'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1, 'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
               'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003, 'margin_multiplier': 5, 'exchange': kite.EXCHANGE_NSE,
-              'buffer_quantity': 5, 'round_value': 2, 'Trade': "YES", 'tick_size': .05, 'start_time': datetime.time(9, 15, 10), 'end_time': datetime.time(15, 15, 10),
+              'buffer_quantity': 5, 'round_value': 2, 'Trade': "NO", 'tick_size': .05, 'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
               "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0, 'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
-              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns), 'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns)},
+              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns), 'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns), 'brick_size':0},
     884737: {"Market": "NSE", "Segment": "Equity", "Symbol": "TATAMOTORS", "max_quantity": 2000, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
               'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1, 'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
               'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003, 'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
-              'buffer_quantity': 5, 'round_value': 2, 'Trade': "YES", 'tick_size': .05, 'start_time': datetime.time(9, 15, 10), 'end_time': datetime.time(15, 15, 10),
+              'buffer_quantity': 5, 'round_value': 2, 'Trade': "NO", 'tick_size': .05, 'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
               "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0, 'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
-              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns), 'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns)},
+              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns), 'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns), 'brick_size':0},
     60417: {"Market": "NSE", "Segment": "Equity", "Symbol": "ASIANPAINT", "max_quantity": 375, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
               'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1, 'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
               'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003, 'margin_multiplier': 9, 'exchange': kite.EXCHANGE_NSE,
-              'buffer_quantity': 5, 'round_value': 2, 'Trade': "YES", 'tick_size': .05, 'start_time': datetime.time(9, 15, 10), 'end_time': datetime.time(15, 15, 10),
+              'buffer_quantity': 5, 'round_value': 2, 'Trade': "NO", 'tick_size': .05, 'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
               "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0, 'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
-              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns), 'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns)},
+              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns), 'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns), 'brick_size':0},
     2865921: {"Market": "NSE", "Segment": "Equity", "Symbol": "INDIGO", "max_quantity": 400, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
               'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1, 'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
               'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003, 'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
-              'buffer_quantity': 5, 'round_value': 2, 'Trade': "YES", 'tick_size': .05, 'start_time': datetime.time(9, 15, 10), 'end_time': datetime.time(15, 15, 10),
+              'buffer_quantity': 5, 'round_value': 2, 'Trade': "NO", 'tick_size': .05, 'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
               "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0, 'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
-              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns), 'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns)},
+              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns), 'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns), 'brick_size':0},
     1510401: {"Market": "NSE", "Segment": "Equity", "Symbol": "AXISBANK", "max_quantity": 850, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
               'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1, 'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
               'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003, 'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
-              'buffer_quantity': 5, 'round_value': 2, 'Trade': "YES", 'tick_size': .05, 'start_time': datetime.time(9, 15, 10), 'end_time': datetime.time(15, 15, 10),
+              'buffer_quantity': 5, 'round_value': 2, 'Trade': "NO", 'tick_size': .05, 'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
               "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0, 'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
-              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns), 'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns)},
+              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns), 'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns), 'brick_size':0},
     2170625: {"Market": "NSE", "Segment": "Equity", "Symbol": "TVSMOTOR", "max_quantity": 1450, 'Direction': "", 'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
               'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1, 'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
               'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003, 'margin_multiplier': 9, 'exchange': kite.EXCHANGE_NSE,
-              'buffer_quantity': 5, 'round_value': 2, 'Trade': "YES", 'tick_size': .05, 'start_time': datetime.time(9, 15, 10), 'end_time': datetime.time(15, 15, 10),
+              'buffer_quantity': 5, 'round_value': 2, 'Trade': "NO", 'tick_size': .05, 'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
               "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0, 'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
-              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns), 'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns)},
+              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns), 'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns), 'brick_size':0},
 }
 
 ohlc = {}  # python dictionary to store the ohlc data in it
@@ -190,6 +190,22 @@ def sma_tma_renko(token):
                       str(RENKO[token][5]) + "," + str(RENKO[token][6]) + ",\"" + str(RENKO[token][7]) + "\")")
     trd_portfolio[token]['DB'].commit()
     trd_portfolio[token]['OHLC_Thread_Running'] = "NO"
+
+
+def del_old_records():
+    date = datetime.datetime.now()
+    date = date.replace(hour=0, minute=0, second=0)
+    date = date.isoformat(' ', 'seconds')
+    for items in trd_portfolio:
+        trd_portfolio[items]['SQL'].execute("delete FROM testdb." + trd_portfolio[items]['Symbol'] + "_ohlc_final_1min where Time < \"" + str(date) + "\";")
+        trd_portfolio[items]['DB'].commit()
+        trd_portfolio[items]['SQL'].execute("delete FROM testdb." + trd_portfolio[items]['Symbol'] + "_ha_final where Time < \"" + str(date) + "\";")
+        trd_portfolio[items]['DB'].commit()
+        trd_portfolio[items]['SQL'].execute("delete FROM testdb." + trd_portfolio[items]['Symbol'] + "_renko_final where Time < \"" + str(date) + "\";")
+        trd_portfolio[items]['DB'].commit()
+
+
+del_old_records()
 
 
 def calculate_ohlc_one_minute(company_data):
@@ -325,9 +341,9 @@ def calculate_ohlc_one_minute(company_data):
 
         # Calculating Triangular moving average for ohlc
         if len(ohlc_final_1min.loc[
-                   ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) < 9:
+                   ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) < 20:
             ohlc[company_data['instrument_token']][9] = 0
-        elif len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) >= 9:
+        elif len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) >= 20:
             c = [ohlc[company_data['instrument_token']][8],
                  ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 8],
                  ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-2, 8],
@@ -363,12 +379,11 @@ def calculate_ohlc_one_minute(company_data):
             HA[company_data['instrument_token']][4] = round(min(ohlc[company_data['instrument_token']][4], HA[company_data['instrument_token']][2], HA[company_data['instrument_token']][5]), 4)
 
         # starting to calculate the RENKO table
-        if len(ohlc_final_1min.loc[
-                   ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']][
-                       'Symbol']]) > 0:  # or (len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0):  # checking if there is atleast 1 candle in OHLC Dataframe or RENKO Dataframe
-            if ohlc_final_1min.loc[
-                ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
-                -1, 7] != 0:  # or (RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7] != [0, 'NaN']):  #checking that we do not have the ATR value as 0
+        if len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0:  # or (len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0):  # checking if there is atleast 1 candle in OHLC Dataframe or RENKO Dataframe
+            if trd_portfolio[company_data['instrument_token']]['brick_size'] == 0:
+                trd_portfolio[company_data['instrument_token']]['brick_size'] = ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 5] * 0.0015
+                print("brick size" + str(trd_portfolio[company_data['instrument_token']]['brick_size']))
+            if trd_portfolio[company_data['instrument_token']]['brick_size'] != 0:
                 if RENKO[company_data['instrument_token']][0] == "Symbol":
                     RENKO[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]['Symbol']
                 ########################################################
@@ -376,19 +391,11 @@ def calculate_ohlc_one_minute(company_data):
                     RENKO[company_data['instrument_token']][1] = ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 5]
                 ########################################################
                 if RENKO[company_data['instrument_token']][3] == "Signal":
-                    if ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 5] >= ohlc_final_1min.loc[
-                        ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7] + RENKO[company_data['instrument_token']][1]:
+                    if ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 5] >= trd_portfolio[company_data['instrument_token']]['brick_size'] + RENKO[company_data['instrument_token']][1]:
                         RENKO[company_data['instrument_token']][7] = str(company_data["timestamp"])
-                        RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][
-                                                                            1] + \
-                                                                        ohlc_final_1min.loc[
-                                                                            ohlc_final_1min.Symbol ==
-                                                                            trd_portfolio[company_data[
-                                                                                'instrument_token']][
-                                                                                'Symbol']].iloc[-1, 7]
+                        RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] + trd_portfolio[company_data['instrument_token']]['brick_size']
                         RENKO[company_data['instrument_token']][3] = "BUY"
-                        trd_portfolio[company_data['instrument_token']]['RENKO_temp'] = pd.DataFrame([RENKO[company_data['instrument_token']]],
-                                                     columns=["Symbol", "Open", "Close", "Direction", "Position", "SMA", "TMA", "Time"])
+                        trd_portfolio[company_data['instrument_token']]['RENKO_temp'] = pd.DataFrame([RENKO[company_data['instrument_token']]],columns=["Symbol", "Open", "Close", "Direction", "Position", "SMA", "TMA", "Time"])
 
                         # Calculating SMA
                         if len(RENKO_Final.loc[
@@ -467,10 +474,9 @@ def calculate_ohlc_one_minute(company_data):
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[
                             RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']][
                                 'Symbol']].iloc[-1, 2]
-                    elif ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 5] <= RENKO[company_data['instrument_token']][1] - \
-                            ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]:
+                    elif ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 5] <= RENKO[company_data['instrument_token']][1] - trd_portfolio[company_data['instrument_token']]['brick_size']:
                         RENKO[company_data['instrument_token']][7] = str(company_data["timestamp"])
-                        RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] - ohlc_final_1min.loc[ohlc_final_1min.Symbol ==trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 7]
+                        RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] - trd_portfolio[company_data['instrument_token']]['brick_size']
                         RENKO[company_data['instrument_token']][3] = "SELL"
                         trd_portfolio[company_data['instrument_token']]['RENKO_temp'] = pd.DataFrame([RENKO[company_data['instrument_token']]],
                                                      columns=["Symbol", "Open", "Close", "Direction", "Position", "SMA", "TMA", "Time"])
@@ -559,17 +565,9 @@ def calculate_ohlc_one_minute(company_data):
                                 'Symbol']].iloc[-1, 2]
 
                 if RENKO[company_data['instrument_token']][3] == "BUY":
-                    if ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 5] >= ohlc_final_1min.loc[
-                        ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']][
-                            'Symbol']].iloc[-1, 7] + RENKO[company_data['instrument_token']][1]:
+                    if ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 5] >= trd_portfolio[company_data['instrument_token']]['brick_size'] + RENKO[company_data['instrument_token']][1]:
                         RENKO[company_data['instrument_token']][7] = str(company_data["timestamp"])
-                        RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][
-                                                                            1] + \
-                                                                        ohlc_final_1min.loc[
-                                                                            ohlc_final_1min.Symbol ==
-                                                                            trd_portfolio[company_data[
-                                                                                'instrument_token']][
-                                                                                'Symbol']].iloc[-1, 7]
+                        RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] + trd_portfolio[company_data['instrument_token']]['brick_size']
                         RENKO[company_data['instrument_token']][3] = "BUY"
                         trd_portfolio[company_data['instrument_token']]['RENKO_temp'] = pd.DataFrame([RENKO[company_data['instrument_token']]],
                                                      columns=["Symbol", "Open", "Close", "Direction", "Position", "SMA", "TMA", "Time"])
@@ -654,39 +652,12 @@ def calculate_ohlc_one_minute(company_data):
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[
                             RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']][
                                 'Symbol']].iloc[-1, 2]
-                    elif ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 5] <= RENKO[company_data['instrument_token']][1] - (
-                            RENKO_Final.loc[
-                                RENKO_Final.Symbol ==
-                                trd_portfolio[
-                                    company_data[
-                                        'instrument_token']][
-                                    'Symbol']].iloc[
-                                -1, 2] -
-                            RENKO_Final.loc[
-                                RENKO_Final.Symbol ==
-                                trd_portfolio[
-                                    company_data[
-                                        'instrument_token']][
-                                    'Symbol']].iloc[
-                                -1, 1]) - \
-                            ohlc_final_1min.loc[
-                                ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']][
-                                    'Symbol']].iloc[-1, 7]:
+                    elif ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 5] <= RENKO[company_data['instrument_token']][1] - (RENKO_Final.loc[RENKO_Final.Symbol ==trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2] - RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1]) - trd_portfolio[company_data['instrument_token']]['brick_size']:
                         RENKO[company_data['instrument_token']][7] = str(company_data["timestamp"])
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[
                             RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']][
                                 'Symbol']].iloc[-1, 1]
-                        RENKO[company_data['instrument_token']][2] = RENKO_Final.loc[RENKO_Final.Symbol ==
-                                                                                           trd_portfolio[
-                                                                                               company_data[
-                                                                                                   'instrument_token']][
-                                                                                               'Symbol']].iloc[
-                                                                            -1, 1] - \
-                                                                        ohlc_final_1min.loc[
-                                                                            ohlc_final_1min.Symbol ==
-                                                                            trd_portfolio[company_data[
-                                                                                'instrument_token']][
-                                                                                'Symbol']].iloc[-1, 7]
+                        RENKO[company_data['instrument_token']][2] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1] - trd_portfolio[company_data['instrument_token']]['brick_size']
                         RENKO[company_data['instrument_token']][3] = "SELL"
                         trd_portfolio[company_data['instrument_token']]['RENKO_temp'] = pd.DataFrame([RENKO[company_data['instrument_token']]],
                                                      columns=["Symbol", "Open", "Close", "Direction", "Position", "SMA", "TMA", "Time"])
@@ -772,18 +743,9 @@ def calculate_ohlc_one_minute(company_data):
                             RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']][
                                 'Symbol']].iloc[-1, 2]
                 if RENKO[company_data['instrument_token']][3] == "SELL":
-                    if ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 5] <= RENKO[company_data['instrument_token']][1] - ohlc_final_1min.loc[
-                                ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']][
-                                    'Symbol']].iloc[
-                                -1, 7]:
+                    if ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 5] <= RENKO[company_data['instrument_token']][1] - trd_portfolio[company_data['instrument_token']]['brick_size']:
                         RENKO[company_data['instrument_token']][7] = str(company_data["timestamp"])
-                        RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][
-                                                                            1] - \
-                                                                        ohlc_final_1min.loc[
-                                                                            ohlc_final_1min.Symbol ==
-                                                                            trd_portfolio[company_data[
-                                                                                'instrument_token']][
-                                                                                'Symbol']].iloc[-1, 7]
+                        RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] - trd_portfolio[company_data['instrument_token']]['brick_size']
                         RENKO[company_data['instrument_token']][3] = "SELL"
                         trd_portfolio[company_data['instrument_token']]['RENKO_temp'] = pd.DataFrame([RENKO[company_data['instrument_token']]],
                                                      columns=["Symbol", "Open", "Close", "Direction", "Position", "SMA", "TMA", "Time"])
@@ -869,38 +831,12 @@ def calculate_ohlc_one_minute(company_data):
                             RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']][
                                 'Symbol']].iloc[-1, 2]
                     elif ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 5] >= RENKO[company_data['instrument_token']][1] + (
-                            RENKO_Final.loc[
-                                RENKO_Final.Symbol ==
-                                trd_portfolio[
-                                    company_data[
-                                        'instrument_token']][
-                                    'Symbol']].iloc[
-                                -1, 1] -
-                            RENKO_Final.loc[
-                                RENKO_Final.Symbol ==
-                                trd_portfolio[
-                                    company_data[
-                                        'instrument_token']][
-                                    'Symbol']].iloc[
-                                -1, 2]) + \
-                            ohlc_final_1min.loc[
-                                ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']][
-                                    'Symbol']].iloc[-1, 7]:
+                            RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1] - RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 2]) + trd_portfolio[company_data['instrument_token']]['brick_size']:
                         RENKO[company_data['instrument_token']][7] = str(company_data["timestamp"])
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[
                             RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']][
                                 'Symbol']].iloc[-1, 1]
-                        RENKO[company_data['instrument_token']][2] = RENKO_Final.loc[RENKO_Final.Symbol ==
-                                                                                           trd_portfolio[
-                                                                                               company_data[
-                                                                                                   'instrument_token']][
-                                                                                               'Symbol']].iloc[
-                                                                            -1, 1] + \
-                                                                        ohlc_final_1min.loc[
-                                                                            ohlc_final_1min.Symbol ==
-                                                                            trd_portfolio[company_data[
-                                                                                'instrument_token']][
-                                                                                'Symbol']].iloc[-1, 7]
+                        RENKO[company_data['instrument_token']][2] = RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 1] + trd_portfolio[company_data['instrument_token']]['brick_size']
                         RENKO[company_data['instrument_token']][3] = "BUY"
                         trd_portfolio[company_data['instrument_token']]['RENKO_temp'] = pd.DataFrame([RENKO[company_data['instrument_token']]],
                                                      columns=["Symbol", "Open", "Close", "Direction", "Position", "SMA", "TMA", "Time"])
@@ -1010,9 +946,9 @@ def on_connect(ws, response):
 
 
 if __name__ == '__main__':
-    find_existing_ohlc()
-    find_existing_ha()
-    find_existing_renko()
+    # find_existing_ohlc()
+    # find_existing_ha()
+    # find_existing_renko()
     kws.on_ticks = on_ticks
     kws.on_connect = on_connect
     kws.connect()

@@ -19,16 +19,51 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="somehow everything working fine. but strategy failing, so a check in before making big changes">
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-03-17.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/Renko.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/apollo.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/ashok.csv" afterDir="false" />
+    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="made changes such that entry and exit is truly based on renko signal and not anything else. finally made some profit after a long time. Lets see..">
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-04-19.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-04-20.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/1.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1.sql" beforeDir="false" afterPath="$PROJECT_DIR$/1.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2020-11-17.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2020-11-24.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2020-12-02.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2020-12-08.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2020-12-10.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-01-15.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-01-18.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-01-20.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-01-21.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-01-22.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-02-02.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-02-03.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-02-04.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-02-08.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-02-09.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-02-10.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-02-17.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-02-18.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-02-22.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-02-23.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-02-24.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-02-25.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-02-26.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-03-01.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-03-02.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-03-03.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-03-04.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-03-05.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-03-08.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-03-09.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-03-10.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-03-12.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-03-15.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-03-16.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-03-17.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/Gen-Access-tkn.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/Gen-Access-tkn.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/access-token.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/access-token.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/app.log" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/app.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/trigger.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/trigger.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,8 +115,8 @@
       <recent name="C:\Users\win10\PycharmProjects\Trading-Application" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.1">
-    <configuration name="1" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.usdinr">
+    <configuration name="2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Trading-Application" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -93,7 +128,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/SQL_Based_project/1.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/SQL_Based_project/2.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -209,11 +244,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.1" />
-        <item itemvalue="Python.trigger" />
         <item itemvalue="Python.usdinr" />
+        <item itemvalue="Python.2" />
         <item itemvalue="Python.Gen-Access-tkn" />
         <item itemvalue="Python.postback" />
+        <item itemvalue="Python.trigger" />
       </list>
     </recent_temporary>
   </component>
@@ -228,13 +263,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1554405465942</updated>
-    </task>
-    <task id="LOCAL-00024" summary="finished the code for multiple stocks. now just need to fix the history data integration with live data.. ('_&lt;)">
-      <created>1573041756379</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1573041756379</updated>
     </task>
     <task id="LOCAL-00025" summary="code updated for few companies and stopping the trading after the 2% profit is reached. :)">
       <created>1573727637046</created>
@@ -572,7 +600,14 @@
       <option name="project" value="LOCAL" />
       <updated>1615919427779</updated>
     </task>
-    <option name="localTasksCounter" value="73" />
+    <task id="LOCAL-00073" summary="made changes such that entry and exit is truly based on renko signal and not anything else. finally made some profit after a long time. Lets see..">
+      <created>1615998719982</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1615998719983</updated>
+    </task>
+    <option name="localTasksCounter" value="74" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -589,7 +624,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="updated the calculate 1 min to refer to multiple stocks." />
     <MESSAGE value="updates by teja." />
     <MESSAGE value="updates as on 11/05/2019. Not much of code difference. excpet for i parsed the order history response to dict." />
     <MESSAGE value="finished the code for multiple stocks. now just need to fix the history data integration with live data.. ('_&lt;)" />
@@ -614,6 +648,7 @@
     <MESSAGE value="made a renko_temp in the trade portfolio within trd_portfolio, created multiple mysql in trd portfolio" />
     <MESSAGE value="somehow everything working fine. but strategy failing, so small changes again" />
     <MESSAGE value="somehow everything working fine. but strategy failing, so a check in before making big changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="somehow everything working fine. but strategy failing, so a check in before making big changes" />
+    <MESSAGE value="made changes such that entry and exit is truly based on renko signal and not anything else. finally made some profit after a long time. Lets see.." />
+    <option name="LAST_COMMIT_MESSAGE" value="made changes such that entry and exit is truly based on renko signal and not anything else. finally made some profit after a long time. Lets see.." />
   </component>
 </project>

@@ -16,16 +16,19 @@ describe rblbank_renko_finalrblbank_renko_final;
 
 INSERT INTO trd_portfolio (OHLC_Thread_Running) values ("NO");
 
-select * from `sbin_renko_final` order by time desc limit 20 ;
-select * from icicibank_renko_final order by time desc;
+select * from `tatamotors_renko_final` order by time desc limit 20 ;
+select * from `rblbank_renko_final` order by time desc;
+select * from `ICICIBANK_renko_final` order by time desc;
 select * from order_updates;
+
 select * from processed_orders;
 rollback;
-delete from order_updates;
+delete from `rblbank_renko_final`;
+delete FROM testdb.apollotyre_ohlc_final_1min where Time < "2021-04-15 00:00:00";
 
 insert into processed_orders (OrderId) values ((select Order_number from order_updates limit 1));
 
-select * from RBLBANK_renko_final order by time DESC limit 2;
+select * from ICICIBANK_renko_final order by time DESC limit 2;
 
 CREATE TABLE RBLBANK_HA_Final (Symbol VARCHAR(255), Time VARCHAR(255),Open decimal(10,4),High decimal(10,4),Low decimal(10,4),Close decimal(10,4),TR decimal(10,4),ATR decimal(10,4),SMA decimal(10,4),TMA decimal(10,4));
 

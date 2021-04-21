@@ -108,7 +108,7 @@ def ngrok_postback_url_update():
     ngrok_driver.find_element_by_id("id_postback_url").send_keys(postback_url)
     sleep(1)
     ngrok_driver.find_element_by_css_selector("#main > div > div > div.seven.columns > form > p:nth-child(8) > input").click()
-    sleep(20)
+    sleep(5)
 
 
 ngrok_postback_url_update()
