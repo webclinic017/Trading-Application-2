@@ -100,14 +100,14 @@ def ngrok_postback_url_update():
     sleep(1)
     ngrok_driver.find_element_by_id("id_password").send_keys("IITIIT1!")
     sleep(1)
-    ngrok_driver.find_element_by_css_selector("#main > div > form > p:nth-child(4) > input").click()
+    ngrok_driver.find_element_by_xpath("//input[@value='Login']").click()
     sleep(1)
-    ngrok_driver.find_element_by_xpath("/html/body/div/div/div/div/table/tbody/tr").click()
+    ngrok_driver.find_element_by_xpath("//tr[@id='app-dysoztj41hntm1ma']").click()
     sleep(1)
     ngrok_driver.find_element_by_id("id_postback_url").clear()
     ngrok_driver.find_element_by_id("id_postback_url").send_keys(postback_url)
     sleep(1)
-    ngrok_driver.find_element_by_css_selector("#main > div > div > div.seven.columns > form > p:nth-child(8) > input").click()
+    ngrok_driver.find_element_by_xpath("//input[@value='Save']").click()
     sleep(5)
 
 

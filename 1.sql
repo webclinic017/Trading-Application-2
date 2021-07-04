@@ -8,9 +8,9 @@ USE testdb;
 SHOW TABLES;
 
 
-create table tvsmotors_ohlc_final_1min as (select * from icicibank_ohlc_final_1min where 1=2);
-create table tvsmotors_ha_final as (select * from icicibank_ha_final where 1=2);
-create table apollotyre_renko_final as (select * from icicibank_renko_final where 1=2);
+create table MPHASIS_ohlc_final_1min as (select * from icicibank_ohlc_final_1min where 1=2);
+create table MPHASIS_ha_final as (select * from icicibank_ha_final where 1=2);
+create table MPHASIS_renko_final as (select * from icicibank_renko_final where 1=2);
 
 describe rblbank_renko_finalrblbank_renko_final;
 
@@ -28,7 +28,7 @@ delete FROM testdb.apollotyre_ohlc_final_1min where Time < "2021-04-15 00:00:00"
 
 insert into processed_orders (OrderId) values ((select Order_number from order_updates limit 1));
 
-select * from ICICIBANK_renko_final order by time DESC limit 2;
+select * from `lupin_ohlc_final_1min` order by time DESC;
 
 CREATE TABLE RBLBANK_HA_Final (Symbol VARCHAR(255), Time VARCHAR(255),Open decimal(10,4),High decimal(10,4),Low decimal(10,4),Close decimal(10,4),TR decimal(10,4),ATR decimal(10,4),SMA decimal(10,4),TMA decimal(10,4));
 
@@ -36,7 +36,15 @@ INSERT INTO USDINR20OCTFUT_ohlc_final_1min (Symbol, Time, Open, High, Low, Close
 
 alter table usdinr20octfut_renko_final drop ATR;
 alter table processed_orders modify OrderId bigint;
-alter table order_updates add Order_number int after Quantity;
+
+alter table `tvsmotor_ohlc_final_1min`
+add PSAR float after RSI;
+ 
+add Loss float after Gain, 
+add Avg_Gain float after Loss,
+add Avg_Loss float after Avg_Gain, 
+add RS float after Avg_Loss, 
+add RSI float after RS;
 
 create table ORDER_UPDATES (Symbol VARCHAR(255), Ins_Token integer, Ord_Status VARCHAR(255), Trans_type VARCHAR(255), Avg_Price decimal(10,4), Quantity integer);
 
@@ -95,7 +103,7 @@ delete from icicibank_renko_final;
 
 insert into trd_portfolio values (1270529, "NSE", "Equity", "ICICIBANK", 100, "", 0, "", 0, 0, 0, 0, 1050, 1, 0.0003, 0.0003, 0.00025, 0.0000325, 0.0000325, 0.18, 0.00003, 5, "kite.EXCHANGE_NSE", 5, 2, "YES", .05, "9, 29, 10", "15, 15, 10", 0, 0, 0, 0);
 
-update trd_portfolio set OHLC_Thread_Running = "NO";
+apollotyre_ha_finalupdate trd_portfolio set OHLC_Thread_Running = "NO";
 
 INSERT INTO RBLBANK_ohlc_final_1min values ("RBLBANK","2020-12-23 10:59:00",216.35,216.45,216.1,216.25,0.35,0,0,0);
 
