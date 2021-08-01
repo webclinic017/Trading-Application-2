@@ -39,7 +39,7 @@ trd_portfolio = {
               'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
               'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
               'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.2, 'down_AF': 0.2, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
+              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
     2672641: {'Trade': "YES", "Market": "NSE", "Segment": "Equity", "Symbol": "LUPIN", "max_quantity": 1300, 'Direction': "",
               'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
               'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
@@ -52,7 +52,7 @@ trd_portfolio = {
               'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
               'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
               'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.2, 'down_AF': 0.2, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
+              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
     895745: {'Trade': "YES", "Market": "NSE", "Segment": "Equity", "Symbol": "TATASTEEL", "max_quantity": 1300, 'Direction': "",
              'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
              'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
@@ -65,7 +65,7 @@ trd_portfolio = {
              'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
              'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-             'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.2, 'down_AF': 0.2, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
+             'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
     1270529: {'Trade': "YES", "Market": "NSE", "Segment": "Equity", "Symbol": "ICICIBANK", "max_quantity": 1300, 'Direction': "",
               'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
               'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
@@ -78,7 +78,7 @@ trd_portfolio = {
               'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
               'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
               'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.2, 'down_AF': 0.2, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
+              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
     4708097: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "RBLBANK", "max_quantity": 2500, 'Direction': "",
               'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
               'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
@@ -91,7 +91,7 @@ trd_portfolio = {
               'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
               'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
               'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.2, 'down_AF': 0.2, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
+              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
     779521: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "SBIN", "max_quantity": 1400, 'Direction': "",
              'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
              'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
@@ -104,7 +104,7 @@ trd_portfolio = {
              'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
              'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-             'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.2, 'down_AF': 0.2, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
+             'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
     41729: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "APOLLOTYRE", "max_quantity": 3400, 'Direction': "",
             'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
             'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
@@ -117,7 +117,7 @@ trd_portfolio = {
             'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
             'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
             'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-            'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.2, 'down_AF': 0.2, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
+            'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
     54273: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "ASHOKLEY", "max_quantity": 4500, 'Direction': "",
             'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
             'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
@@ -130,7 +130,7 @@ trd_portfolio = {
             'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
             'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
             'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-            'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.2, 'down_AF': 0.2, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
+            'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
     884737: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "TATAMOTORS", "max_quantity": 2000, 'Direction': "",
              'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
              'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
@@ -143,7 +143,7 @@ trd_portfolio = {
              'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
              'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-             'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.2, 'down_AF': 0.2, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
+             'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
     60417: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "ASIANPAINT", "max_quantity": 375, 'Direction': "",
             'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
             'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
@@ -156,7 +156,7 @@ trd_portfolio = {
             'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
             'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
             'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-            'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.2, 'down_AF': 0.2, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
+            'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
     2865921: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "INDIGO", "max_quantity": 400, 'Direction': "",
               'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
               'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
@@ -169,7 +169,7 @@ trd_portfolio = {
               'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
               'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
               'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.2, 'down_AF': 0.2, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
+              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
     1510401: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "AXISBANK", "max_quantity": 850, 'Direction': "",
               'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
               'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
@@ -182,7 +182,7 @@ trd_portfolio = {
               'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
               'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
               'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.2, 'down_AF': 0.2, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
+              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
     2170625: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "TVSMOTOR", "max_quantity": 1450, 'Direction': "",
               'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
               'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
@@ -195,7 +195,7 @@ trd_portfolio = {
               'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
               'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
               'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.2, 'down_AF': 0.2, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
+              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
 }
 
 ohlc = {}  # python dictionary to store the ohlc data in it
@@ -408,19 +408,19 @@ def calculate_ohlc_one_minute(company_data):
                                  ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-12, 11],
                                  ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-13, 11]]
                 ohlc[company_data['instrument_token']][13] = round_down(sum(Avg_Loss_List) / 14, 2)
-                ohlc[company_data['instrument_token']][14] = round_down(ohlc[company_data['instrument_token']][12] / ohlc[company_data['instrument_token']][13], 2)
                 if ohlc[company_data['instrument_token']][13] == 0:
                     ohlc[company_data['instrument_token']][15] = 100
                 else:
+                    ohlc[company_data['instrument_token']][14] = round_down(ohlc[company_data['instrument_token']][12] / ohlc[company_data['instrument_token']][13], 2)
                     ohlc[company_data['instrument_token']][15] = round_down(100-(100/(1 + ohlc[company_data['instrument_token']][14])), 2)
 
             if len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) >= 15:
                 ohlc[company_data['instrument_token']][12] = round_down(((ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 12] * 13) + ohlc[company_data['instrument_token']][10]) / 14, 2)
                 ohlc[company_data['instrument_token']][13] = round_down(((ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 13] * 13) + ohlc[company_data['instrument_token']][11]) / 14, 2)
-                ohlc[company_data['instrument_token']][14] = round_down(ohlc[company_data['instrument_token']][12] / ohlc[company_data['instrument_token']][13], 2)
                 if ohlc[company_data['instrument_token']][13] == 0:
                     ohlc[company_data['instrument_token']][15] = 100
                 else:
+                    ohlc[company_data['instrument_token']][14] = round_down(ohlc[company_data['instrument_token']][12] / ohlc[company_data['instrument_token']][13], 2)
                     ohlc[company_data['instrument_token']][15] = round_down(100 - (100 / (1 + ohlc[company_data['instrument_token']][14])), 2)
 
             # Starting to calculate the Parabolic SAR
@@ -436,56 +436,54 @@ def calculate_ohlc_one_minute(company_data):
                  ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-2, 4],
                  ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-3, 4],
                  ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-4, 4])
+                trd_portfolio[company_data['instrument_token']]['up_PSAR'] = trd_portfolio[company_data['instrument_token']]['down_EP']
+                trd_portfolio[company_data['instrument_token']]['down_PSAR'] = trd_portfolio[company_data['instrument_token']]['up_EP']
 
                 # taking the above calculated EP and applying to PSAR based on the trend direction
                 if ohlc[company_data['instrument_token']][5] > ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-4, 5]:
-                    trd_portfolio[company_data['instrument_token']]['up_PSAR'] = trd_portfolio[company_data['instrument_token']]['down_EP']
                     ohlc[company_data['instrument_token']][16] = trd_portfolio[company_data['instrument_token']]['up_PSAR']
                     trd_portfolio[company_data['instrument_token']]['PSAR_direction'] = "UP"
                 else:
-                    trd_portfolio[company_data['instrument_token']]['down_PSAR'] = trd_portfolio[company_data['instrument_token']]['up_EP']
                     ohlc[company_data['instrument_token']][16] = trd_portfolio[company_data['instrument_token']]['down_PSAR']
                     trd_portfolio[company_data['instrument_token']]['PSAR_direction'] = "DOWN"
 
+            # PSAR Calculation when length > 4
             if len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 4:
 
+                trd_portfolio[company_data['instrument_token']]['up_PSAR'] = round_down(min(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 4],
+                    ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-2, 4],
+                    trd_portfolio[company_data['instrument_token']]['up_PSAR'] + trd_portfolio[company_data['instrument_token']]['up_AF'] * (trd_portfolio[company_data['instrument_token']]['up_EP']
+                        - trd_portfolio[company_data['instrument_token']]['up_PSAR'])), 2)
+                trd_portfolio[company_data['instrument_token']]['down_PSAR'] = round_down(max(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 3],
+                    ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-2, 3],
+                    trd_portfolio[company_data['instrument_token']]['down_PSAR'] - trd_portfolio[company_data['instrument_token']]['down_AF'] * (trd_portfolio[company_data['instrument_token']]['down_PSAR'] -
+                    trd_portfolio[company_data['instrument_token']]['down_EP'])), 2)
+
                 # Up PSAR calculation when the trend is already up
-                if trd_portfolio[company_data['instrument_token']]['PSAR_direction'] == "UP":
-                    trd_portfolio[company_data['instrument_token']]['up_PSAR'] = min(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 4],
-                 ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-2, 4],
-                        trd_portfolio[company_data['instrument_token']]['up_PSAR'] +
-                        trd_portfolio[company_data['instrument_token']]['up_AF'] * (
-                                trd_portfolio[company_data['instrument_token']]['up_EP'] -
-                                trd_portfolio[company_data['instrument_token']]['up_PSAR']))
-                    if ohlc[company_data['instrument_token']][3] > trd_portfolio[company_data['instrument_token']]['up_EP']:
-                        trd_portfolio[company_data['instrument_token']]['up_EP'] = ohlc[company_data['instrument_token']][3]
-                        trd_portfolio[company_data['instrument_token']]['up_AF'] = trd_portfolio[company_data['instrument_token']]['up_AF'] + 0.01
-                    if ohlc[company_data['instrument_token']][5] < trd_portfolio[company_data['instrument_token']]['up_PSAR']:
+                if trd_portfolio[company_data['instrument_token']]['PSAR_direction'] == "UP":  # if previous PSAR value is "UP"
+                    if ohlc[company_data['instrument_token']][4] > trd_portfolio[company_data['instrument_token']]['up_PSAR']:
+                        ohlc[company_data['instrument_token']][16] = trd_portfolio[company_data['instrument_token']]['up_PSAR']
+                        if ohlc[company_data['instrument_token']][3] > trd_portfolio[company_data['instrument_token']]['up_EP']:
+                            trd_portfolio[company_data['instrument_token']]['up_EP'] = ohlc[company_data['instrument_token']][3]
+                            trd_portfolio[company_data['instrument_token']]['up_AF'] = trd_portfolio[company_data['instrument_token']]['up_AF'] + 0.01
+                    else:
                         trd_portfolio[company_data['instrument_token']]['down_PSAR'] = ohlc[company_data['instrument_token']][16] = trd_portfolio[company_data['instrument_token']]['up_EP']
-                        trd_portfolio[company_data['instrument_token']]['down_AF'] = 0.2
+                        trd_portfolio[company_data['instrument_token']]['down_AF'] = 0.02
                         trd_portfolio[company_data['instrument_token']]['down_EP'] = ohlc[company_data['instrument_token']][4]
                         trd_portfolio[company_data['instrument_token']]['PSAR_direction'] = "DOWN"
-                    else:
-                        ohlc[company_data['instrument_token']][16] = trd_portfolio[company_data['instrument_token']]['up_PSAR']
 
                         # Down PSAR calculation when the trend is already down
-                if trd_portfolio[company_data['instrument_token']]['PSAR_direction'] == "DOWN":
-                    trd_portfolio[company_data['instrument_token']]['down_PSAR'] = max(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-1, 3],
-                 ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[-2, 3],
-                        trd_portfolio[company_data['instrument_token']]['down_PSAR'] -
-                        trd_portfolio[company_data['instrument_token']]['up_AF'] * (
-                                trd_portfolio[company_data['instrument_token']]['up_PSAR'] -
-                                trd_portfolio[company_data['instrument_token']]['up_EP']))
-                    if ohlc[company_data['instrument_token']][4] < trd_portfolio[company_data['instrument_token']]['down_EP']:
-                        trd_portfolio[company_data['instrument_token']]['down_EP'] = ohlc[company_data['instrument_token']][4]
-                        trd_portfolio[company_data['instrument_token']]['down_AF'] = trd_portfolio[company_data['instrument_token']]['down_AF'] + 0.01
-                    if ohlc[company_data['instrument_token']][5] > trd_portfolio[company_data['instrument_token']]['down_PSAR']:
+                if trd_portfolio[company_data['instrument_token']]['PSAR_direction'] == "DOWN":  # if previous PSAR value is "DOWN"
+                    if ohlc[company_data['instrument_token']][3] < trd_portfolio[company_data['instrument_token']]['down_PSAR']:
+                        ohlc[company_data['instrument_token']][16] = trd_portfolio[company_data['instrument_token']]['down_PSAR']
+                        if ohlc[company_data['instrument_token']][4] < trd_portfolio[company_data['instrument_token']]['down_EP']:
+                            trd_portfolio[company_data['instrument_token']]['down_EP'] = ohlc[company_data['instrument_token']][4]
+                            trd_portfolio[company_data['instrument_token']]['down_AF'] = trd_portfolio[company_data['instrument_token']]['down_AF'] + 0.01
+                    else:
                         trd_portfolio[company_data['instrument_token']]['up_PSAR'] = ohlc[company_data['instrument_token']][16] = trd_portfolio[company_data['instrument_token']]['down_EP']
-                        trd_portfolio[company_data['instrument_token']]['up_AF'] = 0.2
+                        trd_portfolio[company_data['instrument_token']]['up_AF'] = 0.02
                         trd_portfolio[company_data['instrument_token']]['up_EP'] = ohlc[company_data['instrument_token']][3]
                         trd_portfolio[company_data['instrument_token']]['PSAR_direction'] = "UP"
-                    else:
-                        ohlc[company_data['instrument_token']][16] = trd_portfolio[company_data['instrument_token']]['down_PSAR']
 
             # adding the row into the final ohlc table
             trd_portfolio[company_data['instrument_token']]['ohlc_temp'] = pd.DataFrame(
@@ -501,6 +499,8 @@ def calculate_ohlc_one_minute(company_data):
                 str(ohlc[company_data['instrument_token']][12]) + "," + str(ohlc[company_data['instrument_token']][13]) + "," + str(ohlc[company_data['instrument_token']][14]) + "," +
                 str(ohlc[company_data['instrument_token']][15]) + "," + str(ohlc[company_data['instrument_token']][16]) + ");")
             trd_portfolio[company_data['instrument_token']]['DB'].commit()
+
+            print("PSAR DATA:- Time: " + str(ohlc[company_data['instrument_token']][1]) + ", Symbol: " + str(trd_portfolio[company_data['instrument_token']]['Symbol']) + ", up_EP: " + str(trd_portfolio[company_data['instrument_token']]['up_EP']) + ", down_EP: " + str(trd_portfolio[company_data['instrument_token']]['down_EP']) + ", up_AF " + str(trd_portfolio[company_data['instrument_token']]['up_AF']) + ", down_AF: " + str(trd_portfolio[company_data['instrument_token']]['down_AF']) + ", up_PSAR: " + str(trd_portfolio[company_data['instrument_token']]['up_PSAR']) + ", down_PSAR: " + str(trd_portfolio[company_data['instrument_token']]['down_PSAR']) + ", PSAR_direction: " + str(trd_portfolio[company_data['instrument_token']]['PSAR_direction']) + ", Final PSAR: " + str(ohlc[company_data['instrument_token']][16]))
 
             # HA_Final.loc[HA[company_data['instrument_token']][1], :] = HA[company_data['instrument_token']]
             trd_portfolio[company_data['instrument_token']]['ha_temp'] = pd.DataFrame(
