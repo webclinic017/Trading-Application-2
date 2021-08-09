@@ -2,7 +2,7 @@ import socket
 import threading
 import traceback
 import time
-from OpenSSL.SSL import WantReadError
+# from OpenSSL.SSL import WantReadError
 from kiteconnect import exceptions
 from requests.exceptions import ReadTimeout
 import math
@@ -14,7 +14,7 @@ import json
 from kiteconnect import KiteTicker, KiteConnect
 import logging
 
-logging.basicConfig(filename='app.log', filemode='a', format='%(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename='trigger.log', filemode='a', format='%(name)s - %(levelname)s - %(message)s')
 
 acc_token = open("access-token.txt", "r")
 
@@ -34,7 +34,7 @@ mydb = mysql.connector.connect(
 my_cursor = mydb.cursor()
 
 opening_margin = ds.kite.margins(segment=None)
-print(opening_margin)
+# print(opening_margin)
 logging.info(opening_margin)
 day_margin = opening_margin['equity']['available']['live_balance']
 print(day_margin)
@@ -51,6 +51,8 @@ profit_Final = pd.DataFrame(
 
 for x in ds.trd_portfolio:
     profit[x] = ["Symbol", 0, 0, "Profit", 0, 0, 0]  # ["Symbol", "BUY Price", "SELL Price", "Profit", "Volume", "Charges", "final_profit"]
+    ds.trd_portfolio[x]['DB'] = mysql.connector.connect(host="127.0.0.1", user="root", passwd="password123",database="testdb")
+    ds.trd_portfolio[x]['SQL'] = ds.trd_portfolio[x]['DB'].cursor()
 
 
 def get_previous_close(items):
@@ -110,7 +112,7 @@ def quantity():
                         ds.trd_portfolio[items]['Tradable_quantity'] = 0
                     else:
                         ds.trd_portfolio[items]['Tradable_quantity'] = int(round(min(((temp_day_margin * ds.trd_portfolio[items]['margin_multiplier']) / (previous_close * ds.trd_portfolio[items][
-                            'Quantity_multiplier'])) - ds.trd_portfolio[items]['buffer_quantity'],
+                            'Quantity_multiplier'])) - (ds.trd_portfolio[items]['buffer_quantity']),
                                                                                   ds.trd_portfolio[items]['max_quantity']), 0))
             my_cursor.execute("update trd_portfolio set Tradable_quantity = " + str(ds.trd_portfolio[items]['Tradable_quantity']) + " where token = " + str(items))
             mydb.commit()
@@ -118,9 +120,6 @@ def quantity():
         traceback.print_exc()
         pass
     except Exception as e:
-        traceback.print_exc(e)
-        pass
-    except WantReadError as e:
         traceback.print_exc(e)
         pass
 
@@ -136,7 +135,7 @@ def ord_update_count():
 
 
 def length_table(stock):
-    my_cursor.execute("select count(*) from " + str(stock) + "_ohlc_final_1min")
+    my_cursor.execute("select count(*) from " + str(stock) + "_renko_final")
     records = my_cursor.fetchall()
     mydb.commit()
     return records[0][0]
@@ -213,11 +212,18 @@ def first_order():
     return [data[0], data[1], data[2], data[3], data[4], data[5], data[6]]
 
 
-def latest_row(stock):
-    my_cursor.execute("select * from " + str(stock) + "_ohlc_final_1min order by time DESC limit 2;")
+def latest_row_ohlc(stock):
+    my_cursor.execute("select * from " + str(stock) + "_ohlc_final_1min order by time DESC limit 1;")
     data = my_cursor.fetchall()
     mydb.commit()
-    return [data[0][2], data[0][8], data[0][5], data[0][15], data[1][8]]
+    return [data[0][5], data[0][8], data[0][16]]
+
+
+def latest_row_renko(stock):
+    my_cursor.execute("select * from " + str(stock) + "_renko_final order by time DESC limit 1;")
+    data = my_cursor.fetchall()
+    mydb.commit()
+    return [data[0][3]]
 
 
 def del_processed_order():
@@ -306,11 +312,11 @@ def target():
                         print("trade price for calculation: " + str(traded_price), "traded quantity: " + str(traded_quantity), "Brokerage: " + str(Brokerage), "STT: " + str(STT), "TNXCharges: " + str(TNXChrgs), "GST: " + str(GST), "SEBI Charges: " + str(SEBIChrgs), "Stamp: " + str(StampDuty), "Order_Charges" + str(order_charges))
                         logging.info("trade price for calculation: " + str(traded_price), "traded quantity: " + str(traded_quantity), "Brokerage: " + str(Brokerage), "STT: " + str(STT), "TNXCharges: " + str(TNXChrgs), "GST: " + str(GST), "SEBI Charges: " + str(SEBIChrgs), "Stamp: " + str(StampDuty), "Order_Charges" + str(order_charges))
                         if carry_forward < 0:
-                            target_amount = abs((order_charges * -2) + carry_forward) / traded_quantity
+                            target_amount = abs((order_charges * -1) + carry_forward) / traded_quantity
                             print("amount to gain in this trade when carry forward is negative" + str(target_amount))
                             logging.info("amount to gain in this trade when carry forward is negative" + str(target_amount))
                         else:
-                            target_amount = abs(order_charges * 2) / abs(traded_quantity)
+                            target_amount = abs(order_charges * 1) / abs(traded_quantity)
                             print("amount to gain in this trade when carry forward is positive " + str(target_amount))
                             logging.info("amount to gain in this trade when carry forward is positive " + str(target_amount))
                         if profit[entries][4] > 0:
@@ -343,11 +349,12 @@ def trigger():
                     target()
                 else:
                     if ((carry_forward / day_margin) * 100) <= 4:
-                        if length_table(ds.trd_portfolio[token]['Symbol']) >= 15:  # length of the RENKO final table
-                            validation_row = latest_row(ds.trd_portfolio[token]['Symbol'])
-                            # entry orders
+                        if length_table(ds.trd_portfolio[token]['Symbol']) >= 1:  # length of the RENKO final table
+                            ohlc_row = latest_row_ohlc(ds.trd_portfolio[token]['Symbol'])
+                            renko_row = latest_row_renko(ds.trd_portfolio[token]['Symbol'])
+                            # entry orders when quantity is 0
                             if profit[token][4] == 0:
-                                if validation_row[0] > validation_row[1] > validation_row[2] > ds.trd_portfolio[token]['LTP'] and validation_row[4] > validation_row[3]:
+                                if ohlc_row[0] < ohlc_row[1] and ohlc_row[0] < ohlc_row[2] and renko_row[0] == "SELL":
                                     if ds.trd_portfolio[token]['Direction'] != "Down":
                                         if ds.trd_portfolio[token]['Tradable_quantity'] > 0:
                                             ds.trd_portfolio[token]['Orderid'] = ds.kite.place_order(variety="regular", exchange=ds.trd_portfolio[token]['exchange'],
@@ -358,29 +365,23 @@ def trigger():
                                             time.sleep(2)
                                             quantity()
                                             order_status(token, ds.trd_portfolio[token]['Orderid'], 'SELL')
-                                elif validation_row[0] < validation_row[1] < validation_row[2] < ds.trd_portfolio[token]['LTP'] and validation_row[4] < validation_row[3]:
+                                            target()
+                                elif ohlc_row[0] > ohlc_row[1] and ohlc_row[0] > ohlc_row[2] and renko_row[0] == "BUY":
                                     if ds.trd_portfolio[token]['Direction'] != "Up":
                                         if ds.trd_portfolio[token]['Tradable_quantity'] > 0:
-                                            ds.trd_portfolio[token]['Orderid'] = ds.kite.place_order(variety="regular",
-                                                                                                     exchange=
-                                                                                                     ds.trd_portfolio[token][
-                                                                                                         'exchange'],
-                                                                                                     tradingsymbol=
-                                                                                                     ds.trd_portfolio[token][
-                                                                                                         'Symbol'],
-                                                                                                     transaction_type=ds.kite.TRANSACTION_TYPE_BUY,
-                                                                                                     quantity=
-                                                                                                     ds.trd_portfolio[token][
-                                                                                                         'Tradable_quantity'],
-                                                                                                     order_type=ds.kite.ORDER_TYPE_MARKET,
-                                                                                                     product=ds.kite.PRODUCT_MIS)
+                                            ds.trd_portfolio[token]['Orderid'] = ds.kite.place_order(variety="regular", exchange=ds.trd_portfolio[token]['exchange'],
+                                                tradingsymbol=ds.trd_portfolio[token]['Symbol'],transaction_type=ds.kite.TRANSACTION_TYPE_BUY,quantity=ds.trd_portfolio[token]['Tradable_quantity'],
+                                                order_type=ds.kite.ORDER_TYPE_MARKET, product=ds.kite.PRODUCT_MIS)
                                             print(ds.trd_portfolio[token]['Orderid'])
                                             logging.info(ds.trd_portfolio[token]['Orderid'])
                                             time.sleep(2)
                                             quantity()
                                             order_status(token, ds.trd_portfolio[token]['Orderid'], 'BUY')
-                            # exit orders
-                            elif profit[token][4] > 0 and validation_row[0] > validation_row[1] > validation_row[2] > ds.trd_portfolio[token]['LTP']:
+                                            target()
+                                # else:
+                                #     print(str(ds.trd_portfolio[token]['Symbol']) + " - no condition met - Close: " + str(ohlc_row[0]) + ", SMA: " + str(ohlc_row[1]) + ", PSAR: " + str(ohlc_row[2]) + ", Renko: " + str(renko_row[0]))
+                            # exit orders when quantity is not 0
+                            elif profit[token][4] > 0 and ohlc_row[0] < ohlc_row[1] and ohlc_row[0] < ohlc_row[2] and renko_row[0] == "SELL":
                                 print(profit[token][4])
                                 ''' Below is a exit order when we do not have a target
                                 ds.trd_portfolio[token]['Orderid'] = ds.kite.place_order(variety="regular",
@@ -402,7 +403,7 @@ def trigger():
                                 logging.info(ds.trd_portfolio[token]['Orderid'])
                                 time.sleep(2)
                                 quantity()
-                            elif profit[token][4] < 0 and validation_row[0] < validation_row[1] < validation_row[2] < ds.trd_portfolio[token]['LTP'] == "BUY":
+                            elif profit[token][4] < 0 and ohlc_row[0] > ohlc_row[1] and ohlc_row[0] > ohlc_row[2] and renko_row[0] == "BUY":
                                 print(profit[token][4])
                                 ''' Below is a exit order when we do not have a target
                                 ds.trd_portfolio[token]['Orderid'] = ds.kite.place_order(variety="regular",
@@ -465,9 +466,6 @@ def trigger():
     except Exception as e:
         traceback.print_exc(e)
         pass
-    except WantReadError as e:
-        traceback.print_exc(e)
-        pass
 
 
 def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
@@ -475,12 +473,14 @@ def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
     try:
         for company_data in ticks:
             ds.trd_portfolio[company_data['instrument_token']]['LTP'] = company_data['last_price']
-            if trigger_thread_running == "NO":
-                trigger_thread = threading.Thread(target=trigger)
-                trigger_thread.start()
-            if ((carry_forward / day_margin) * 100) > 10:
-                print("target reached")
-                logging.info("target reached")
+        if trigger_thread_running == "NO":
+            trigger_thread_running = "YES"
+            trigger()
+            # trigger_thread = threading.Thread(target=trigger)
+            # trigger_thread.start()
+        if ((carry_forward / day_margin) * 100) > 10:
+            print("target reached")
+            logging.info("target reached")
     except Exception as e:
         traceback.print_exc(e)
 

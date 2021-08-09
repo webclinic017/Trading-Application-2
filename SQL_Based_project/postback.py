@@ -2,11 +2,11 @@ from flask import Flask, request
 import os
 import datetime
 import json
-import mysql.connector
+import mysql.connector as mysql
 
 app = Flask(__name__)
 
-mydb = mysql.connector.connect(
+mydb = mysql.connect(
     host="localhost",
     user="root",
     passwd="password123",

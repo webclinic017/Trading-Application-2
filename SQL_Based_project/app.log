@@ -63,3 +63,9 @@ kiteconnect.ticker - ERROR - Retrying connection. Retry attempt count: 1. Next r
 kiteconnect.ticker - ERROR - Retrying connection. Retry attempt count: 2. Next retry in around: 7 seconds
 kiteconnect.ticker - ERROR - Retrying connection. Retry attempt count: 3. Next retry in around: 18 seconds
 kiteconnect.ticker - ERROR - Retrying connection. Retry attempt count: 4. Next retry in around: 48 seconds
+kiteconnect.ticker - ERROR - Connection error: 1006 - connection was closed uncleanly (None)
+kiteconnect.ticker - ERROR - Connection closed: 1006 - connection was closed uncleanly (None)
+kiteconnect.ticker - ERROR - Connection error: 1006 - connection was closed uncleanly (None)
+kiteconnect.ticker - ERROR - Connection closed: 1006 - connection was closed uncleanly (None)
+kiteconnect.ticker - ERROR - Connection error: 1006 - connection was closed uncleanly (None)
+kiteconnect.ticker - ERROR - Connection closed: 1006 - connection was closed uncleanly (None)

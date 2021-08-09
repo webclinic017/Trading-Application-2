@@ -33,7 +33,7 @@ trd_portfolio = {
               'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
               'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
               'margin_multiplier': 8, 'exchange': kite.EXCHANGE_NSE,
-              'buffer_quantity': 2, 'round_value': 2, 'tick_size': .05,
+              'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
               'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 30, 30),
               "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
               'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
@@ -211,7 +211,7 @@ for x in trd_portfolio:
     ohlc[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # [Symbol, Traded Time, Open, High, Low, Close, True Range, Average True Range, Simple Moving Average, Triangular moving average, Gain, Loss, Avg_Gain, Avg_Loss, RS, RSI]
     RENKO[x] = ["Symbol", 0, 0, "Signal", "None", 0, 0, "Time"]
     HA[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    trd_portfolio[x]['DB'] = mysql.connector.connect(host="127.0.0.1", user="root", passwd="password123", database="testdb", port=3306, connect_timeout=100000)
+    trd_portfolio[x]['DB'] = mysql.connector.connect(host="127.0.0.1", user="root", passwd="password123", database="testdb")
     trd_portfolio[x]['SQL'] = trd_portfolio[x]['DB'].cursor()
 
 
@@ -229,6 +229,7 @@ def find_existing_ohlc():
         trd_portfolio[items]['SQL'].execute(
             "select * from " + str(trd_portfolio[items]['Symbol']) + "_ohlc_final_1min order by time desc limit 20;")
         tup_data = trd_portfolio[items]['SQL'].fetchall()
+        trd_portfolio[items]['SQL'].commit()
         data = [list(ele) for ele in tup_data]
         for s in range(len(data)):
             ohlc[items] = data[-(s + 1)]
@@ -245,6 +246,7 @@ def find_existing_ha():
         trd_portfolio[items]['SQL'].execute(
             "select * from " + str(trd_portfolio[items]['Symbol']) + "_ha_final order by time desc limit 20;")
         tup_data = trd_portfolio[items]['SQL'].fetchall()
+        trd_portfolio[items]['SQL'].commit()
         data = [list(ele) for ele in tup_data]
         for s in range(len(data)):
             HA[items] = data[-(s + 1)]
@@ -261,6 +263,7 @@ def find_existing_renko():
         trd_portfolio[items]['SQL'].execute(
             "select * from " + str(trd_portfolio[items]['Symbol']) + "_renko_final order by time desc limit 20;")
         tup_data = trd_portfolio[items]['SQL'].fetchall()
+        trd_portfolio[items]['SQL'].commit()
         data = [list(ele) for ele in tup_data]
         for s in range(len(data)):
             RENKO[items] = data[-(s + 1)]
@@ -500,7 +503,7 @@ def calculate_ohlc_one_minute(company_data):
                 str(ohlc[company_data['instrument_token']][15]) + "," + str(ohlc[company_data['instrument_token']][16]) + ");")
             trd_portfolio[company_data['instrument_token']]['DB'].commit()
 
-            print("PSAR DATA:- Time: " + str(ohlc[company_data['instrument_token']][1]) + ", Symbol: " + str(trd_portfolio[company_data['instrument_token']]['Symbol']) + ", up_EP: " + str(trd_portfolio[company_data['instrument_token']]['up_EP']) + ", down_EP: " + str(trd_portfolio[company_data['instrument_token']]['down_EP']) + ", up_AF " + str(trd_portfolio[company_data['instrument_token']]['up_AF']) + ", down_AF: " + str(trd_portfolio[company_data['instrument_token']]['down_AF']) + ", up_PSAR: " + str(trd_portfolio[company_data['instrument_token']]['up_PSAR']) + ", down_PSAR: " + str(trd_portfolio[company_data['instrument_token']]['down_PSAR']) + ", PSAR_direction: " + str(trd_portfolio[company_data['instrument_token']]['PSAR_direction']) + ", Final PSAR: " + str(ohlc[company_data['instrument_token']][16]))
+            # print("PSAR DATA:- Time: " + str(ohlc[company_data['instrument_token']][1]) + ", Symbol: " + str(trd_portfolio[company_data['instrument_token']]['Symbol']) + ", up_EP: " + str(trd_portfolio[company_data['instrument_token']]['up_EP']) + ", down_EP: " + str(trd_portfolio[company_data['instrument_token']]['down_EP']) + ", up_AF " + str(trd_portfolio[company_data['instrument_token']]['up_AF']) + ", down_AF: " + str(trd_portfolio[company_data['instrument_token']]['down_AF']) + ", up_PSAR: " + str(trd_portfolio[company_data['instrument_token']]['up_PSAR']) + ", down_PSAR: " + str(trd_portfolio[company_data['instrument_token']]['down_PSAR']) + ", PSAR_direction: " + str(trd_portfolio[company_data['instrument_token']]['PSAR_direction']) + ", Final PSAR: " + str(ohlc[company_data['instrument_token']][16]))
 
             # HA_Final.loc[HA[company_data['instrument_token']][1], :] = HA[company_data['instrument_token']]
             trd_portfolio[company_data['instrument_token']]['ha_temp'] = pd.DataFrame(
