@@ -1,39 +1,29 @@
-import os
-import sys
-import ssl
+import datetime
 import socket
-import platform
-
+import threading
+import traceback
+import time
+# from OpenSSL.SSL import WantReadError
+from kiteconnect import exceptions
+from requests.exceptions import ReadTimeout
+import math
 import mysql.connector
+import usdinr as ds
+import pandas as pd
+import requests
+import json
+from kiteconnect import KiteTicker, KiteConnect
 
-print("os:            " + platform.platform())
-print("python         " + sys.version)
-print("openssl:       " + ssl.OPENSSL_VERSION)
-print("TLSv1.2:       " + str(ssl.PROTOCOL_TLSv1_2))
+acc_token = open("access-token.txt", "r")
 
-parameters = {
-    'host': 'localhost',
-    'user': 'root',
-    'port': 3300
-}
+api_k = "dysoztj41hntm1ma"  # api_key
+api_s = "e9u4vp3t8jx9opnmg7rkyuwhpghgim6c"  # api_secret
+access_token = acc_token.read()
+kws = KiteTicker(api_k, access_token)
+kite = KiteConnect(api_key=api_k, access_token=access_token)
+acc_token.close()
 
-db_conn = mysql.connector.connect(**parameters)
-
-cur = db_conn.cursor()
-cur.execute("SHOW STATUS LIKE 'Ssl_version'")
-results = cur.fetchall()
-print(results)
-
-cur.execute("SHOW STATUS LIKE 'Ssl_cipher'")
-results = cur.fetchall()
-print(results)
-
-cur.execute("SHOW VARIABLES LIKE 'tls_version'")
-results = cur.fetchall()
-print(results)
-
-cur.close()
-
-db_conn.close()
-
-print("done")
+order_present = kite.orders()
+print(order_present)
+for order in order_present:
+    print(order['status'])

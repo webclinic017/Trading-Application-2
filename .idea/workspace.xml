@@ -19,22 +19,20 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="Hopefully, corrected the">
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-08-09.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/trigger.log" afterDir="false" />
+    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-11-02.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-11-03.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2021-11-08.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/chromedriver_win32.zip" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.ngrok.exe.old" beforeDir="false" afterPath="$PROJECT_DIR$/.ngrok.exe.old" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/1.sql" beforeDir="false" afterPath="$PROJECT_DIR$/1.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/2.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2021-08-09.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/Gen-Access-tkn.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/Gen-Access-tkn.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/access-token.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/access-token.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/app.log" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/app.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/chromedriver.exe" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/chromedriver.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQL_Based_project/postback.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/postback.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/trigger.log" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/trigger.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/trigger.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/trigger.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chromedriver.exe" beforeDir="false" afterPath="$PROJECT_DIR$/chromedriver.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chromedriver_win32 (1)/chromedriver.exe" beforeDir="false" afterPath="$PROJECT_DIR$/chromedriver_win32 (1)/chromedriver.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ngrok.exe" beforeDir="false" afterPath="$PROJECT_DIR$/ngrok.exe" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -182,6 +180,9 @@
       <module name="Trading-Application" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/SQL_Based_project" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -220,10 +221,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.trigger" />
-        <item itemvalue="Python.postback" />
-        <item itemvalue="Python.trigger" />
         <item itemvalue="Python.usdinr" />
         <item itemvalue="Python.Gen-Access-tkn" />
+        <item itemvalue="Python.postback" />
+        <item itemvalue="Python.2" />
       </list>
     </recent_temporary>
   </component>
@@ -237,13 +238,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1554405465942</updated>
-    </task>
-    <task id="LOCAL-00028" summary="modified the placement of lines for order modification for the existing positions">
-      <created>1575878834150</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1575878834150</updated>
     </task>
     <task id="LOCAL-00029" summary="modified the tics method to initiate threads to call the candle and renko methods. hopefully this works. I am not checking if the thread is alive, instead, checking if a variable, named candle_thread_running &amp; renko_thread_running is NO or not.">
       <created>1577695164477</created>
@@ -581,7 +575,14 @@
       <option name="project" value="LOCAL" />
       <updated>1627796246343</updated>
     </task>
-    <option name="localTasksCounter" value="77" />
+    <task id="LOCAL-00077" summary="finally ran some code with PSAR">
+      <created>1628504534394</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1628504534394</updated>
+    </task>
+    <option name="localTasksCounter" value="78" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -598,7 +599,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="code updated for few companies and stopping the trading after the 2% profit is reached. :)" />
     <MESSAGE value="file 3 only for SBI as of now. the target takes care of previous losses for the day. stopping the logic to run once 2% is achieved." />
     <MESSAGE value="modified the placement of lines for order modification for the existing positions" />
     <MESSAGE value="modified the tics method to initiate threads to call the candle and renko methods. hopefully this works. I am not checking if the thread is alive, instead, checking if a variable, named candle_thread_running &amp; renko_thread_running is NO or not." />
@@ -623,33 +623,34 @@
     <MESSAGE value="added new meethod in usd inr to delete old records in sql database" />
     <MESSAGE value="added PSAR to ohlc candle. Modifications in usdinr and sql table." />
     <MESSAGE value="Hopefully, corrected the down PSAR issue. Need to run and check tomorrow." />
-    <option name="LAST_COMMIT_MESSAGE" value="Hopefully, corrected the down PSAR issue. Need to run and check tomorrow." />
+    <MESSAGE value="finally ran some code with PSAR" />
+    <option name="LAST_COMMIT_MESSAGE" value="finally ran some code with PSAR" />
   </component>
   <component name="WindowStateProjectService">
     <state x="669" y="115" key="#trigger" timestamp="1628485178463">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="669" y="115" key="#trigger/0.0.1920.1040@0.0.1920.1040" timestamp="1628485178463" />
-    <state x="536" y="88" key="CommitChangelistDialog2" timestamp="1627796234743">
+    <state x="536" y="88" key="CommitChangelistDialog2" timestamp="1628504521487">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="536" y="88" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1627796234743" />
-    <state width="1899" height="351" key="GridCell.Tab.0.bottom" timestamp="1628504386375">
+    <state x="536" y="88" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1628504521487" />
+    <state width="1899" height="338" key="GridCell.Tab.0.bottom" timestamp="1636349410724">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="351" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1628504386375" />
-    <state width="1899" height="351" key="GridCell.Tab.0.center" timestamp="1628504386375">
+    <state width="1899" height="338" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1636349410724" />
+    <state width="1899" height="338" key="GridCell.Tab.0.center" timestamp="1636349410724">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="351" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1628504386375" />
-    <state width="1899" height="351" key="GridCell.Tab.0.left" timestamp="1628504386375">
+    <state width="1899" height="338" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1636349410724" />
+    <state width="1899" height="338" key="GridCell.Tab.0.left" timestamp="1636349410724">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="351" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1628504386375" />
-    <state width="1899" height="351" key="GridCell.Tab.0.right" timestamp="1628504386375">
+    <state width="1899" height="338" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1636349410724" />
+    <state width="1899" height="338" key="GridCell.Tab.0.right" timestamp="1636349410724">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="351" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1628504386375" />
+    <state width="1899" height="338" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1636349410724" />
     <state width="1899" height="364" key="GridCell.Tab.1.bottom" timestamp="1628484988984">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -670,28 +671,17 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="522" y="304" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1628484234926" />
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1627796252416">
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2" timestamp="1628504535027">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1627796252416" />
+    <state x="552" y="253" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1628504535027" />
     <state x="438" y="225" key="com.intellij.execution.console.ConsoleHistoryController$MyBrowseAction$1" timestamp="1628240474033">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="438" y="225" key="com.intellij.execution.console.ConsoleHistoryController$MyBrowseAction$1/0.0.1920.1040@0.0.1920.1040" timestamp="1628240474033" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1621493298551">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1621493298551" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/SQL_Based_project/trigger.py</url>
-          <line>233</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">

@@ -27,12 +27,12 @@ ha_temp_columns = ["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR"
 candle_thread_running = ""
 
 trd_portfolio = {
-    1152769: {'Trade': "YES", "Market": "NSE", "Segment": "Equity", "Symbol": "MPHASIS", "max_quantity": 1300, 'Direction': "",
+    1152769: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "MPHASIS", "max_quantity": 1300, 'Direction': "",
               'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
               'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
               'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
               'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
-              'margin_multiplier': 8, 'exchange': kite.EXCHANGE_NSE,
+              'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
               'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
               'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 30, 30),
               "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
@@ -40,12 +40,12 @@ trd_portfolio = {
               'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
               'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
               'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
-    2672641: {'Trade': "YES", "Market": "NSE", "Segment": "Equity", "Symbol": "LUPIN", "max_quantity": 1300, 'Direction': "",
+    2672641: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "LUPIN", "max_quantity": 1300, 'Direction': "",
               'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
               'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
               'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
               'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
-              'margin_multiplier': 8, 'exchange': kite.EXCHANGE_NSE,
+              'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
               'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
               'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 30, 30),
               "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
@@ -53,12 +53,12 @@ trd_portfolio = {
               'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
               'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
               'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
-    895745: {'Trade': "YES", "Market": "NSE", "Segment": "Equity", "Symbol": "TATASTEEL", "max_quantity": 1300, 'Direction': "",
+    895745: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "TATASTEEL", "max_quantity": 1300, 'Direction': "",
              'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
              'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
              'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
              'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
-             'margin_multiplier': 8, 'exchange': kite.EXCHANGE_NSE,
+             'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
              'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
              'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 30, 30),
              "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
@@ -71,7 +71,7 @@ trd_portfolio = {
               'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
               'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
               'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
-              'margin_multiplier': 8, 'exchange': kite.EXCHANGE_NSE,
+              'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
               'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
               'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 30, 30),
               "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
@@ -92,12 +92,12 @@ trd_portfolio = {
               'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
               'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
               'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
-    779521: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "SBIN", "max_quantity": 1400, 'Direction': "",
+    779521: {'Trade': "YES", "Market": "NSE", "Segment": "Equity", "Symbol": "SBIN", "max_quantity": 1400, 'Direction': "",
              'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
              'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
              'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
              'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
-             'margin_multiplier': 5, 'exchange': kite.EXCHANGE_NSE,
+             'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
              'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
              'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
              "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
@@ -110,7 +110,7 @@ trd_portfolio = {
             'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
             'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
             'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
-            'margin_multiplier': 8, 'exchange': kite.EXCHANGE_NSE,
+            'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
             'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
             'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
             "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
@@ -123,7 +123,7 @@ trd_portfolio = {
             'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
             'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
             'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
-            'margin_multiplier': 5, 'exchange': kite.EXCHANGE_NSE,
+            'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
             'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
             'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
             "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
@@ -149,7 +149,7 @@ trd_portfolio = {
             'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
             'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
             'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
-            'margin_multiplier': 9, 'exchange': kite.EXCHANGE_NSE,
+            'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
             'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
             'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
             "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
@@ -229,7 +229,7 @@ def find_existing_ohlc():
         trd_portfolio[items]['SQL'].execute(
             "select * from " + str(trd_portfolio[items]['Symbol']) + "_ohlc_final_1min order by time desc limit 20;")
         tup_data = trd_portfolio[items]['SQL'].fetchall()
-        trd_portfolio[items]['SQL'].commit()
+        trd_portfolio[items]['DB'].commit()
         data = [list(ele) for ele in tup_data]
         for s in range(len(data)):
             ohlc[items] = data[-(s + 1)]
@@ -246,7 +246,7 @@ def find_existing_ha():
         trd_portfolio[items]['SQL'].execute(
             "select * from " + str(trd_portfolio[items]['Symbol']) + "_ha_final order by time desc limit 20;")
         tup_data = trd_portfolio[items]['SQL'].fetchall()
-        trd_portfolio[items]['SQL'].commit()
+        trd_portfolio[items]['DB'].commit()
         data = [list(ele) for ele in tup_data]
         for s in range(len(data)):
             HA[items] = data[-(s + 1)]
@@ -263,7 +263,7 @@ def find_existing_renko():
         trd_portfolio[items]['SQL'].execute(
             "select * from " + str(trd_portfolio[items]['Symbol']) + "_renko_final order by time desc limit 20;")
         tup_data = trd_portfolio[items]['SQL'].fetchall()
-        trd_portfolio[items]['SQL'].commit()
+        trd_portfolio[items]['DB'].commit()
         data = [list(ele) for ele in tup_data]
         for s in range(len(data)):
             RENKO[items] = data[-(s + 1)]
@@ -324,8 +324,7 @@ def del_old_records():
     date = date.isoformat(' ', 'seconds')
     for items in trd_portfolio:
         trd_portfolio[items]['SQL'].execute(
-            "delete FROM testdb." + trd_portfolio[items]['Symbol'] + "_ohlc_final_1min where Time < \"" + str(
-                date) + "\";")
+            "delete FROM testdb." + trd_portfolio[items]['Symbol'] + "_ohlc_final_1min where Time < \"" + str(date) + "\";")
         trd_portfolio[items]['DB'].commit()
         trd_portfolio[items]['SQL'].execute(
             "delete FROM testdb." + trd_portfolio[items]['Symbol'] + "_ha_final where Time < \"" + str(date) + "\";")
@@ -333,9 +332,6 @@ def del_old_records():
         trd_portfolio[items]['SQL'].execute(
             "delete FROM testdb." + trd_portfolio[items]['Symbol'] + "_renko_final where Time < \"" + str(date) + "\";")
         trd_portfolio[items]['DB'].commit()
-
-
-del_old_records()
 
 
 def calculate_ohlc_one_minute(company_data):
@@ -515,7 +511,7 @@ def calculate_ohlc_one_minute(company_data):
                 str(HA[company_data['instrument_token']][4]) + "," + str(HA[company_data['instrument_token']][5]) + "," + str(HA[company_data['instrument_token']][6]) + "," + str(
                 HA[company_data['instrument_token']][7]) + "," + str(HA[company_data['instrument_token']][8]) + "," + str(HA[company_data['instrument_token']][9]) + "," +
                 str(HA[company_data['instrument_token']][10]) + "," + str(HA[company_data['instrument_token']][11]) + "," + str(HA[company_data['instrument_token']][12]) + "," + str(
-                HA[company_data['instrument_token']][13]) + "," + str(HA[company_data['instrument_token']][14]) + "," + str(HA[company_data['instrument_token']][15]) + ");")
+                HA[company_data['instrument_token']][13]) + "," + str(HA[company_data['instrument_token']][14]) + "," + str(HA[company_data['instrument_token']][15]) + "," + str(HA[company_data['instrument_token']][16]) + ");")
             trd_portfolio[company_data['instrument_token']]['DB'].commit()
 
             # making ohlc for new candle
@@ -1334,8 +1330,7 @@ def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
             if trd_portfolio[company_data['instrument_token']]['Trade'] == "YES":
                 if trd_portfolio[company_data['instrument_token']]['OHLC_Thread_Running'] == "NO":
                     if trd_portfolio[company_data['instrument_token']]['start_time'] < (
-                            company_data['last_trade_time'].time()) < trd_portfolio[company_data['instrument_token']][
-                        'end_time']:
+                            company_data['last_trade_time'].time()) < trd_portfolio[company_data['instrument_token']]['end_time']:
                         candle = threading.Thread(target=calculate_ohlc_one_minute, args=(company_data,))
                         candle.start()
     except Exception as e:
@@ -1348,6 +1343,10 @@ def on_connect(ws, response):
 
 
 if __name__ == '__main__':
+    find_existing_ohlc()
+    find_existing_ha()
+    find_existing_renko()
+    del_old_records()
     # find_existing_ohlc()
     # find_existing_ha()
     # find_existing_renko()
