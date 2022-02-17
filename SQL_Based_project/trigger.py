@@ -114,11 +114,11 @@ def quantity():
                             ds.trd_portfolio[items]['Tradable_quantity'] = 0
                         else:
                             ds.trd_portfolio[items]['Tradable_quantity'] = int(round(min(((temp_day_margin * ds.trd_portfolio[items]['margin_multiplier']) / (previous_close * ds.trd_portfolio[items][
-                                'Quantity_multiplier'])) - (ds.trd_portfolio[items]['buffer_quantity'] + 5),
+                                'Quantity_multiplier'])) - (ds.trd_portfolio[items]['buffer_quantity'] + 8),
                                                                                       ds.trd_portfolio[items]['max_quantity']), 0)) - 3
                 my_cursor.execute("update trd_portfolio set Tradable_quantity = " + str(ds.trd_portfolio[items]['Tradable_quantity']) + " where token = " + str(items))
                 mydb.commit()
-                print("Tradable_quantity = " + str(ds.trd_portfolio[items]['Tradable_quantity']))
+                # print("Tradable_quantity = " + str(ds.trd_portfolio[items]['Tradable_quantity']))
     except (ReadTimeout, socket.timeout, TypeError, exceptions.InputException, exceptions.NetworkException, exceptions.NetworkException):
         traceback.print_exc()
         pass

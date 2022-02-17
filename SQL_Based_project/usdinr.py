@@ -92,7 +92,7 @@ trd_portfolio = {
               'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
               'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
               'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
-    779521: {'Trade': "YES", "Market": "NSE", "Segment": "Equity", "Symbol": "SBIN", "max_quantity": 1400, 'Direction': "",
+    779521: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "SBIN", "max_quantity": 1400, 'Direction': "",
              'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
              'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
              'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
