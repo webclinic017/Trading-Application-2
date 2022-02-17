@@ -223,6 +223,26 @@ def round_down(n, decimals=0):
         traceback.print_exc(e)
 
 
+def createtable():
+    for stock in trd_portfolio:
+        trd_portfolio[stock]['SQL'].execute(
+            "CREATE TABLE IF NOT EXISTS {0}_ha_final(Symbol varchar(255), Time varchar(255),Open float,High float,"
+            "Low float,Close float,TR float,ATR float,SMA float,TMA float,Gain float,Loss float,Avg_Gain float,"
+            "Avg_Loss float,RS float,RSI float,PSAR float)".format(trd_portfolio[stock]['Symbol'])
+        )
+        trd_portfolio[stock]['SQL'].execute(
+            "CREATE TABLE IF NOT EXISTS {0}_ohlc_final_1min(Symbol varchar(255), Time varchar(255),Open float,High float,"
+            "Low float,Close float,TR float,ATR float,SMA float,TMA float,Gain float,Loss float,Avg_Gain float,"
+            "Avg_Loss float,RS float,RSI float,PSAR float)".format(trd_portfolio[stock]['Symbol'])
+        )
+        trd_portfolio[stock]['SQL'].execute(
+            "CREATE TABLE IF NOT EXISTS {0}_renko_final(Symbol varchar(255),Open float,Close float,"
+            "Direction varchar(255),Position varchar(255),SMA float,TMA float,"
+            "Time varchar(255))".format(trd_portfolio[stock]['Symbol'])
+        )
+        trd_portfolio[stock]['DB'].commit()
+
+
 def find_existing_ohlc():
     global ohlc_final_1min
     for items in trd_portfolio:
@@ -339,7 +359,7 @@ def calculate_ohlc_one_minute(company_data):
     try:
         # below if condition is to check the data being received, and the data present are of the same minute or not
         trd_portfolio[company_data['instrument_token']]['OHLC_Thread_Running'] = "YES"
-        if (str(((company_data["timestamp"]).replace(second=0))) != ohlc[company_data['instrument_token']][1]) and (
+        if (str(((company_data["last_trade_time"]).replace(second=0))) != ohlc[company_data['instrument_token']][1]) and (
                 ohlc[company_data['instrument_token']][1] != "Time"):
 
             # Calculating SMA for Heiken Ashi. Only SMA Calculation for Henken Ashi
@@ -532,7 +552,7 @@ def calculate_ohlc_one_minute(company_data):
             ohlc[company_data['instrument_token']][4] = company_data['last_price']
 
         ohlc[company_data['instrument_token']][5] = company_data['last_price']  # closing price
-        ohlc[company_data['instrument_token']][1] = str(((company_data["timestamp"]).replace(second=0)))
+        ohlc[company_data['instrument_token']][1] = str(((company_data["last_trade_time"]).replace(second=0)))
         ohlc[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]['Symbol']
 
         # Calculating True Range
@@ -638,7 +658,7 @@ def calculate_ohlc_one_minute(company_data):
         if len(HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) < 1:
             if HA[company_data['instrument_token']][0] == "Symbol":
                 HA[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]['Symbol']
-            HA[company_data['instrument_token']][1] = str(((company_data["timestamp"]).replace(second=0)))
+            HA[company_data['instrument_token']][1] = str(((company_data["last_trade_time"]).replace(second=0)))
             HA[company_data['instrument_token']][2] = round(
                 (ohlc[company_data['instrument_token']][2] + ohlc[company_data['instrument_token']][5]) / 2, 4)
             HA[company_data['instrument_token']][3] = round(ohlc[company_data['instrument_token']][3], 4)
@@ -649,7 +669,7 @@ def calculate_ohlc_one_minute(company_data):
         if len(HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) >= 1:
             if HA[company_data['instrument_token']][0] == "Symbol":
                 HA[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]['Symbol']
-            HA[company_data['instrument_token']][1] = str(((company_data["timestamp"]).replace(second=0)))
+            HA[company_data['instrument_token']][1] = str(((company_data["last_trade_time"]).replace(second=0)))
             HA[company_data['instrument_token']][5] = round(
                 (ohlc[company_data['instrument_token']][2] + ohlc[company_data['instrument_token']][3] +
                  ohlc[company_data['instrument_token']][4] + ohlc[company_data['instrument_token']][5]) / 4, 4)
@@ -690,7 +710,7 @@ def calculate_ohlc_one_minute(company_data):
                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
                         -1, 5] >= trd_portfolio[company_data['instrument_token']]['brick_size'] + \
                             RENKO[company_data['instrument_token']][1]:
-                        RENKO[company_data['instrument_token']][7] = str(company_data["timestamp"])
+                        RENKO[company_data['instrument_token']][7] = str(company_data["last_trade_time"])
                         RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] + \
                                                                      trd_portfolio[company_data['instrument_token']][
                                                                          'brick_size']
@@ -781,7 +801,7 @@ def calculate_ohlc_one_minute(company_data):
                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
                         -1, 5] <= RENKO[company_data['instrument_token']][1] - \
                             trd_portfolio[company_data['instrument_token']]['brick_size']:
-                        RENKO[company_data['instrument_token']][7] = str(company_data["timestamp"])
+                        RENKO[company_data['instrument_token']][7] = str(company_data["last_trade_time"])
                         RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] - \
                                                                      trd_portfolio[company_data['instrument_token']][
                                                                          'brick_size']
@@ -887,7 +907,7 @@ def calculate_ohlc_one_minute(company_data):
                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
                         -1, 5] >= trd_portfolio[company_data['instrument_token']]['brick_size'] + \
                             RENKO[company_data['instrument_token']][1]:
-                        RENKO[company_data['instrument_token']][7] = str(company_data["timestamp"])
+                        RENKO[company_data['instrument_token']][7] = str(company_data["last_trade_time"])
                         RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] + \
                                                                      trd_portfolio[company_data['instrument_token']][
                                                                          'brick_size']
@@ -998,7 +1018,7 @@ def calculate_ohlc_one_minute(company_data):
                                                                                             'instrument_token']][
                                                                                         'Symbol']].iloc[-1, 1]) - \
                             trd_portfolio[company_data['instrument_token']]['brick_size']:
-                        RENKO[company_data['instrument_token']][7] = str(company_data["timestamp"])
+                        RENKO[company_data['instrument_token']][7] = str(company_data["last_trade_time"])
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[
                             RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']][
                                 'Symbol']].iloc[-1, 1]
@@ -1107,7 +1127,7 @@ def calculate_ohlc_one_minute(company_data):
                         ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
                         -1, 5] <= RENKO[company_data['instrument_token']][1] - \
                             trd_portfolio[company_data['instrument_token']]['brick_size']:
-                        RENKO[company_data['instrument_token']][7] = str(company_data["timestamp"])
+                        RENKO[company_data['instrument_token']][7] = str(company_data["last_trade_time"])
                         RENKO[company_data['instrument_token']][2] = RENKO[company_data['instrument_token']][1] - \
                                                                      trd_portfolio[company_data['instrument_token']][
                                                                          'brick_size']
@@ -1213,7 +1233,7 @@ def calculate_ohlc_one_minute(company_data):
                                 -1, 1] - RENKO_Final.loc[
                                 RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']].iloc[
                                 -1, 2]) + trd_portfolio[company_data['instrument_token']]['brick_size']:
-                        RENKO[company_data['instrument_token']][7] = str(company_data["timestamp"])
+                        RENKO[company_data['instrument_token']][7] = str(company_data["last_trade_time"])
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[
                             RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']][
                                 'Symbol']].iloc[-1, 1]
@@ -1343,6 +1363,7 @@ def on_connect(ws, response):
 
 
 if __name__ == '__main__':
+    createtable()
     find_existing_ohlc()
     find_existing_ha()
     find_existing_renko()

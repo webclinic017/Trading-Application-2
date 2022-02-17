@@ -32,6 +32,8 @@ def get_key(url):
         chrome_driver.find_element_by_id("password").send_keys("millionaire1")
         chrome_driver.find_element_by_css_selector(
             "#container > div > div > div.login-form > form > div.actions > button").click()
+        totp = input("Enter the totp: ")
+        chrome_driver.find_element_by_id("totp").send_keys(totp)
         sleep(10)
         # chrome_driver.find_element_by_id("pin").send_keys("171188")
         chrome_driver.find_element_by_css_selector(
