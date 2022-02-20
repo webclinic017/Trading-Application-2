@@ -21,13 +21,13 @@ kite = KiteConnect(api_key=api_k, access_token=access_token)
 acc_token.close()
 
 RENKO_temp_columns = ["Symbol", "Open", "Close", "Direction", "Position", "SMA", "TMA", "Time"]
-ohlc_temp_columns = ["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA", "Gain", "Loss", "Avg_Gain", "Avg_Loss", "RS", "RSI", "PSAR"]
-#                       0          1      2       3      4       5       6     7      8      9      10       11        12         13        14    15     16
-ha_temp_columns = ["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA", "Gain", "Loss", "Avg_Gain", "Avg_Loss", "RS", "RSI", "PSAR"]
+ohlc_temp_columns = ["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA", "Gain", "Loss", "Avg_Gain", "Avg_Loss", "RS", "RSI", "PSAR", "Single_Chart_Pattern"]
+#                       0          1      2       3      4       5       6     7      8      9      10       11        12         13        14    15     16             17
+ha_temp_columns = ["Symbol", "Time", "Open", "High", "Low", "Close", "TR", "ATR", "SMA", "TMA", "Gain", "Loss", "Avg_Gain", "Avg_Loss", "RS", "RSI", "PSAR", "Single_Chart_Pattern"]
 candle_thread_running = ""
 
 trd_portfolio = {
-    1152769: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "MPHASIS", "max_quantity": 1300, 'Direction': "",
+    256265: {'Trade': "YES", "Market": "NSE", "Segment": "Equity", "Symbol": "NIFTY", "max_quantity": 1300, 'Direction': "",
               'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
               'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
               'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
@@ -39,163 +39,7 @@ trd_portfolio = {
               'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
               'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
               'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
-    2672641: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "LUPIN", "max_quantity": 1300, 'Direction': "",
-              'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
-              'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
-              'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
-              'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
-              'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
-              'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
-              'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 30, 30),
-              "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
-              'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
-              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
-              'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
-    895745: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "TATASTEEL", "max_quantity": 1300, 'Direction': "",
-             'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
-             'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
-             'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
-             'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
-             'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
-             'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
-             'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 30, 30),
-             "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
-             'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
-             'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
-             'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-             'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
-    1270529: {'Trade': "YES", "Market": "NSE", "Segment": "Equity", "Symbol": "ICICIBANK", "max_quantity": 1300, 'Direction': "",
-              'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
-              'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
-              'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
-              'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
-              'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
-              'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
-              'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 30, 30),
-              "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
-              'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
-              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
-              'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
-    4708097: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "RBLBANK", "max_quantity": 2500, 'Direction': "",
-              'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
-              'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
-              'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
-              'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
-              'margin_multiplier': 5, 'exchange': kite.EXCHANGE_NSE,
-              'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
-              'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
-              "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
-              'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
-              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
-              'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
-    779521: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "SBIN", "max_quantity": 1400, 'Direction': "",
-             'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
-             'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
-             'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
-             'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
-             'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
-             'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
-             'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
-             "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
-             'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
-             'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
-             'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-             'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
-    41729: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "APOLLOTYRE", "max_quantity": 3400, 'Direction': "",
-            'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
-            'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
-            'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
-            'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
-            'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
-            'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
-            'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
-            "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
-            'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
-            'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
-            'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-            'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
-    54273: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "ASHOKLEY", "max_quantity": 4500, 'Direction': "",
-            'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
-            'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
-            'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
-            'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
-            'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
-            'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
-            'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
-            "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
-            'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
-            'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
-            'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-            'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
-    884737: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "TATAMOTORS", "max_quantity": 2000, 'Direction': "",
-             'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
-             'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
-             'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
-             'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
-             'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
-             'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
-             'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
-             "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
-             'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
-             'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
-             'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-             'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
-    60417: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "ASIANPAINT", "max_quantity": 375, 'Direction': "",
-            'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
-            'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
-            'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
-            'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
-            'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
-            'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
-            'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
-            "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
-            'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
-            'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
-            'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-            'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
-    2865921: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "INDIGO", "max_quantity": 400, 'Direction': "",
-              'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
-              'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
-              'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
-              'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
-              'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
-              'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
-              'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
-              "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
-              'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
-              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
-              'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
-    1510401: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "AXISBANK", "max_quantity": 850, 'Direction': "",
-              'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
-              'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
-              'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
-              'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
-              'margin_multiplier': 6, 'exchange': kite.EXCHANGE_NSE,
-              'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
-              'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
-              "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
-              'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
-              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
-              'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
-    2170625: {'Trade': "NO", "Market": "NSE", "Segment": "Equity", "Symbol": "TVSMOTOR", "max_quantity": 1450, 'Direction': "",
-              'Orderid': 0, 'Target_order': '', 'Target_order_id': 0,
-              'Positions': 0, 'Tradable_quantity': 0, 'LTP': 0, 'Per_Unit_Cost': 1050, 'Quantity_multiplier': 1,
-              'buy_brokerage': 0.0003, 'sell_brokerage': 0.0003,
-              'stt_ctt': 0.00025, 'buy_tran': 0.0000325, 'sell_tran': 0.0000325, 'gst': 0.18, 'stamp': 0.00003,
-              'margin_multiplier': 9, 'exchange': kite.EXCHANGE_NSE,
-              'buffer_quantity': 5, 'round_value': 2, 'tick_size': .05,
-              'start_time': datetime.time(9, 00, 10), 'end_time': datetime.time(15, 15, 10),
-              "lower_circuit_limit": 0, "upper_circuit_limit": 0, 'Target_amount': 0, 'Options_lot_size': 0,
-              'OHLC_Thread_Running': 'NO', 'DB': '', 'SQL': '',
-              'RENKO_temp': pd.DataFrame(columns=RENKO_temp_columns),
-              'ohlc_temp': pd.DataFrame(columns=ohlc_temp_columns), 'ha_temp': pd.DataFrame(columns=ha_temp_columns),
-              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'},
+              'brick_size': 0, 'up_EP': 0, 'down_EP': 0, 'up_AF': 0.02, 'down_AF': 0.02, 'up_PSAR': 0,  'down_PSAR': 0,  'PSAR_direction': 'None'}
 }
 
 ohlc = {}  # python dictionary to store the ohlc data in it
@@ -208,7 +52,7 @@ HA_temp = pd.DataFrame(columns=ha_temp_columns)
 HA_Final = pd.DataFrame(columns=ha_temp_columns)
 
 for x in trd_portfolio:
-    ohlc[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # [Symbol, Traded Time, Open, High, Low, Close, True Range, Average True Range, Simple Moving Average, Triangular moving average, Gain, Loss, Avg_Gain, Avg_Loss, RS, RSI]
+    ohlc[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "Single Chart Pattern"]  # [Symbol, Traded Time, Open, High, Low, Close, True Range, Average True Range, Simple Moving Average, Triangular moving average, Gain, Loss, Avg_Gain, Avg_Loss, RS, RSI, Single Chart Patterns]
     RENKO[x] = ["Symbol", 0, 0, "Signal", "None", 0, 0, "Time"]
     HA[x] = ["Symbol", "Time", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     trd_portfolio[x]['DB'] = mysql.connector.connect(host="127.0.0.1", user="root", passwd="password123", database="testdb")
@@ -228,7 +72,7 @@ def createtable():
         trd_portfolio[stock]['SQL'].execute(
             "CREATE TABLE IF NOT EXISTS {0}_ha_final(Symbol varchar(255), Time varchar(255),Open float,High float,"
             "Low float,Close float,TR float,ATR float,SMA float,TMA float,Gain float,Loss float,Avg_Gain float,"
-            "Avg_Loss float,RS float,RSI float,PSAR float)".format(trd_portfolio[stock]['Symbol'])
+            "Avg_Loss float,RS float,RSI float,PSAR float, Single_Candle_Pattern varchar(255))".format(trd_portfolio[stock]['Symbol'])
         )
         trd_portfolio[stock]['SQL'].execute(
             "CREATE TABLE IF NOT EXISTS {0}_ohlc_final_1min(Symbol varchar(255), Time varchar(255),Open float,High float,"
@@ -352,6 +196,20 @@ def del_old_records():
         trd_portfolio[items]['SQL'].execute(
             "delete FROM testdb." + trd_portfolio[items]['Symbol'] + "_renko_final where Time < \"" + str(date) + "\";")
         trd_portfolio[items]['DB'].commit()
+
+
+# method calculating the candle stick patterns
+def single_candle_pattern(open, high, low, close):
+    if close > open and open-low >= 2*(close-open) and (high == close or high-close < close-open):
+        return "Hammer"
+    elif open > close and high-open >= 2*(open-close) and (close == low or close-low < open-close):
+        return "Shooting Start"
+    elif open == low and open < close == high:
+        return "Bullish Marubozu"
+    elif open == high and open > close == low:
+        return "Bearish Marubozu"
+
+    pass
 
 
 def calculate_ohlc_one_minute(company_data):
@@ -504,6 +362,9 @@ def calculate_ohlc_one_minute(company_data):
                         trd_portfolio[company_data['instrument_token']]['up_EP'] = ohlc[company_data['instrument_token']][3]
                         trd_portfolio[company_data['instrument_token']]['PSAR_direction'] = "UP"
 
+            # Single Candle stick pattern detection
+            ohlc[company_data['instrument_token']][17] = single_candle_pattern(ohlc[company_data['instrument_token']][2], ohlc[company_data['instrument_token']][3], ohlc[company_data['instrument_token']][4], ohlc[company_data['instrument_token']][5])
+
             # adding the row into the final ohlc table
             trd_portfolio[company_data['instrument_token']]['ohlc_temp'] = pd.DataFrame(
                 [ohlc[company_data['instrument_token']]], columns=ohlc_temp_columns)
@@ -516,7 +377,7 @@ def calculate_ohlc_one_minute(company_data):
                 str(ohlc[company_data['instrument_token']][6]) + "," + str(ohlc[company_data['instrument_token']][7]) + "," + str(ohlc[company_data['instrument_token']][8]) + "," +
                 str(ohlc[company_data['instrument_token']][9]) + "," + str(ohlc[company_data['instrument_token']][10]) + "," + str(ohlc[company_data['instrument_token']][11]) + "," +
                 str(ohlc[company_data['instrument_token']][12]) + "," + str(ohlc[company_data['instrument_token']][13]) + "," + str(ohlc[company_data['instrument_token']][14]) + "," +
-                str(ohlc[company_data['instrument_token']][15]) + "," + str(ohlc[company_data['instrument_token']][16]) + ");")
+                str(ohlc[company_data['instrument_token']][15]) + "," + str(ohlc[company_data['instrument_token']][16]) + "," + str(ohlc[company_data['instrument_token']][17]) + ");")
             trd_portfolio[company_data['instrument_token']]['DB'].commit()
 
             # print("PSAR DATA:- Time: " + str(ohlc[company_data['instrument_token']][1]) + ", Symbol: " + str(trd_portfolio[company_data['instrument_token']]['Symbol']) + ", up_EP: " + str(trd_portfolio[company_data['instrument_token']]['up_EP']) + ", down_EP: " + str(trd_portfolio[company_data['instrument_token']]['down_EP']) + ", up_AF " + str(trd_portfolio[company_data['instrument_token']]['up_AF']) + ", down_AF: " + str(trd_portfolio[company_data['instrument_token']]['down_AF']) + ", up_PSAR: " + str(trd_portfolio[company_data['instrument_token']]['up_PSAR']) + ", down_PSAR: " + str(trd_portfolio[company_data['instrument_token']]['down_PSAR']) + ", PSAR_direction: " + str(trd_portfolio[company_data['instrument_token']]['PSAR_direction']) + ", Final PSAR: " + str(ohlc[company_data['instrument_token']][16]))
@@ -686,6 +547,7 @@ def calculate_ohlc_one_minute(company_data):
                     HA[company_data['instrument_token']][5]), 4)
 
         # starting to calculate the RENKO table
+        '''
         if len(ohlc_final_1min.loc[ohlc_final_1min.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0:  # or (len(RENKO_Final.loc[RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) > 0):  # checking if there is atleast 1 candle in OHLC Dataframe or RENKO Dataframe
             if trd_portfolio[company_data['instrument_token']]['brick_size'] == 0:
                 trd_portfolio[company_data['instrument_token']]['brick_size'] = ohlc_final_1min.loc[
@@ -1337,6 +1199,7 @@ def calculate_ohlc_one_minute(company_data):
                         RENKO[company_data['instrument_token']][1] = RENKO_Final.loc[
                             RENKO_Final.Symbol == trd_portfolio[company_data['instrument_token']][
                                 'Symbol']].iloc[-1, 2]
+                                '''
         trd_portfolio[company_data['instrument_token']]['OHLC_Thread_Running'] = "NO"
     except Exception as e:
         traceback.print_exc(e)
@@ -1350,7 +1213,7 @@ def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
             if trd_portfolio[company_data['instrument_token']]['Trade'] == "YES":
                 if trd_portfolio[company_data['instrument_token']]['OHLC_Thread_Running'] == "NO":
                     if trd_portfolio[company_data['instrument_token']]['start_time'] < (
-                            company_data['last_trade_time'].time()) < trd_portfolio[company_data['instrument_token']]['end_time']:
+                            company_data['timestamp'].time()) < trd_portfolio[company_data['instrument_token']]['end_time']:
                         candle = threading.Thread(target=calculate_ohlc_one_minute, args=(company_data,))
                         candle.start()
     except Exception as e:
