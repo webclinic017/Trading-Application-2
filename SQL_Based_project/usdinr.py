@@ -203,12 +203,27 @@ def single_candle_pattern(open, high, low, close):
     if close > open and open-low >= 2*(close-open) and (high == close or high-close < close-open):
         return "Hammer"
     elif open > close and high-open >= 2*(open-close) and (close == low or close-low < open-close):
-        return "Shooting Start"
-    elif open == low and open < close == high:
+        return "Shooting Star"
+    elif (open == low or (open-low < .2 * close-open)) and open < close and (close == high or (high - close < (.2 * close - open))):
         return "Bullish Marubozu"
-    elif open == high and open > close == low:
+    elif (open == high or (high-open < .2 * open - close)) and open > close and (close == low or (close-low < (.2 * open - close))):
         return "Bearish Marubozu"
-
+    elif abs(close - open)/(high - low) < 0.1 and (high - max(close, open)) > (3 * abs(close - open)) and (min(close, open) - low) > (3 * abs(close - open)):
+        return "Doji"
+    elif abs(close - open)/(high - low) < 0.1 and (min(close, open) - low) > (3 * abs(close - open)) and (high - max(close, open)) < abs(close - open):
+        return "Dragonfly Doji"
+    elif abs(close-open)/(high-low) < 0.1 and (high-max(close, open)) > (3*abs(close-open)) and (min(close, open)-low) <= abs(close-open):
+        return "Gravestone Doji"
+    elif close<open and 0.3 > abs(close-open)/(high-low) >= 0.1 and (min(close, open)-low) >= (2*abs(close-open)) and (high-max(close, open)) > (0.25*abs(close-open)):
+        return "Hanging Man Red"
+    elif close>open and 0.3 > abs(close-open)/(high-low) >= 0.1 and (min(close, open)-low) >= (2*abs(close-open)) and (high-max(close, open)) > (0.25*abs(close-open)):
+        return "Hanging Man Green"
+    elif close<open and 0.3 > abs(close-open)/(high-low) >= 0.1 and (high-max(close,open)) >= (2*abs(close-open)) and (min(close, open)-low) <= (0.25*abs(close-open)):
+        return "Inverted Hammer Red"
+    elif close>open and 0.3 > abs(close-open)/(high-low) >= 0.1 and (high-max(close, open)) >= (2*abs(close-open)) and (min(close, open)-low) <= (0.25*abs(close-open)):
+        return "Inverted Hammer Green"
+    else:
+        return "None"
     pass
 
 
@@ -1228,8 +1243,8 @@ def on_connect(ws, response):
 if __name__ == '__main__':
     createtable()
     find_existing_ohlc()
-    find_existing_ha()
-    find_existing_renko()
+    # find_existing_ha()
+    # find_existing_renko()
     del_old_records()
     # find_existing_ohlc()
     # find_existing_ha()

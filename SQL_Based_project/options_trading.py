@@ -37,10 +37,16 @@ opening_margin = ds.kite.margins(segment=None)
 # print(opening_margin)
 day_margin = opening_margin['equity']['available']['live_balance']
 print(f"margin at the day start {day_margin}")
+
+instrument_list = kite.instruments()
+df = pd.DataFrame(instrument_list)
+print(df)
+
 processed_orders = []
 unprocessed_order_count = 0
 trigger_thread_running = "NO"
-
+positions = ''
+position_order_no = 0
 options_to_trade = []
 
 CE_order_list = []
@@ -52,11 +58,21 @@ PE_target_list = []
 CE_stop_loss_list = []
 PE_stop_loss_list = []
 
+positive_indications = ['Hammer', "Bullish Marubozu", "Dragonfly Doji", "Hanging Man Green"]
+negative_indications = ['Shooting Star', "Bearish Marubozu", "Gravestone Doji", "Inverted Hammer Red"]
+
 carry_forward = 0
 profit = {}
 profit_temp = pd.DataFrame(columns=["Symbol", "BUY Price", "SELL Price", "Profit", "Volume", "Charges", "final_profit"])
 profit_Final = pd.DataFrame(
     columns=["Symbol", "BUY Price", "SELL Price", "Profit", "Volume", "Charges", "final_profit"])
+
+positive_indications = ['Hammer', "Bullish Marubozu", "Dragonfly Doji", "Hanging Man Green"]
+negative_indications = ['Shooting Star', "Bearish Marubozu", "Gravestone Doji", "Inverted Hammer Red"]
+CE_symbol = ''
+CE_ins_tkn = 0
+PE_ins_tkn = 0
+PE_symbol = ''
 
 for x in ds.trd_portfolio:
     profit[x] = ["Symbol", 0, 0, "Profit", 0, 0, 0]  # ["Symbol", "BUY Price", "SELL Price", "Profit", "Volume", "Charges", "final_profit"]
@@ -83,6 +99,43 @@ headers = {  # header for API request to update circuit limits
     'Authorization': 'token dysoztj41hntm1ma:' + ds.access_token
 }
 
+def expiry_date():
+    d = datetime.date.today()
+    while d.weekday() != 3:
+        d += datetime.timedelta(1)
+
+    if d == datetime.date.today():
+        d += datetime.timedelta(7)
+    return d
+
+
+option_expiry_date = expiry_date()
+
+
+def nifty_spot():
+    nifty_ltp = (kite.ltp('NSE:NIFTY 50')).get('NSE:NIFTY 50').get('last_price')
+    return round(nifty_ltp / 100) * 100
+
+
+def options_list():
+    global CE_symbol, CE_ins_tkn, PE_ins_tkn, PE_symbol
+    closest_strike = nifty_spot()
+    valid_options = df.loc[(df['segment'] == 'NFO-OPT') & (df['name'] == 'NIFTY') & (
+                df['expiry'].astype(str) == str(option_expiry_date)) & (df['strike'] == closest_strike)]
+    print(valid_options.to_string())
+    CE_ins_tkn = valid_options[valid_options['instrument_type'] == 'CE'].iloc[0, 1]
+    PE_ins_tkn = valid_options[valid_options['instrument_type'] == 'PE'].iloc[0, 1]
+    CE_symbol = valid_options[valid_options['instrument_type'] == 'CE'].iloc[0, 2]
+    PE_symbol = valid_options[valid_options['instrument_type'] == 'PE'].iloc[0, 2]
+    print(CE_ins_tkn, PE_ins_tkn, CE_symbol, PE_symbol)
+
+
+nifty_spot()
+options_list()
+print("CE details {} {}".format(CE_ins_tkn, CE_symbol))
+call_ltp = (kite.ltp('NFO:'+CE_symbol))
+print(call_ltp)
+
 
 # def circuit_limits():
 #     with requests.session() as s:
@@ -100,10 +153,15 @@ headers = {  # header for API request to update circuit limits
 # circuit_limits()
 
 
-def quantity():
+def quantity(Type):
     try:
-        temp_open_margin = ds.KiteConnect.margins(ds.kite)
+        temp_open_margin = kite.margins()
         temp_day_margin = temp_open_margin['equity']['available']['live_balance']
+        options_list()
+        if Type == 'CE':
+            actual_quantity = kite.ltp(CE_ins_tkn)
+
+
         for items in ds.trd_portfolio:
             if ds.trd_portfolio[items]['Trade'] == "YES":
                 if (temp_day_margin/day_margin * 100) < 1:
@@ -135,7 +193,7 @@ def quantity():
         pass
 
 
-quantity()
+# quantity()
 
 
 def ord_update_count():
@@ -146,10 +204,10 @@ def ord_update_count():
 
 
 def length_table(stock):
-    my_cursor.execute("select count(*) from " + str(stock) + "_renko_final")
+    my_cursor.execute("select count(*) from " + str(stock) + "_ohlc_final_1min")
     records = my_cursor.fetchall()
     mydb.commit()
-    return records[0][0]
+    return records[0][17]
 
 
 def sum_all_of_stocks():  # function to know the sum of all the stocks that are in place.
@@ -350,6 +408,25 @@ def target():
         traceback.print_exc(e)
 
 
+def options_trigger():
+    global positions, position_order_no
+    try:
+        for token in ds.trd_portfolio:
+            if length_table(ds.trd_portfolio[token]['Symbol']) >= 1:  # length of the Nifty 1_min final table
+                # entry orders when quantity is 0
+                ohlc_row = latest_row_ohlc(ds.trd_portfolio[token]['Symbol'])
+                if ohlc_row[17] in positive_indications:
+                    if positions == '':
+                        options_list()
+                        position_order_no = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE,
+                                                    tradingsymbol=CE_symbol, transaction_type=ds.kite.TRANSACTION_TYPE_BUY,quantity=quantity('CE'),
+                                                    order_type=ds.kite.ORDER_TYPE_MARKET, product=ds.kite.PRODUCT_MIS)
+                        print("taken CE entry at {} at a price of ")
+
+    except Exception as e:
+        print(e)
+
+
 def trigger():
     global trigger_thread_running
     try:
@@ -497,17 +574,17 @@ def on_ticks(ws, ticks):  # retrieve continuous ticks in JSON format
     try:
         for company_data in ticks:
             ds.trd_portfolio[company_data['instrument_token']]['LTP'] = company_data['last_price']
-        if datetime.time(9, 30, 00) < company_data['last_trade_time'].time() < datetime.time(15, 19, 00):
+        if datetime.time(9, 30, 00) < company_data['timestamp'].time() < datetime.time(15, 19, 00):
             if trigger_thread_running == "NO":
                 trigger_thread_running = "YES"
-                trigger()
+                options_trigger()
                 # trigger_thread = threading.Thread(target=trigger)
                 # trigger_thread.start()
             if ((carry_forward / day_margin) * 100) >= 1:
                 print("target reached")
                 logging.info("target reached")
-        elif company_data['last_trade_time'].time() > datetime.time(15, 19, 00):
-            close_business()
+        # elif company_data['timestamp'].time() > datetime.time(15, 19, 00):
+        #     close_business()
     except Exception as error:
         traceback.print_exc(error)
 

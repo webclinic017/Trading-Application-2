@@ -7,13 +7,13 @@ SHOW DATABASES;
 USE testdb;
 SHOW TABLES;
 
-select count(*) from order_updates;
+select * from nifty_ohlc_final_1min;
 
 create table MPHASIS_ohlc_final_1min as (select * from icicibank_ohlc_final_1min where 1=2);
 create table MPHASIS_ha_final as (select * from icicibank_ha_final where 1=2);
 create table MPHASIS_renko_final as (select * from icicibank_renko_final where 1=2);
 
-describe rblbank_renko_finalrblbank_renko_final;
+describe rblbank_renko_final;
 SHOW VARIABLES LIKE '%tls%';
 
 INSERT INTO trd_portfolio (OHLC_Thread_Running) values ("NO");
@@ -21,11 +21,11 @@ INSERT INTO trd_portfolio (OHLC_Thread_Running) values ("NO");
 select * from `tatamotors_renko_final` order by time desc limit 20 ;
 select * from `rblbank_renko_final` order by time desc;
 select * from `ICICIBANK_renko_final` order by time desc;
-select * from order_updates;
+select * from trd_portfolio;
 
 select * from processed_orders;
 rollback;
-delete from `rblbank_renko_final`;
+delete from `order_updates`;
 delete FROM testdb.apollotyre_ohlc_final_1min where Time < "2021-04-15 00:00:00";
 
 insert into processed_orders (OrderId) values ((select Order_number from order_updates limit 1));
@@ -44,8 +44,8 @@ INSERT INTO USDINR20OCTFUT_ohlc_final_1min (Symbol, Time, Open, High, Low, Close
 alter table usdinr20octfut_renko_final drop ATR;
 alter table processed_orders modify OrderId bigint;
 
-alter table `tvsmotor_ohlc_final_1min`
-add PSAR float after RSI,
+alter table `nifty_ohlc_final_1min`
+add Single_Chart_Pattern float after PSAR;
 add Loss float after Gain,
 add Avg_Gain float after Loss,
 add Avg_Loss float after Avg_Gain,
