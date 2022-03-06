@@ -23,7 +23,8 @@ kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 acc_token.close()
 
-order_present = kite.orders()
-print(order_present)
-for order in order_present:
-    print(order['status'])
+temp_historical_min = int((datetime.datetime.now().strftime("%M")))-1
+print(datetime.datetime.today().replace(minute=temp_historical_min, second=0,microsecond=0))
+print(math.ceil(626.1245*10)/10)
+print(divmod(626.1245,.05))
+print((kite.ltp("NFO:{}".format("NIFTY2231016200CE"))).get("NFO:{}".format("NIFTY2231016200CE")).get('last_price'))

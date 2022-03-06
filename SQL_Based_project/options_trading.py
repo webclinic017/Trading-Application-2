@@ -47,7 +47,12 @@ unprocessed_order_count = 0
 trigger_thread_running = "NO"
 positions = ''
 position_order_no = 0
+position_quantity = 0
+position_stop_loss_ord_no = 0
+position_order_status = ''
+position_order_price = 0
 options_to_trade = []
+max_quantity = 1800
 
 CE_order_list = []
 PE_order_list = []
@@ -153,47 +158,25 @@ print(call_ltp)
 # circuit_limits()
 
 
-def quantity(Type):
+def quantity(option_type):
     try:
         temp_open_margin = kite.margins()
         temp_day_margin = temp_open_margin['equity']['available']['live_balance']
         options_list()
-        if Type == 'CE':
-            actual_quantity = kite.ltp(CE_ins_tkn)
-
-
-        for items in ds.trd_portfolio:
-            if ds.trd_portfolio[items]['Trade'] == "YES":
-                if (temp_day_margin/day_margin * 100) < 1:
-                    ds.trd_portfolio[items]['Tradable_quantity'] = 0
-                elif ds.trd_portfolio[items]['Segment'] == "Options":  # calculating quantity for options
-                    maxquantity = min(temp_day_margin / ds.trd_portfolio[items]['LTP'], ds.trd_portfolio[items]['max_quantity'])
-                    multiplier = 0
-                    while (multiplier * 75) < maxquantity:  # ds.trd_portfolio[items]['max_quantity']:
-                        multiplier = multiplier + 1
-                    else:
-                        ds.trd_portfolio[items]['Tradable_quantity'] = (multiplier - 1) * 75
-                elif ds.trd_portfolio[items]['Segment'] != "Options":  # calculating quantity for equities
-                    previous_close = get_previous_close(items)
-                    if previous_close != 0:
-                        if ((min(temp_day_margin, day_margin/4.5) * ds.trd_portfolio[items]['margin_multiplier']) / (previous_close * ds.trd_portfolio[items]['Quantity_multiplier'])) - ds.trd_portfolio[items]['buffer_quantity'] < 1:
-                            ds.trd_portfolio[items]['Tradable_quantity'] = 0
-                        else:
-                            ds.trd_portfolio[items]['Tradable_quantity'] = int(round(min(((temp_day_margin * ds.trd_portfolio[items]['margin_multiplier']) / (previous_close * ds.trd_portfolio[items][
-                                'Quantity_multiplier'])) - (ds.trd_portfolio[items]['buffer_quantity'] + 5),
-                                                                                      ds.trd_portfolio[items]['max_quantity']), 0)) - 3
-                # my_cursor.execute("update trd_portfolio set Tradable_quantity = " + str(ds.trd_portfolio[items]['Tradable_quantity']) + " where token = " + str(items))
-                # mydb.commit()
-                print("Tradable_quantity = " + str(ds.trd_portfolio[items]['Tradable_quantity']))
+        if option_type == 'CE':
+            actual_quantity = temp_day_margin/(kite.ltp("NFO:{}".format(CE_symbol))).get("NFO:{}".format(CE_symbol)).get('last_price')
+            tradeable_quantity = round((actual_quantity/50) * 50) - 50
+            return min(tradeable_quantity, max_quantity)
+        elif option_type == 'PE':
+            actual_quantity = temp_day_margin/(kite.ltp("NFO:{}".format(PE_symbol))).get("NFO:{}".format(PE_symbol)).get('last_price')
+            tradeable_quantity = round((actual_quantity/50) * 50) - 50
+            return min(tradeable_quantity, max_quantity)
     except (ReadTimeout, socket.timeout, TypeError, exceptions.InputException, exceptions.NetworkException, exceptions.NetworkException):
         traceback.print_exc()
         pass
     except Exception as e:
         traceback.print_exc(e)
         pass
-
-
-# quantity()
 
 
 def ord_update_count():
@@ -227,32 +210,22 @@ def round_down(n, decimals=0):
         traceback.print_exc(e)
 
 
-def order_status(token, orderid, trade_type):
+def order_status(orderid):
+    global position_order_status, position_order_price
     try:
         order_details = ds.kite.order_history(orderid)
         for item in order_details:
             if item['status'] == "COMPLETE":
-                if trade_type == 'SELL':
-                    ds.trd_portfolio[token]['Direction'] = "Down"
-                    ds.trd_portfolio[token]['Target_order'] = "NO"
-                    print(ds.trd_portfolio[token]['Direction'])
-                    logging.info(ds.trd_portfolio[token]['Direction'])
-                    break
-                elif trade_type == 'BUY':
-                    ds.trd_portfolio[token]['Direction'] = "Up"
-                    ds.trd_portfolio[token]['Target_order'] = "NO"
-                    print(ds.trd_portfolio[token]['Direction'])
-                    logging.info(ds.trd_portfolio[token]['Direction'])
-                    break
+                position_order_status = "COMPLETE"
+                position_order_price = item['price']
             elif item['status'] == "REJECTED":
-                print("order got rejected", ds.trd_portfolio[token]['Direction'], ds.trd_portfolio[token]['Target_order'])
-                logging.info("order got rejected", ds.trd_portfolio[token]['Direction'], ds.trd_portfolio[token]['Target_order'])
+                position_order_status = "COMPLETE"
                 break
         else:
             time.sleep(1)
-            order_status(token, orderid, type)
+            order_status(orderid)
     except Exception as e:
-        order_status(token, orderid, type)
+        order_status(orderid)
         traceback.print_exc(e)
 
 
@@ -408,8 +381,19 @@ def target():
         traceback.print_exc(e)
 
 
+def get_previous_minute_details(direction):
+    temp_historical_min = int(datetime.datetime.now().strftime("%M"))-1
+    his_time = datetime.datetime.today().replace(minute=temp_historical_min, second=0,microsecond=0)
+    if direction == 'CE':
+        temp_historical_data = kite.historical_data(CE_ins_tkn,his_time,his_time,'minute')
+        return temp_historical_data[0]['low']
+    if direction == 'PE':
+        temp_historical_data = kite.historical_data(PE_ins_tkn,his_time,his_time,'minute')
+        return temp_historical_data[0]['low']
+
+
 def options_trigger():
-    global positions, position_order_no
+    global positions, position_order_no, position_order_status, position_quantity, position_stop_loss_ord_no
     try:
         for token in ds.trd_portfolio:
             if length_table(ds.trd_portfolio[token]['Symbol']) >= 1:  # length of the Nifty 1_min final table
@@ -418,10 +402,34 @@ def options_trigger():
                 if ohlc_row[17] in positive_indications:
                     if positions == '':
                         options_list()
+                        position_quantity = quantity('CE')
                         position_order_no = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE,
                                                     tradingsymbol=CE_symbol, transaction_type=ds.kite.TRANSACTION_TYPE_BUY,quantity=quantity('CE'),
                                                     order_type=ds.kite.ORDER_TYPE_MARKET, product=ds.kite.PRODUCT_MIS)
                         print("taken CE entry at {} at a price of ")
+                        time.sleep(2)
+                        while position_order_status not in ('COMPLETE', 'REJETED'):
+                            order_status(position_order_no)
+                        if position_order_status == "COMPLETE":
+                            positions = 'CE'
+                            target_price = math.ceil(((position_order_price * 1.005)*10)/10)
+                            position_target_ord_no = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE,
+                                                                 tradingsymbol=CE_symbol,
+                                                                 transaction_type=ds.kite.TRANSACTION_TYPE_BUY,
+                                                                 quantity=position_quantity,
+                                                                 order_type=ds.kite.ORDER_TYPE_LIMIT,
+                                                                 product=ds.kite.PRODUCT_MIS, price=stop_loss)
+                            print("Placed target at a price of {} and order no - {}".format(target_price, position_target_ord_no))
+                            stop_loss = get_previous_minute_details('CE')
+                            position_stop_loss_ord_no = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NSE,
+                                                                 tradingsymbol=CE_symbol,
+                                                                 transaction_type=ds.kite.TRANSACTION_TYPE_BUY,
+                                                                 quantity=position_quantity,
+                                                                 order_type=ds.kite.ORDER_TYPE_LIMIT,
+                                                                 product=ds.kite.PRODUCT_MIS, price=stop_loss)
+
+
+
 
     except Exception as e:
         print(e)

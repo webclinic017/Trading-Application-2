@@ -23,8 +23,8 @@ df = pd.read_csv('instruments_list')
 positive_indications = ['Hammer', "Bullish Marubozu", "Dragonfly Doji", "Hanging Man Green"]
 negative_indications = ['Shooting Star', "Bearish Marubozu", "Gravestone Doji", "Inverted Hammer Red"]
 
-from_date = '2022-03-02 09:15:00'
-to_date = '2022-03-02 15:30:00'
+from_date = '2022-03-02 09:32:00'
+to_date = '2022-03-02 09:32:00'
 
 historical_data = kite.historical_data(256265, from_date, to_date, 'minute')
 his_df = pd.DataFrame(historical_data)
@@ -66,6 +66,7 @@ nifty_spot()
 options_list()
 
 call_historical_data = kite.historical_data(CE_ins_tkn, from_date, to_date, 'minute')
+print("one minute CALL dta{}".format(call_historical_data[0]['open']))
 call_his_df = pd.DataFrame(call_historical_data)
 call_his_df['date'] = call_his_df['date'].dt.time
 call_his_df.to_csv("call_his_df.csv")
