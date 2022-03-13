@@ -232,7 +232,7 @@ def calculate_ohlc_one_minute(company_data):
     try:
         # below if condition is to check the data being received, and the data present are of the same minute or not
         trd_portfolio[company_data['instrument_token']]['OHLC_Thread_Running'] = "YES"
-        if (str(((company_data["last_trade_time"]).replace(second=0))) != ohlc[company_data['instrument_token']][1]) and (
+        if (str(((company_data['timestamp'].time()).replace(second=0))) != ohlc[company_data['instrument_token']][1]) and (
                 ohlc[company_data['instrument_token']][1] != "Time"):
 
             # Calculating SMA for Heiken Ashi. Only SMA Calculation for Henken Ashi
@@ -378,7 +378,9 @@ def calculate_ohlc_one_minute(company_data):
                         trd_portfolio[company_data['instrument_token']]['PSAR_direction'] = "UP"
 
             # Single Candle stick pattern detection
-            ohlc[company_data['instrument_token']][17] = single_candle_pattern(ohlc[company_data['instrument_token']][2], ohlc[company_data['instrument_token']][3], ohlc[company_data['instrument_token']][4], ohlc[company_data['instrument_token']][5])
+            SCP = single_candle_pattern(ohlc[company_data['instrument_token']][2], ohlc[company_data['instrument_token']][3], ohlc[company_data['instrument_token']][4], ohlc[company_data['instrument_token']][5])
+            print(SCP)
+            ohlc[company_data['instrument_token']][17] = SCP
 
             # adding the row into the final ohlc table
             trd_portfolio[company_data['instrument_token']]['ohlc_temp'] = pd.DataFrame(
@@ -428,7 +430,7 @@ def calculate_ohlc_one_minute(company_data):
             ohlc[company_data['instrument_token']][4] = company_data['last_price']
 
         ohlc[company_data['instrument_token']][5] = company_data['last_price']  # closing price
-        ohlc[company_data['instrument_token']][1] = str(((company_data["last_trade_time"]).replace(second=0)))
+        ohlc[company_data['instrument_token']][1] = str(((company_data['timestamp'].time()).replace(second=0)))
         ohlc[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]['Symbol']
 
         # Calculating True Range
@@ -534,7 +536,7 @@ def calculate_ohlc_one_minute(company_data):
         if len(HA_Final.loc[HA_Final.Symbol == trd_portfolio[company_data['instrument_token']]['Symbol']]) < 1:
             if HA[company_data['instrument_token']][0] == "Symbol":
                 HA[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]['Symbol']
-            HA[company_data['instrument_token']][1] = str(((company_data["last_trade_time"]).replace(second=0)))
+            HA[company_data['instrument_token']][1] = str(((company_data['timestamp'].time()).replace(second=0)))
             HA[company_data['instrument_token']][2] = round(
                 (ohlc[company_data['instrument_token']][2] + ohlc[company_data['instrument_token']][5]) / 2, 4)
             HA[company_data['instrument_token']][3] = round(ohlc[company_data['instrument_token']][3], 4)

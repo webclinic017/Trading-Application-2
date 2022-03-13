@@ -23,8 +23,15 @@ kws = KiteTicker(api_k, access_token)
 kite = KiteConnect(api_key=api_k, access_token=access_token)
 acc_token.close()
 
-temp_historical_min = int((datetime.datetime.now().strftime("%M")))-1
-print(datetime.datetime.today().replace(minute=temp_historical_min, second=0,microsecond=0))
-print(math.ceil(626.1245*10)/10)
-print(divmod(626.1245,.05))
-print((kite.ltp("NFO:{}".format("NIFTY2231016200CE"))).get("NFO:{}".format("NIFTY2231016200CE")).get('last_price'))
+noted_time = ''
+CE_symbol = 'NIFTY2231716600CE'
+CE_ins_tkn = 12961282
+PE_ins_tkn = 12961538
+PE_symbol = 'NIFTY2231716600PE'
+
+from_date = '2022-03-11 09:30:00'
+to_date = '2022-03-11 15:30:00'
+
+call_historical_data = kite.historical_data(CE_ins_tkn, from_date, to_date, 'minute')
+call_his_df = pd.DataFrame(call_historical_data)
+

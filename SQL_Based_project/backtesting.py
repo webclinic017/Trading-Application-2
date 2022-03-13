@@ -23,11 +23,13 @@ df = pd.read_csv('instruments_list')
 positive_indications = ['Hammer', "Bullish Marubozu", "Dragonfly Doji", "Hanging Man Green"]
 negative_indications = ['Shooting Star', "Bearish Marubozu", "Gravestone Doji", "Inverted Hammer Red"]
 
-from_date = '2022-03-02 09:32:00'
-to_date = '2022-03-02 09:32:00'
+from_date = '2022-03-11 09:30:00'
+to_date = '2022-03-11 15:30:00'
+date = datetime.date(2022, 3, 10)
 
 historical_data = kite.historical_data(256265, from_date, to_date, 'minute')
 his_df = pd.DataFrame(historical_data)
+print(his_df)
 his_df['date'] = his_df['date'].dt.time
 his_df['Single_Candle_Pattern'] = "Pattern"
 his_df.to_csv("historical_data.csv")
@@ -66,7 +68,6 @@ nifty_spot()
 options_list()
 
 call_historical_data = kite.historical_data(CE_ins_tkn, from_date, to_date, 'minute')
-print("one minute CALL dta{}".format(call_historical_data[0]['open']))
 call_his_df = pd.DataFrame(call_historical_data)
 call_his_df['date'] = call_his_df['date'].dt.time
 call_his_df.to_csv("call_his_df.csv")
@@ -74,6 +75,10 @@ put_historical_data = kite.historical_data(PE_ins_tkn, from_date, to_date, 'minu
 put_his_df = pd.DataFrame(put_historical_data)
 put_his_df['date'] = put_his_df['date'].dt.time
 put_his_df.to_csv("put_his_df.csv")
+nifty_historical_data = kite.historical_data(256265, from_date, to_date, 'minute')
+nifty_his_df = pd.DataFrame(nifty_historical_data)
+nifty_his_df['date'] = nifty_his_df['date'].dt.time
+nifty_his_df.to_csv("nifty historical data")
 
 # method calculating the candle stick patterns
 def single_candle_pattern(open, high, low, close):
@@ -81,9 +86,9 @@ def single_candle_pattern(open, high, low, close):
         return "Hammer"
     elif open > close and high-open >= 2*(open-close) and (close == low or close-low < open-close):
         return "Shooting Star"
-    elif (open == low or (open-low < .2 * close-open)) and open < close and (close == high or (high - close < (.2 * close - open))):
+    elif (open == low or (open-low < (.2 * (close-open)))) and open < close and (close == high or (high - close < (.2 * (close - open)))):
         return "Bullish Marubozu"
-    elif (open == high or (high-open < .2 * open - close)) and open > close and (close == low or (close-low < (.2 * open - close))):
+    elif (open == high or (high-open < (.2 * (open - close)))) and open > close and (close == low or (close-low < (.2 * (open - close)))):
         return "Bearish Marubozu"
     elif abs(close - open)/(high - low) < 0.1 and (high - max(close, open)) > (3 * abs(close - open)) and (min(close, open) - low) > (3 * abs(close - open)):
         return "Doji"
@@ -122,11 +127,9 @@ profit_amount = 0
 expected_profit_amount = 0
 loss_amount = 0
 streak = []
-quantity = 1800
+quantity = 3600
 bp = 0
 sp = 0
-
-print(his_df.to_string())
 
 
 def three_min_backtesting():
@@ -251,81 +254,251 @@ def three_min_backtesting():
         traceback.print_exc(e)
 
 
+def get_prev_low(token,from_to_date):
+    combined_datetime = datetime.datetime.combine(date, from_to_date)
+    temp_his_data = kite.historical_data(token, combined_datetime, combined_datetime, 'minute')
+    return temp_his_data[0]['low']
+
+
 def single_min_backtesting():
-    global pos, target_price, profit_amount, quantity, bp, sp, loss_amount
+    global pos, target_price, profit_amount, quantity, bp, sp, loss_amount, stop_loss
     try:
         for x in range(len(his_df)):
-            # print("row number is {}".format(x))
             if x <= len(his_df)-5:
-                # print(x)
                 if his_df.iloc[x, 6] in positive_indications:
                     if pos == '':
                         bp = call_his_df.iloc[x + 1, 1]
-                        print("Take CE entry at time of {} and CE price of {}".format(his_df.iloc[x, 0], bp))
                         pos = 'CE'
-                        target_price = bp + (bp * .005)
+                        target_price = bp + (bp * .01)
+                        stop_loss = get_prev_low(CE_ins_tkn, his_df.iloc[x, 0])
                         if call_his_df.iloc[x + 1, 2] >= target_price:
-                            profit_amount = profit_amount + ((target_price - bp) * quantity)
-                            print("Buy price = {}, Sell Price = {}, Profit made = {}".format(bp, target_price, profit_amount))
+                            sp = target_price
+                            profit_amount += (sp - bp) * quantity
+                            print("A Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6], his_df.iloc[x, 0], bp, sp, (sp-bp)*quantity, profit_amount))
+                            print("----------------------------------------------------------------------------------------------------------------------------------------------------")
                             pos = ''
                             bp = 0
                             target_price = 0
+                            stop_loss = 0
+                        elif call_his_df.iloc[x + 1, 3] <= stop_loss:
+                            sp = stop_loss
+                            profit_amount += (sp - bp) * quantity
+                            print(
+                                "B Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
+                                    his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
+                            print(
+                                "----------------------------------------------------------------------------------------------------------------------------------------------------")
+                            pos = ''
+                            bp = 0
+                            target_price = 0
+                            stop_loss = 0
                     if pos == 'CE':
-                        target_price = target_price + (bp * .005)
-                        print("Increase target to {} and continue in CE position at {}".format(target_price, his_df.iloc[x, 0]))
+                        target_price += bp*.01
+                        stop_loss = get_prev_low(CE_ins_tkn, his_df.iloc[x, 0])
+                        if call_his_df.iloc[x + 1, 2] >= target_price:
+                            sp = target_price
+                            profit_amount += (sp - bp) * quantity
+                            print(
+                                "C Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
+                                    his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
+                            print(
+                                "----------------------------------------------------------------------------------------------------------------------------------------------------")
+                            pos = ''
+                            bp = 0
+                            target_price = 0
+                            stop_loss = 0
+                        elif call_his_df.iloc[x + 1, 3] <= stop_loss:
+                            sp = stop_loss
+                            profit_amount += (sp - bp) * quantity
+                            print(
+                                "D Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
+                                    his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
+                            print(
+                                "----------------------------------------------------------------------------------------------------------------------------------------------------")
+                            pos = ''
+                            bp = 0
+                            target_price = 0
+                            stop_loss = 0
                     if pos == 'PE':
                         sp = put_his_df.iloc[x + 1, 1]
-                        loss_amount = (sp - bp) * quantity
-                        print("Occured loss in PE position of {}".format(loss_amount))
-                        profit_amount = profit_amount + ((sp - bp) * quantity)
+                        profit_amount += (sp - bp) * quantity
+                        print(
+                            "E Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
+                                his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
+                        print(
+                            "----------------------------------------------------------------------------------------------------------------------------------------------------")
                         bp = call_his_df.iloc[x + 1, 1]
-                        target_price = bp + (bp * .005) + (abs(loss_amount)/bp)
-                        print("Exit PE position and enter in CE position at {} for a buy price of {} and target of {}".format(his_df.iloc[x, 0], bp, target_price))
                         pos = 'CE'
+                        target_price = bp + (bp * .01)
+                        stop_loss = get_prev_low(CE_ins_tkn, his_df.iloc[x, 0])
+                        if call_his_df.iloc[x + 1, 2] >= target_price:
+                            sp = target_price
+                            profit_amount += (sp - bp) * quantity
+                            print(
+                                "F Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
+                                    his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
+                            print(
+                                "----------------------------------------------------------------------------------------------------------------------------------------------------")
+                            pos = ''
+                            bp = 0
+                            target_price = 0
+                            stop_loss = 0
+                        elif call_his_df.iloc[x + 1, 3] <= stop_loss:
+                            sp = stop_loss
+                            profit_amount += (sp - bp) * quantity
+                            print(
+                                "G Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
+                                    his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
+                            print(
+                                "----------------------------------------------------------------------------------------------------------------------------------------------------")
+                            pos = ''
+                            bp = 0
+                            target_price = 0
+                            stop_loss = 0
                 elif his_df.iloc[x, 6] in negative_indications:
                     if pos == '':
                         bp = put_his_df.iloc[x + 1, 1]
-                        print("Take PE entry at time of {} and PE price of {}".format(his_df.iloc[x, 0], bp))
                         pos = 'PE'
-                        target_price = bp + (bp * .005)
+                        target_price = bp + (bp * .01)
+                        stop_loss = get_prev_low(PE_ins_tkn, his_df.iloc[x, 0])
                         if put_his_df.iloc[x + 1, 2] >= target_price:
-                            profit_amount = profit_amount + ((target_price - bp) * quantity)
+                            sp = target_price
+                            profit_amount += (sp - bp) * quantity
                             print(
-                                "Buy price = {}, Sell Price = {}, Profit made = {}".format(bp, target_price, profit_amount))
+                                "H Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
+                                    his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
+                            print(
+                                "----------------------------------------------------------------------------------------------------------------------------------------------------")
                             pos = ''
                             bp = 0
                             target_price = 0
+                            stop_loss = 0
+                        elif put_his_df.iloc[x + 1, 3] <= stop_loss:
+                            sp = stop_loss
+                            profit_amount += (sp - bp) * quantity
+                            print(
+                                "I Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
+                                    his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
+                            print(
+                                "----------------------------------------------------------------------------------------------------------------------------------------------------")
+                            pos = ''
+                            bp = 0
+                            target_price = 0
+                            stop_loss = 0
                     if pos == 'PE':
-                        target_price = target_price + (bp * .005)
-                        print("Increase target to {} and continue in PE position at {}".format(target_price,
-                                                                                               his_df.iloc[x, 0]))
+                        target_price += bp * .01
+                        stop_loss = get_prev_low(PE_ins_tkn, his_df.iloc[x, 0])
+                        if put_his_df.iloc[x + 1, 2] >= target_price:
+                            sp = target_price
+                            profit_amount += (sp - bp) * quantity
+                            print(
+                                "J Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
+                                    his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
+                            print(
+                                "----------------------------------------------------------------------------------------------------------------------------------------------------")
+                            pos = ''
+                            bp = 0
+                            target_price = 0
+                            stop_loss = 0
+                        elif put_his_df.iloc[x + 1, 3] <= stop_loss:
+                            sp = stop_loss
+                            profit_amount += (sp - bp) * quantity
+                            print(
+                                "K Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
+                                    his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
+                            print(
+                                "----------------------------------------------------------------------------------------------------------------------------------------------------")
+                            pos = ''
+                            bp = 0
+                            target_price = 0
+                            stop_loss = 0
                     if pos == 'CE':
                         sp = call_his_df.iloc[x + 1, 1]
-                        loss_amount = (sp - bp) * quantity
-                        print("Occured loss in CE position of {} with a profit amount till now is {}".format(loss_amount, profit_amount))
-                        profit_amount = profit_amount + ((sp - bp) * quantity)
-                        bp = put_his_df.iloc[x + 1, 1]
-                        target_price = bp + (bp * .005) + (abs(loss_amount) / bp)
+                        profit_amount += (sp - bp) * quantity
                         print(
-                            "Exit PE position and enter in CE position at {} for a buy price of {} and target of {}".format(
-                                his_df.iloc[x, 0], bp, target_price))
+                            "L Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
+                                his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
+                        print(
+                            "----------------------------------------------------------------------------------------------------------------------------------------------------")
+                        bp = put_his_df.iloc[x + 1, 1]
                         pos = 'PE'
+                        target_price = bp + (bp * .01)
+                        stop_loss = get_prev_low(PE_ins_tkn, his_df.iloc[x, 0])
+                        if put_his_df.iloc[x + 1, 2] >= target_price:
+                            sp = target_price
+                            profit_amount += (sp - bp) * quantity
+                            print(
+                                "M Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
+                                    his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
+                            print(
+                                "----------------------------------------------------------------------------------------------------------------------------------------------------")
+                            pos = ''
+                            bp = 0
+                            target_price = 0
+                            stop_loss = 0
+                        elif put_his_df.iloc[x + 1, 3] <= stop_loss:
+                            sp = stop_loss
+                            profit_amount += (sp - bp) * quantity
+                            print(
+                                "N Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
+                                    his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
+                            print(
+                                "----------------------------------------------------------------------------------------------------------------------------------------------------")
+                            pos = ''
+                            bp = 0
+                            target_price = 0
+                            stop_loss = 0
                 else:
                     if pos == 'CE':
                         if call_his_df.iloc[x + 1, 2] >= target_price:
-                            profit_amount = profit_amount + ((target_price - bp) * quantity)
-                            print("Buy price = {}, Sell Price = {}, Profit made = {}".format(bp, target_price, profit_amount))
+                            sp = target_price
+                            profit_amount += (sp - bp) * quantity
+                            print(
+                                "O Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
+                                    his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
+                            print(
+                                "----------------------------------------------------------------------------------------------------------------------------------------------------")
                             pos = ''
                             bp = 0
                             target_price = 0
+                            stop_loss = 0
+                        elif call_his_df.iloc[x + 1, 3] <= stop_loss:
+                            sp = stop_loss
+                            profit_amount += (sp - bp) * quantity
+                            print(
+                                "P Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
+                                    his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
+                            print(
+                                "----------------------------------------------------------------------------------------------------------------------------------------------------")
+                            pos = ''
+                            bp = 0
+                            target_price = 0
+                            stop_loss = 0
                     if pos == 'PE':
                         if put_his_df.iloc[x + 1, 2] >= target_price:
-                            profit_amount = profit_amount + ((target_price - bp) * quantity)
+                            sp = target_price
+                            profit_amount += (sp - bp) * quantity
                             print(
-                                "Buy price = {}, Sell Price = {}, Profit made = {}".format(bp, target_price, profit_amount))
+                                "Q Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
+                                    his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
+                            print(
+                                "----------------------------------------------------------------------------------------------------------------------------------------------------")
                             pos = ''
                             bp = 0
                             target_price = 0
+                            stop_loss = 0
+                        elif put_his_df.iloc[x + 1, 3] <= stop_loss:
+                            sp = stop_loss
+                            profit_amount += (sp - bp) * quantity
+                            print(
+                                "R Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
+                                    his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
+                            print(
+                                "----------------------------------------------------------------------------------------------------------------------------------------------------")
+                            pos = ''
+                            bp = 0
+                            target_price = 0
+                            stop_loss = 0
     except Exception as e:
         traceback.print_exc(e)
 
