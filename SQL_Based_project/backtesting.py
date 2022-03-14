@@ -23,9 +23,9 @@ df = pd.read_csv('instruments_list')
 positive_indications = ['Hammer', "Bullish Marubozu", "Dragonfly Doji", "Hanging Man Green"]
 negative_indications = ['Shooting Star', "Bearish Marubozu", "Gravestone Doji", "Inverted Hammer Red"]
 
-from_date = '2022-03-11 09:30:00'
-to_date = '2022-03-11 15:30:00'
-date = datetime.date(2022, 3, 10)
+from_date = '2022-03-14 09:15:00'
+to_date = '2022-03-14 15:30:00'
+date = datetime.date(2022, 3, 14)
 
 historical_data = kite.historical_data(256265, from_date, to_date, 'minute')
 his_df = pd.DataFrame(historical_data)
@@ -127,7 +127,7 @@ profit_amount = 0
 expected_profit_amount = 0
 loss_amount = 0
 streak = []
-quantity = 3600
+quantity = 1000
 bp = 0
 sp = 0
 
@@ -269,7 +269,7 @@ def single_min_backtesting():
                     if pos == '':
                         bp = call_his_df.iloc[x + 1, 1]
                         pos = 'CE'
-                        target_price = bp + (bp * .01)
+                        target_price = bp + (bp * .005)
                         stop_loss = get_prev_low(CE_ins_tkn, his_df.iloc[x, 0])
                         if call_his_df.iloc[x + 1, 2] >= target_price:
                             sp = target_price
@@ -329,7 +329,7 @@ def single_min_backtesting():
                             "----------------------------------------------------------------------------------------------------------------------------------------------------")
                         bp = call_his_df.iloc[x + 1, 1]
                         pos = 'CE'
-                        target_price = bp + (bp * .01)
+                        target_price = bp + (bp * .005)
                         stop_loss = get_prev_low(CE_ins_tkn, his_df.iloc[x, 0])
                         if call_his_df.iloc[x + 1, 2] >= target_price:
                             sp = target_price
@@ -359,7 +359,7 @@ def single_min_backtesting():
                     if pos == '':
                         bp = put_his_df.iloc[x + 1, 1]
                         pos = 'PE'
-                        target_price = bp + (bp * .01)
+                        target_price = bp + (bp * .005)
                         stop_loss = get_prev_low(PE_ins_tkn, his_df.iloc[x, 0])
                         if put_his_df.iloc[x + 1, 2] >= target_price:
                             sp = target_price
@@ -386,7 +386,7 @@ def single_min_backtesting():
                             target_price = 0
                             stop_loss = 0
                     if pos == 'PE':
-                        target_price += bp * .01
+                        target_price += bp * .005
                         stop_loss = get_prev_low(PE_ins_tkn, his_df.iloc[x, 0])
                         if put_his_df.iloc[x + 1, 2] >= target_price:
                             sp = target_price
@@ -422,7 +422,7 @@ def single_min_backtesting():
                             "----------------------------------------------------------------------------------------------------------------------------------------------------")
                         bp = put_his_df.iloc[x + 1, 1]
                         pos = 'PE'
-                        target_price = bp + (bp * .01)
+                        target_price = bp + (bp * .005)
                         stop_loss = get_prev_low(PE_ins_tkn, his_df.iloc[x, 0])
                         if put_his_df.iloc[x + 1, 2] >= target_price:
                             sp = target_price
