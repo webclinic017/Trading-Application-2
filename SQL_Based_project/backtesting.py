@@ -23,8 +23,8 @@ df = pd.read_csv('instruments_list')
 positive_indications = ['Hammer', "Bullish Marubozu", "Dragonfly Doji", "Hanging Man Green"]
 negative_indications = ['Shooting Star', "Bearish Marubozu", "Gravestone Doji", "Inverted Hammer Red"]
 
-from_date = '2022-03-14 09:15:00'
-to_date = '2022-03-14 15:30:00'
+from_date = '2022-03-15 09:15:00'
+to_date = '2022-03-15 15:30:00'
 date = datetime.date(2022, 3, 14)
 
 historical_data = kite.historical_data(256265, from_date, to_date, 'minute')

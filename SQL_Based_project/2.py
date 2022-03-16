@@ -29,9 +29,15 @@ CE_ins_tkn = 12961282
 PE_ins_tkn = 12961538
 PE_symbol = 'NIFTY2231716600PE'
 
-from_date = '2022-03-11 09:30:00'
-to_date = '2022-03-11 15:30:00'
+date = datetime.datetime.today().date()
+time = datetime.time(9, 15, 00)
+start_time = datetime.datetime.combine(date, time)
+processed_time = datetime.datetime.combine(date, time)
+print(processed_time - datetime.timedelta(minutes=5))
 
-call_historical_data = kite.historical_data(CE_ins_tkn, from_date, to_date, 'minute')
-call_his_df = pd.DataFrame(call_historical_data)
-
+while processed_time < datetime.datetime.now():
+    if processed_time + datetime.timedelta(minutes=5) > datetime.datetime.now():
+        break
+    else:
+        processed_time = processed_time + datetime.timedelta(minutes=5)
+        print(processed_time)
