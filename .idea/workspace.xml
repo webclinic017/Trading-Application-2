@@ -19,17 +19,25 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="changed the frequency from 1 min to 5 min.. and">
-      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2022-03-15.txt" afterDir="false" />
+    <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2022-03-25.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2022-03-28.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/2022-03-29.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/2.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2022-03-09.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2022-03-10.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2022-03-14.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/2022-03-15.txt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/access-token.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/access-token.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/backtesting.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/backtesting.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/call_his_df.csv" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/call_his_df.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/historical_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/historical_data.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/nifty historical data" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/nifty historical data" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/options_trading.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/options_trading.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/postback.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/postback.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/put_his_df.csv" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/put_his_df.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/usdinr.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,7 +96,7 @@
       <recent name="C:\Users\gkaranam\PycharmProjects\Trading-Application" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.backtesting">
+  <component name="RunManager" selected="Python.options_trading">
     <configuration name="2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Trading-Application" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -217,11 +225,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.backtesting" />
         <item itemvalue="Python.options_trading" />
-        <item itemvalue="Python.2" />
-        <item itemvalue="Python.Gen-Access-tkn" />
         <item itemvalue="Python.postback" />
+        <item itemvalue="Python.Gen-Access-tkn" />
+        <item itemvalue="Python.2" />
+        <item itemvalue="Python.backtesting" />
       </list>
     </recent_temporary>
   </component>
@@ -235,13 +243,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1554405465942</updated>
-    </task>
-    <task id="LOCAL-00038" summary="updating with multiple stocks">
-      <created>1593762269825</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1593762269825</updated>
     </task>
     <task id="LOCAL-00039" summary="updating with multiple stocks">
       <created>1593762407485</created>
@@ -579,7 +580,14 @@
       <option name="project" value="LOCAL" />
       <updated>1647275560356</updated>
     </task>
-    <option name="localTasksCounter" value="87" />
+    <task id="LOCAL-00087" summary="changed the frequency from 1 min to 5 min.. and giving it a try">
+      <created>1647435613647</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1647435613647</updated>
+    </task>
+    <option name="localTasksCounter" value="88" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -596,7 +604,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="added sql insert statement for order updates which i receive through postback" />
     <MESSAGE value="added all the required sql connections. now just need to code for quantity and trigger conditions in sql." />
     <MESSAGE value="few more updates with sql integration" />
     <MESSAGE value="ohlc and ha minute calculations moved to dictionary, sql giving issues" />
@@ -621,7 +628,8 @@
     <MESSAGE value="bilding options trigger file" />
     <MESSAGE value="seems like its, done.. need to test tomorrow." />
     <MESSAGE value="faced few issues, was not able to properly manage place stop loss order. So i have changed it to exit at market order when stop loss hits." />
-    <option name="LAST_COMMIT_MESSAGE" value="faced few issues, was not able to properly manage place stop loss order. So i have changed it to exit at market order when stop loss hits." />
+    <MESSAGE value="changed the frequency from 1 min to 5 min.. and giving it a try" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed the frequency from 1 min to 5 min.. and giving it a try" />
   </component>
   <component name="WindowStateProjectService">
     <state x="1346" y="374" key="#Inspections" timestamp="1645258609948">
@@ -632,33 +640,33 @@
       <screen x="0" y="0" width="3440" height="1392" />
     </state>
     <state x="576" y="291" key="#order_app/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1645114673958" />
-    <state x="1052" y="118" key="CommitChangelistDialog2" timestamp="1647434524832">
+    <state x="1052" y="118" key="CommitChangelistDialog2" timestamp="1647435613112">
       <screen x="0" y="0" width="3440" height="1392" />
     </state>
-    <state x="1052" y="118" key="CommitChangelistDialog2/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1647434524832" />
-    <state width="3419" height="453" key="GridCell.Tab.0.bottom" timestamp="1647430316096">
+    <state x="1052" y="118" key="CommitChangelistDialog2/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1647435613112" />
+    <state width="3419" height="453" key="GridCell.Tab.0.bottom" timestamp="1648581638574">
       <screen x="0" y="0" width="3440" height="1392" />
     </state>
-    <state width="1899" height="453" key="GridCell.Tab.0.bottom/0.0.3440.1392/-1920.144.1920.1032@-1920.144.1920.1032" timestamp="1647421649846" />
-    <state width="3419" height="453" key="GridCell.Tab.0.bottom/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1647430316096" />
+    <state width="1899" height="453" key="GridCell.Tab.0.bottom/0.0.3440.1392/-1920.144.1920.1032@-1920.144.1920.1032" timestamp="1647499992292" />
+    <state width="3419" height="453" key="GridCell.Tab.0.bottom/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1648581638574" />
     <state width="1696" height="431" key="GridCell.Tab.0.bottom/0.0.3440.1392@0.0.3440.1392" timestamp="1645472970618" />
-    <state width="3419" height="453" key="GridCell.Tab.0.center" timestamp="1647430316096">
+    <state width="3419" height="453" key="GridCell.Tab.0.center" timestamp="1648581638574">
       <screen x="0" y="0" width="3440" height="1392" />
     </state>
-    <state width="1899" height="453" key="GridCell.Tab.0.center/0.0.3440.1392/-1920.144.1920.1032@-1920.144.1920.1032" timestamp="1647421649846" />
-    <state width="3419" height="453" key="GridCell.Tab.0.center/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1647430316096" />
+    <state width="1899" height="453" key="GridCell.Tab.0.center/0.0.3440.1392/-1920.144.1920.1032@-1920.144.1920.1032" timestamp="1647499992292" />
+    <state width="3419" height="453" key="GridCell.Tab.0.center/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1648581638574" />
     <state width="1696" height="431" key="GridCell.Tab.0.center/0.0.3440.1392@0.0.3440.1392" timestamp="1645472970617" />
-    <state width="3419" height="453" key="GridCell.Tab.0.left" timestamp="1647430316096">
+    <state width="3419" height="453" key="GridCell.Tab.0.left" timestamp="1648581638574">
       <screen x="0" y="0" width="3440" height="1392" />
     </state>
-    <state width="1899" height="453" key="GridCell.Tab.0.left/0.0.3440.1392/-1920.144.1920.1032@-1920.144.1920.1032" timestamp="1647421649845" />
-    <state width="3419" height="453" key="GridCell.Tab.0.left/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1647430316096" />
+    <state width="1899" height="453" key="GridCell.Tab.0.left/0.0.3440.1392/-1920.144.1920.1032@-1920.144.1920.1032" timestamp="1647499992292" />
+    <state width="3419" height="453" key="GridCell.Tab.0.left/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1648581638574" />
     <state width="1696" height="431" key="GridCell.Tab.0.left/0.0.3440.1392@0.0.3440.1392" timestamp="1645472970617" />
-    <state width="3419" height="453" key="GridCell.Tab.0.right" timestamp="1647430316096">
+    <state width="3419" height="453" key="GridCell.Tab.0.right" timestamp="1648581638574">
       <screen x="0" y="0" width="3440" height="1392" />
     </state>
-    <state width="1899" height="453" key="GridCell.Tab.0.right/0.0.3440.1392/-1920.144.1920.1032@-1920.144.1920.1032" timestamp="1647421649846" />
-    <state width="3419" height="453" key="GridCell.Tab.0.right/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1647430316096" />
+    <state width="1899" height="453" key="GridCell.Tab.0.right/0.0.3440.1392/-1920.144.1920.1032@-1920.144.1920.1032" timestamp="1647499992292" />
+    <state width="3419" height="453" key="GridCell.Tab.0.right/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1648581638574" />
     <state width="1696" height="431" key="GridCell.Tab.0.right/0.0.3440.1392@0.0.3440.1392" timestamp="1645472970617" />
     <state width="1696" height="509" key="GridCell.Tab.1.bottom" timestamp="1646340687153">
       <screen x="0" y="0" width="3440" height="1392" />
@@ -684,10 +692,10 @@
       <screen x="0" y="0" width="3440" height="1392" />
     </state>
     <state x="368" y="341" key="SettingsEditor/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1645115830740" />
-    <state x="989" y="339" key="Vcs.Push.Dialog.v2" timestamp="1647275562152">
+    <state x="989" y="339" key="Vcs.Push.Dialog.v2" timestamp="1647435616351">
       <screen x="0" y="0" width="3440" height="1392" />
     </state>
-    <state x="989" y="339" key="Vcs.Push.Dialog.v2/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1647275562152" />
+    <state x="989" y="339" key="Vcs.Push.Dialog.v2/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1647435616351" />
     <state x="92" y="92" width="3256" height="1208" key="dock-window-1" timestamp="1646818411478">
       <screen x="0" y="0" width="3440" height="1392" />
     </state>

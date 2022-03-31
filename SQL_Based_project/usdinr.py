@@ -537,10 +537,14 @@ def calculate_ohlc_one_minute(company_data):
             if HA[company_data['instrument_token']][0] == "Symbol":
                 HA[company_data['instrument_token']][0] = trd_portfolio[company_data['instrument_token']]['Symbol']
             HA[company_data['instrument_token']][1] = str(((company_data['timestamp'].time()).replace(second=0)))
+            # open
             HA[company_data['instrument_token']][2] = round(
                 (ohlc[company_data['instrument_token']][2] + ohlc[company_data['instrument_token']][5]) / 2, 4)
+            # high
             HA[company_data['instrument_token']][3] = round(ohlc[company_data['instrument_token']][3], 4)
+            # low
             HA[company_data['instrument_token']][4] = round(ohlc[company_data['instrument_token']][4], 4)
+            # close
             HA[company_data['instrument_token']][5] = round(
                 (ohlc[company_data['instrument_token']][2] + ohlc[company_data['instrument_token']][3] +
                  ohlc[company_data['instrument_token']][4] + ohlc[company_data['instrument_token']][5]) / 4, 4)

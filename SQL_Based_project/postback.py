@@ -29,7 +29,6 @@ def post():
     order_response = request.get_data()
     f.write(str(order_response) + '\n')
     structured_response = json.loads(order_response)
-    print(structured_response)
     if structured_response['status'] == "COMPLETE":
         print(structured_response['average_price'], structured_response['tradingsymbol'], structured_response['transaction_type'], structured_response['quantity'], structured_response['status'], structured_response['instrument_token'])
         # circuit_limits()
