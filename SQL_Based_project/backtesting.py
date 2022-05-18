@@ -23,13 +23,17 @@ df = pd.read_csv('instruments_list')
 positive_indications = ['Hammer', "Bullish Marubozu", "Dragonfly Doji", "Hanging Man Green"]
 negative_indications = ['Shooting Star', "Bearish Marubozu", "Gravestone Doji", "Inverted Hammer Red"]
 
+nifty_ohlc = [0, 0, 0, 0, "Pattern", "Two Candle Pattern", "Three Candle Pattern", "MA", "Trend"]
+nifty_ohlc_1 = [0, 0, 0, 0, "Pattern", "Two Candle Pattern", "Three Candle Pattern", "2MA", "Trend"]
+nifty_ohlc_2 = [0, 0, 0, 0, "Pattern", "Two Candle Pattern", "Three Candle Pattern", "3MA", "Trend"]
+
 from_date = '2022-03-17 09:15:00'
 to_date = '2022-03-17 15:30:00'
 date = datetime.date(2022, 3, 17)
 
 historical_data = kite.historical_data(256265, from_date, to_date, '5minute')
 his_df = pd.DataFrame(historical_data)
-print(his_df)
+# print(his_df)
 his_df['date'] = his_df['date'].dt.time
 his_df['Single_Candle_Pattern'] = "Pattern"
 his_df.to_csv("historical_data.csv")
@@ -44,7 +48,7 @@ def expiry_date():
     return d
 
 
-option_expiry_date = expiry_date()
+# option_expiry_date = expiry_date()
 
 
 def nifty_spot():
@@ -64,21 +68,21 @@ def options_list():
     print(CE_ins_tkn, PE_ins_tkn, CE_symbol, PE_symbol)
 
 
-nifty_spot()
-options_list()
+# nifty_spot()
+# options_list()
 
-call_historical_data = kite.historical_data(CE_ins_tkn, from_date, to_date, 'minute')
-call_his_df = pd.DataFrame(call_historical_data)
-call_his_df['date'] = call_his_df['date'].dt.time
-call_his_df.to_csv("call_his_df.csv")
-put_historical_data = kite.historical_data(PE_ins_tkn, from_date, to_date, 'minute')
-put_his_df = pd.DataFrame(put_historical_data)
-put_his_df['date'] = put_his_df['date'].dt.time
-put_his_df.to_csv("put_his_df.csv")
-nifty_historical_data = kite.historical_data(256265, from_date, to_date, 'minute')
-nifty_his_df = pd.DataFrame(nifty_historical_data)
-nifty_his_df['date'] = nifty_his_df['date'].dt.time
-nifty_his_df.to_csv("nifty historical data")
+# call_historical_data = kite.historical_data(CE_ins_tkn, from_date, to_date, 'minute')
+# call_his_df = pd.DataFrame(call_historical_data)
+# call_his_df['date'] = call_his_df['date'].dt.time
+# call_his_df.to_csv("call_his_df.csv")
+# put_historical_data = kite.historical_data(PE_ins_tkn, from_date, to_date, 'minute')
+# put_his_df = pd.DataFrame(put_historical_data)
+# put_his_df['date'] = put_his_df['date'].dt.time
+# put_his_df.to_csv("put_his_df.csv")
+# nifty_historical_data = kite.historical_data(256265, from_date, to_date, 'minute')
+# nifty_his_df = pd.DataFrame(nifty_historical_data)
+# nifty_his_df['date'] = nifty_his_df['date'].dt.time
+# nifty_his_df.to_csv("nifty historical data")
 
 # method calculating the candle stick patterns
 def single_candle_pattern(open, high, low, close):
@@ -111,6 +115,29 @@ def single_candle_pattern(open, high, low, close):
 
 for row in range(len(his_df)):
     his_df.iloc[row, 6] = single_candle_pattern(his_df.iloc[row, 1], his_df.iloc[row, 2], his_df.iloc[row, 3], his_df.iloc[row, 4])
+
+    nifty_ohlc_2 = nifty_ohlc_1
+    nifty_ohlc_1 = nifty_ohlc
+    toy = [his_df.iloc[row, 1], his_df.iloc[row, 2], his_df.iloc[row, 3], his_df.iloc[row, 4], single_candle_pattern(his_df.iloc[row, 1], his_df.iloc[row, 2], his_df.iloc[row, 3], his_df.iloc[row, 4]), 'Two Candle Pattern', 'Three Candle Pattern', 'MA', 'Trend']
+    nifty_ohlc = toy
+    # nifty_ohlc[0] = his_df.iloc[row, 1]
+    # nifty_ohlc[1] = his_df.iloc[row, 2]
+    # nifty_ohlc[2] = his_df.iloc[row, 3]
+    # nifty_ohlc[3] = his_df.iloc[row, 4]
+    # nifty_ohlc[4] = single_candle_pattern(nifty_ohlc[0], nifty_ohlc[1], nifty_ohlc[2], nifty_ohlc[3])
+    if nifty_ohlc_2[3] != 0:
+        nifty_ohlc[7] = (nifty_ohlc[3] + nifty_ohlc_1[3] + nifty_ohlc_2[3]) / 3
+    if nifty_ohlc_2[7] != "3MA" and nifty_ohlc_2[7] != "2MA" and nifty_ohlc_2[7] != "MA":
+        if nifty_ohlc_2[7] > nifty_ohlc_1[7] > nifty_ohlc[7]:
+            nifty_ohlc[8] = "Down"
+        elif nifty_ohlc_2[7] < nifty_ohlc_1[7] < nifty_ohlc[7]:
+            nifty_ohlc[8] = "Up"
+        else:
+            nifty_ohlc[8] = "Flat"
+    # print(nifty_ohlc_2)
+    # print(nifty_ohlc_1)
+    print(nifty_ohlc)
+    print("__________________________")
 
     # single_candle_pattern(row[1]['open'], row[1]['high'], row[1]['low'], row[1]['close'])
 

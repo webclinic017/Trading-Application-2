@@ -96,13 +96,14 @@ profit_temp = pd.DataFrame(columns=["Symbol", "BUY Price", "SELL Price", "Profit
 profit_Final = pd.DataFrame(
     columns=["Symbol", "BUY Price", "SELL Price", "Profit", "Volume", "Charges", "final_profit"])
 
-positive_indications = ['Hammer', "Bullish Marubozu", "Dragonfly Doji", "Hanging Man Green"]
-negative_indications = ['Shooting Star', "Bearish Marubozu", "Gravestone Doji", "Inverted Hammer Red"]
+
 CE_symbol = ''
 CE_ins_tkn = 0
 PE_ins_tkn = 0
 PE_symbol = ''
-nifty_ohlc = [0, 0, 0, 0, "Pattern"]
+nifty_ohlc = [0, 0, 0, 0, "Pattern", "Two Candle Pattern", "Three Candle Pattern", "3MA", "Trend"]
+nifty_ohlc_1 = [0, 0, 0, 0, "Pattern", "Two Candle Pattern", "Three Candle Pattern", "3MA", "Trend"]
+nifty_ohlc_2 = [0, 0, 0, 0, "Pattern", "Two Candle Pattern", "Three Candle Pattern", "3MA", "Trend"]
 nifty_ha_ohlc = [0, 0, 0, 0]
 start_time = datetime.time(9, 15, 00)
 # processed_time = datetime.time(9, 15, 00)
@@ -342,8 +343,6 @@ def process_orders():
         my_cursor.execute("select * from order_updates limit 1")
         data = my_cursor.fetchone()
         mydb.commit()
-        print(type(data))
-        print(data)
         # order_number = data[6]
         # price = data[4]
         position_quantity = data[5]
@@ -386,7 +385,7 @@ def lowest_low(direction):
     global processed_time, trigger_thread_running
     try:
         temp_low = all_time_low = get_previous_minute_low(direction)
-        print("temp_low: {}, all_time_low: {}".format(temp_low, all_time_low))
+        # print("temp_low: {}, all_time_low: {}".format(temp_low, all_time_low))
         prev_from_datetime = processed_time
         while all_time_low <= temp_low:
             temp_low = all_time_low
@@ -398,15 +397,15 @@ def lowest_low(direction):
             elif direction == 'CE':
                 # print(CE_ins_tkn)
                 lowest_historical_data = kite.historical_data(CE_ins_tkn, prev_from_datetime, prev_to_datetime, duration)
-                print(lowest_historical_data)
+                # print(lowest_historical_data)
                 all_time_low = lowest_historical_data[0]['low']
 
             elif direction == 'PE':
                 # print(PE_ins_tkn)
                 lowest_historical_data = kite.historical_data(PE_ins_tkn, prev_from_datetime, prev_to_datetime, duration)
-                print(lowest_historical_data)
+                # print(lowest_historical_data)
                 all_time_low = lowest_historical_data[0]['low']
-            print("temp_low: {}, all_time_low: {}".format(temp_low, all_time_low))
+            # print("temp_low: {}, all_time_low: {}".format(temp_low, all_time_low))
         return temp_low
     except exceptions.InputException as error:
         trigger_thread_running = "NO"
@@ -441,9 +440,11 @@ def fresh_trade(position_direction):
                     "Entry - Signal: {}, Quantity: {}, Instrument: {}".format(nifty_ohlc[4], position_quantity, traded_symbol))
                 print("Buy Price: {}".format(position_buy_price))
                 stop_loss = lowest_low(position_direction)
-                target_price = min(math.ceil((((position_buy_price * 1.01) + abs(loss_amount) / position_quantity) * 10) / 10),
-                                   math.ceil(position_buy_price + (position_buy_price - stop_loss)))
+                target_price = math.ceil((((position_buy_price * 1.01) + abs(loss_amount) / position_quantity) * 10) / 10)
                 target_price_2 = math.ceil(position_buy_price+(2*(target_price-position_buy_price)))
+                # target_price = min(
+                #     math.ceil((((position_buy_price * 1.01) + abs(loss_amount) / position_quantity) * 10) / 10),
+                #     math.ceil(position_buy_price + (position_buy_price - stop_loss)))
                 # target_price_2 = max(
                 #     math.ceil((((position_buy_price * 1.01) + abs(loss_amount) / position_quantity) * 10) / 10),
                 #     math.ceil(position_buy_price + (position_buy_price - stop_loss)))
@@ -492,8 +493,8 @@ def trend_continuation():
     global target_price, target_price_2, stop_loss, trigger_thread_running
     try:
         prev_close = get_previous_minute_close(positions)
-        if prev_close > position_buy_price:
-            stop_loss += prev_close - position_buy_price
+        if prev_close > max(target_price, lowest_low(positions)):
+            stop_loss = max(target_price, lowest_low(positions))
             kite.modify_order(variety="regular", order_id=position_stop_loss_ord_no, price=stop_loss - 0.05,
                               trigger_price=stop_loss)
             # target_price = min(math.ceil(((get_previous_minute_close(positions) * .01) * 10) / 10), math.ceil(
@@ -518,11 +519,11 @@ def trend_continuation():
 
 
 def options_trigger():
-    global positions, position_order_no, position_order_status, position_quantity, position_stop_loss_ord_no, target_price, nifty_ohlc, loss_amount, trigger_thread_running, noted_time, traded_symbol, stop_loss, position_target_order_no, position_target_order_status, nifty_ha_ohlc, target_price_2
+    global positions, position_order_no, position_order_status, position_quantity, position_stop_loss_ord_no, target_price, nifty_ohlc, loss_amount, trigger_thread_running, noted_time, traded_symbol, stop_loss, position_target_order_no, position_target_order_status, nifty_ha_ohlc, target_price_2, nifty_ohlc_1
     try:
         while ord_update_count() > 0:
             process_orders()
-        if nifty_ohlc[4] in positive_indications and nifty_ha_ohlc[3] > nifty_ha_ohlc[0]:
+        if (nifty_ohlc[8] == "Up" or nifty_ohlc[8] == "Flat") and (nifty_ohlc[4] in positive_indications):
             if positions == '':
                 fresh_trade('CE')
             elif positions == 'CE':
@@ -530,7 +531,7 @@ def options_trigger():
             elif positions == 'PE':
                 exit_positions()
                 fresh_trade('CE')
-        if nifty_ohlc[4] in negative_indications and nifty_ha_ohlc[3] < nifty_ha_ohlc[0]:
+        if (nifty_ohlc[8] == "Down" or nifty_ohlc[8] == "Flat") and (nifty_ohlc[4] in negative_indications):
             if positions == '':
                 fresh_trade('PE')
             elif positions == 'PE':
@@ -538,6 +539,8 @@ def options_trigger():
             elif positions == 'CE':
                 exit_positions()
                 fresh_trade('PE')
+        elif positions != "" and (nifty_ohlc[4] not in positive_indications or nifty_ohlc[4] not in negative_indications):
+            trend_continuation()
         while noted_time == processed_time:
         #     if ord_update_count() > 0:
         #         process_orders()
@@ -606,7 +609,7 @@ def single_candle_pattern(open, high, low, close):
 
 
 def get_nifty_onlc():
-    global nifty_ohlc, processed_time, duration, nifty_ha_ohlc, from_to_date, to_date
+    global nifty_ohlc, nifty_ohlc_1, nifty_ohlc_2, processed_time, duration, nifty_ha_ohlc, from_to_date, to_date
     try:
         current_time = datetime.datetime.now()
         actual_time = current_time - datetime.timedelta(minutes=3)
@@ -614,11 +617,23 @@ def get_nifty_onlc():
         from_to_date = processed_time
         to_date = from_to_date + datetime.timedelta(minutes=3)
         temp_historical_data = kite.historical_data(256265, from_to_date, to_date, duration)
-        nifty_ohlc[0] = temp_historical_data[0]['open']
-        nifty_ohlc[1] = temp_historical_data[0]['high']
-        nifty_ohlc[2] = temp_historical_data[0]['low']
-        nifty_ohlc[3] = temp_historical_data[0]['close']
-        nifty_ohlc[4] = single_candle_pattern(nifty_ohlc[0], nifty_ohlc[1], nifty_ohlc[2], nifty_ohlc[3])
+        nifty_ohlc_2 = nifty_ohlc_1
+        nifty_ohlc_1 = nifty_ohlc
+        toy = [temp_historical_data[0]['open'], temp_historical_data[0]['high'], temp_historical_data[0]['low'],
+               temp_historical_data[0]['close'],
+               single_candle_pattern(temp_historical_data[0]['open'], temp_historical_data[0]['high'],
+                                     temp_historical_data[0]['low'], temp_historical_data[0]['close']),
+               'Two Candle Pattern', 'Three Candle Pattern', 'MA', 'Trend']
+        nifty_ohlc = toy
+        if nifty_ohlc_2[3] != 0:
+            nifty_ohlc[7] = (nifty_ohlc[3] + nifty_ohlc_1[3] + nifty_ohlc_2[3]) / 3
+        if nifty_ohlc_2[7] != "3MA":
+            if nifty_ohlc_2[7] > nifty_ohlc_1[7] > nifty_ohlc[7]:
+                nifty_ohlc[8] = "Down"
+            elif nifty_ohlc_2[7] < nifty_ohlc_1[7] < nifty_ohlc[7]:
+                nifty_ohlc[8] = "Up"
+            else:
+                nifty_ohlc[8] = "Flat"
         if nifty_ha_ohlc[0] == 0:
             # open
             nifty_ha_ohlc[0] = round((nifty_ohlc[0] + nifty_ohlc[3])/2, 4)
@@ -627,7 +642,6 @@ def get_nifty_onlc():
             # low
             nifty_ha_ohlc[2] = nifty_ohlc[2]
             # close
-            print()
             nifty_ha_ohlc[3] = round((nifty_ohlc[0] + nifty_ohlc[1] + nifty_ohlc[2] + nifty_ohlc[3])/4, 4)
         else:
             # open
@@ -638,18 +652,16 @@ def get_nifty_onlc():
             nifty_ha_ohlc[1] = max(nifty_ohlc[1], nifty_ha_ohlc[0], nifty_ha_ohlc[3])
             # low
             nifty_ha_ohlc[2] = min(nifty_ohlc[2], nifty_ha_ohlc[0], nifty_ha_ohlc[3])
-        print("Nifty last minute - {} OHLC is Open: {}, High: {}, Low: {}, Close: {}, Pattern: {}".format(from_to_date,
+        print("Nifty last minute - {} OHLC is Open: {}, High: {}, Low: {}, Close: {}, Pattern: {}, 2_Candle_Pattern: {}, 3_Candle_Pattern: {}, MA: {}, Trend: {}".format(from_to_date,
                                                                                                           nifty_ohlc[0],
                                                                                                           nifty_ohlc[1],
                                                                                                           nifty_ohlc[2],
                                                                                                           nifty_ohlc[3],
-                                                                                                          nifty_ohlc[
-                                                                                                              4]))
-        print("Nifty last minute - {} HA ohlc is,  Open: {}, High: {}, Low: {}, Close: {}".format(from_to_date,
-                                                                                                          nifty_ha_ohlc[0],
-                                                                                                          nifty_ha_ohlc[1],
-                                                                                                          nifty_ha_ohlc[2],
-                                                                                                          nifty_ha_ohlc[3]))
+                                                                                                          nifty_ohlc[4], nifty_ohlc[5], nifty_ohlc[6], nifty_ohlc[7], nifty_ohlc[8]))
+        #                                                                                                   nifty_ha_ohlc[0],
+        #                                                                                                   nifty_ha_ohlc[1],
+        #                                                                                                   nifty_ha_ohlc[2],
+        #                                                                                                   nifty_ha_ohlc[3]))
     except Exception as r:
         traceback.print_exc(r)
 
