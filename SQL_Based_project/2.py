@@ -1,16 +1,6 @@
-temp_list = [[1,2,3], [4,5,6], [7,8,9]]
+temp_list = [1,2,5,4,2,3,6,8,6,4,4,9]
 
-a = [0,0,0]
-b = [0,0,0]
-c = [0,0,0]
-
-for x in temp_list:
-    a = b
-    b = c
-    c[0] = x[0]
-    c[1] = x[1]
-    c[2] = x[2]
-    print(a)
-    print(b)
-    print(c)
-    print("_________________")
+print(temp_list[-5:-2])
+print(temp_list[7:11])
+print(temp_list[len(temp_list)-1])
+print(len(temp_list[12:]))

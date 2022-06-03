@@ -77,6 +77,15 @@ position_indicator = ''
 traded_symbol = ''
 stop_loss = 0
 other_orders = []
+toy = []
+highs = []
+lows = []
+previous_high = None
+current_high = None
+current_high_loc = None
+previous_low = None
+current_low = None
+current_low_loc = None
 
 CE_order_list = []
 PE_order_list = []
@@ -87,8 +96,8 @@ PE_target_list = []
 CE_stop_loss_list = []
 PE_stop_loss_list = []
 
-positive_indications = ['Hammer', "Bullish Marubozu", "Dragonfly Doji", "Hanging Man Green"]
-negative_indications = ['Shooting Star', "Bearish Marubozu", "Gravestone Doji", "Inverted Hammer Red"]
+positive_indications = ['Hammer', "Bullish Marubozu", "Dragonfly Doji", "Hanging Man Green", "Tweezer Bottom", "Bullish Engulfing"]
+negative_indications = ['Shooting Star', "Bearish Marubozu", "Gravestone Doji", "Inverted Hammer Red", "Tweezer Top", "Bearish Engulfing"]
 
 carry_forward = 0
 profit = {}
@@ -505,7 +514,7 @@ def trend_continuation():
             #             get_previous_minute_close(positions) - get_previous_minute_open(positions))))
         # kite.modify_order(variety="regular", order_id=position_target_order_no,
         #                   price=target_price)
-        print("Stop Loss: {}, Target: {}, Target 2: {}".format(stop_loss, target_price, target_price_2))
+            print("Stop Loss: {}, Target: {}, Target 2: {}".format(stop_loss, target_price, target_price_2))
         # if ord_update_count() > 0:
         #     process_orders()
         # stop_loss_order_status(int(position_stop_loss_ord_no))
@@ -523,7 +532,8 @@ def options_trigger():
     try:
         while ord_update_count() > 0:
             process_orders()
-        if (nifty_ohlc[8] == "Up" or nifty_ohlc[8] == "Flat") and (nifty_ohlc[4] in positive_indications):
+        if (((nifty_ohlc_1[8] == "Down" or nifty_ohlc_1[8] == "Flat") and (nifty_ohlc[8] == "Down" or nifty_ohlc[8] == "Flat")) and ((nifty_ohlc_1[0] < nifty_ohlc_1[3]) and (nifty_ohlc[0] < nifty_ohlc[3])))\
+                or (nifty_ohlc_1[4] in positive_indications and nifty_ohlc[4] in positive_indications):
             if positions == '':
                 fresh_trade('CE')
             elif positions == 'CE':
@@ -531,7 +541,8 @@ def options_trigger():
             elif positions == 'PE':
                 exit_positions()
                 fresh_trade('CE')
-        if (nifty_ohlc[8] == "Down" or nifty_ohlc[8] == "Flat") and (nifty_ohlc[4] in negative_indications):
+        elif (((nifty_ohlc_1[8] == "Up" or nifty_ohlc_1[8] == "Flat") and (nifty_ohlc[8] == "Up" or nifty_ohlc[8] == "Flat")) and ((nifty_ohlc_1[0] > nifty_ohlc_1[3]) and (nifty_ohlc[0] > nifty_ohlc[3])))\
+                or (nifty_ohlc_1[4] in negative_indications and nifty_ohlc[4] in negative_indications):
             if positions == '':
                 fresh_trade('PE')
             elif positions == 'PE':
@@ -539,8 +550,9 @@ def options_trigger():
             elif positions == 'CE':
                 exit_positions()
                 fresh_trade('PE')
-        elif positions != "" and (nifty_ohlc[4] not in positive_indications or nifty_ohlc[4] not in negative_indications):
+        elif positions != "" :
             trend_continuation()
+        low_high()
         while noted_time == processed_time:
         #     if ord_update_count() > 0:
         #         process_orders()
@@ -608,8 +620,76 @@ def single_candle_pattern(open, high, low, close):
     pass
 
 
+def double_candle_pattern(open, high, low, close, open1, high1, low1, close1):
+    if close1<open1 and abs(close1 - open1)/(high1 - low1)>=0.7 and close<open and 0.3>abs(close - open)/(high - low)>=0.1 and abs(low / low1 - 1)<0.05 and abs(close - open)<2*(min(close, open) - low):
+        return "Tweezer Bottom"
+    elif close1>open1 and abs(close1-open1)/(high1-low1)>=0.7 and close>open and 0.3>abs(close-open)/(high-low)>=0.1 and abs(high/high1-1)<0.05 and abs(close1-open1)<2*(high1-max(close1,open1)):
+        return "Tweezer Top"
+    elif close1<open1 and 0.3>abs(close1-open1)/(high1-low1)>=0.1 and close>open and abs(close-open)/(high-low)>=0.7 and high1<close and low1>open:
+        return "Bullish Engulfing"
+    elif close1>open1 and 0.3>abs(close1-open1)/(high1-low1)>=0.1 and close<open and abs(close-open)/(high-low)>=0.7 and high1<open and low1>close:
+        return "Bearish Engulfing"
+    else:
+        return "None"
+
+
+def low_high():
+    global toy, current_low, current_high, current_low_loc, current_high_loc, previous_high, previous_low
+    try:
+        highs.append(toy[1])
+        lows.append(toy[2])
+        if previous_high is None:
+            if current_high is None:
+                current_high = toy[1]
+                current_high_loc = len(highs)
+            if current_high is not None and toy[1] > current_high:
+                current_high = toy[1]
+                current_high_loc = len(highs)
+            elif current_high is not None and toy[1] < current_high and len(highs) - current_high_loc >= 4:
+                previous_high = current_high
+                current_high = 0
+        elif previous_high is not None:
+            if current_high == 0:
+                if toy[1] >= max(highs[-3:]):
+                    current_high = toy[1]
+                    current_high_loc = len(highs)
+            elif current_high != 0:
+                if toy[1] >= current_high:
+                    current_high = toy[1]
+                    current_high_loc = len(highs)
+                if len(highs[current_high_loc:]) == 3:
+                    previous_high = current_high
+                    current_high = 0
+
+        if previous_low is None:
+            if current_low is None:
+                current_low = toy[2]
+                current_low_loc = len(lows)
+            if current_low is not None and toy[2] < current_low:
+                current_low = toy[2]
+                current_low_loc = len(lows)
+            elif current_low is not None and toy[2] > current_low and len(lows) - current_low_loc >= 4:
+                previous_low = current_low
+                current_low = 0
+        elif previous_low is not None:
+            if current_low == 0:
+                if toy[2] >= min(lows[-3:]):
+                    current_low = toy[2]
+                    current_low_loc = len(lows)
+            elif current_low != 0:
+                if toy[2] <= current_low:
+                    current_low = toy[2]
+                    current_low_loc = len(lows)
+                if len(lows[current_low_loc:]) == 3:
+                    previous_low = current_low
+                    current_low = 0
+        # print(highs, lows)
+    except Exception as e:
+        traceback.print_exc(e)
+
+
 def get_nifty_onlc():
-    global nifty_ohlc, nifty_ohlc_1, nifty_ohlc_2, processed_time, duration, nifty_ha_ohlc, from_to_date, to_date
+    global nifty_ohlc, nifty_ohlc_1, nifty_ohlc_2, processed_time, duration, nifty_ha_ohlc, from_to_date, to_date, highs, current_high, current_high_loc, previous_high, current_low, previous_low, current_low_loc, toy
     try:
         current_time = datetime.datetime.now()
         actual_time = current_time - datetime.timedelta(minutes=3)
@@ -623,7 +703,9 @@ def get_nifty_onlc():
                temp_historical_data[0]['close'],
                single_candle_pattern(temp_historical_data[0]['open'], temp_historical_data[0]['high'],
                                      temp_historical_data[0]['low'], temp_historical_data[0]['close']),
-               'Two Candle Pattern', 'Three Candle Pattern', 'MA', 'Trend']
+               double_candle_pattern(temp_historical_data[0]['open'], temp_historical_data[0]['high'],
+                                     temp_historical_data[0]['low'], temp_historical_data[0]['close'], nifty_ohlc[0], nifty_ohlc[1], nifty_ohlc[2],  nifty_ohlc[3]), 'Three Candle Pattern', '3MA', 'Trend']
+
         nifty_ohlc = toy
         if nifty_ohlc_2[3] != 0:
             nifty_ohlc[7] = (nifty_ohlc[3] + nifty_ohlc_1[3] + nifty_ohlc_2[3]) / 3
@@ -652,16 +734,7 @@ def get_nifty_onlc():
             nifty_ha_ohlc[1] = max(nifty_ohlc[1], nifty_ha_ohlc[0], nifty_ha_ohlc[3])
             # low
             nifty_ha_ohlc[2] = min(nifty_ohlc[2], nifty_ha_ohlc[0], nifty_ha_ohlc[3])
-        print("Nifty last minute - {} OHLC is Open: {}, High: {}, Low: {}, Close: {}, Pattern: {}, 2_Candle_Pattern: {}, 3_Candle_Pattern: {}, MA: {}, Trend: {}".format(from_to_date,
-                                                                                                          nifty_ohlc[0],
-                                                                                                          nifty_ohlc[1],
-                                                                                                          nifty_ohlc[2],
-                                                                                                          nifty_ohlc[3],
-                                                                                                          nifty_ohlc[4], nifty_ohlc[5], nifty_ohlc[6], nifty_ohlc[7], nifty_ohlc[8]))
-        #                                                                                                   nifty_ha_ohlc[0],
-        #                                                                                                   nifty_ha_ohlc[1],
-        #                                                                                                   nifty_ha_ohlc[2],
-        #                                                                                                   nifty_ha_ohlc[3]))
+        print("Nifty last minute - {}, Close: {}, Pattern: {}, MA: {}, Trend: {}".format(from_to_date, nifty_ohlc[3], nifty_ohlc[4], nifty_ohlc[7], nifty_ohlc[8]))
     except Exception as r:
         traceback.print_exc(r)
 
