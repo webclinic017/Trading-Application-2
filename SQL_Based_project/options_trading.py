@@ -86,6 +86,11 @@ current_high_loc = None
 previous_low = None
 current_low = None
 current_low_loc = None
+previous_highs_list = []
+previous_lows_list = []
+larger_trend = None
+candle_body_size = []
+average_candle_size = None
 
 CE_order_list = []
 PE_order_list = []
@@ -188,6 +193,73 @@ def options_list():
 
 nifty_spot()
 options_list()
+
+def low_high(high, low):
+    global toy, current_low, current_high, current_low_loc, current_high_loc, previous_high, previous_low, previous_highs_list, larger_trend, candle_body_size, average_candle_size
+    try:
+        highs.append(high)
+        lows.append(low)
+        if previous_high is None:
+            if current_high is None:
+                current_high = high
+                current_high_loc = len(highs)
+            if current_high is not None and high > current_high:
+                current_high = high
+                current_high_loc = len(highs)
+            elif current_high is not None and high < current_high and len(highs) - current_high_loc >= 4:
+                previous_high = current_high
+                current_high = 0
+                previous_highs_list.append(previous_high)
+                print(f'previous high: {previous_high}')
+        elif previous_high is not None:
+            if current_high == 0:
+                if high >= max(highs[-3:]):
+                    current_high = high
+                    current_high_loc = len(highs)
+            elif current_high != 0:
+                if high >= current_high:
+                    current_high = high
+                    current_high_loc = len(highs)
+                if len(highs[current_high_loc:]) == 3:
+                    previous_high = current_high
+                    current_high = 0
+                    previous_highs_list.append(previous_high)
+                    print(f'previous high: {previous_high}')
+
+        if previous_low is None:
+            if current_low is None:
+                current_low = low
+                current_low_loc = len(lows)
+            if current_low is not None and low < current_low:
+                current_low = low
+                current_low_loc = len(lows)
+            elif current_low is not None and low > current_low and len(lows) - current_low_loc >= 4:
+                previous_low = current_low
+                current_low = 0
+                previous_lows_list.append(previous_low)
+                print(f'previous low: {previous_low}')
+        elif previous_low is not None:
+            if current_low == 0:
+                if low >= min(lows[-3:]):
+                    current_low = low
+                    current_low_loc = len(lows)
+            elif current_low != 0:
+                if low <= current_low:
+                    current_low = low
+                    current_low_loc = len(lows)
+                if len(lows[current_low_loc:]) == 3:
+                    previous_low = current_low
+                    current_low = 0
+                previous_lows_list.append(previous_low)
+                print(f'previous low: {previous_low}')
+        if len(previous_lows_list) >= 2 and len(previous_highs_list) >= 1 and previous_lows_list[-2] < previous_lows_list[-1]:
+            larger_trend = 'UP'
+        elif len(previous_lows_list) >= 1 and len(previous_highs_list) >= 2 and previous_highs_list[-2] > previous_highs_list[-1]:
+            larger_trend = "DOWN"
+        candle_body_size.append(abs(toy[0]-toy[3]))
+        average_candle_size = sum(candle_body_size)/len(candle_body_size)
+    except Exception as e:
+        traceback.print_exc(e)
 
 
 def quantity(option_type):
@@ -528,52 +600,31 @@ def trend_continuation():
 
 
 def options_trigger():
-    global positions, position_order_no, position_order_status, position_quantity, position_stop_loss_ord_no, target_price, nifty_ohlc, loss_amount, trigger_thread_running, noted_time, traded_symbol, stop_loss, position_target_order_no, position_target_order_status, nifty_ha_ohlc, target_price_2, nifty_ohlc_1
+    global larger_trend, positions, position_order_no, position_order_status, position_quantity, position_stop_loss_ord_no, target_price, nifty_ohlc, loss_amount, trigger_thread_running, noted_time, traded_symbol, stop_loss, position_target_order_no, position_target_order_status, nifty_ha_ohlc, target_price_2, nifty_ohlc_1
     try:
         while ord_update_count() > 0:
             process_orders()
-        if (((nifty_ohlc_1[8] == "Down" or nifty_ohlc_1[8] == "Flat") and (nifty_ohlc[8] == "Down" or nifty_ohlc[8] == "Flat")) and ((nifty_ohlc_1[0] < nifty_ohlc_1[3]) and (nifty_ohlc[0] < nifty_ohlc[3])))\
-                or (nifty_ohlc_1[4] in positive_indications and nifty_ohlc[4] in positive_indications):
-            if positions == '':
-                fresh_trade('CE')
-            elif positions == 'CE':
-                trend_continuation()
-            elif positions == 'PE':
-                exit_positions()
-                fresh_trade('CE')
-        elif (((nifty_ohlc_1[8] == "Up" or nifty_ohlc_1[8] == "Flat") and (nifty_ohlc[8] == "Up" or nifty_ohlc[8] == "Flat")) and ((nifty_ohlc_1[0] > nifty_ohlc_1[3]) and (nifty_ohlc[0] > nifty_ohlc[3])))\
-                or (nifty_ohlc_1[4] in negative_indications and nifty_ohlc[4] in negative_indications):
-            if positions == '':
-                fresh_trade('PE')
-            elif positions == 'PE':
-                trend_continuation()
-            elif positions == 'CE':
-                exit_positions()
-                fresh_trade('PE')
-        elif positions != "" :
+        if nifty_ohlc[4] != "Pattern" and larger_trend is not None:
+            if larger_trend == "DOWN" and (nifty_ohlc[5] in positive_indications or nifty_ohlc[4] in positive_indications):
+                if positions == '':
+                    fresh_trade('CE')
+                elif positions == 'CE':
+                    trend_continuation()
+                elif positions == 'PE':
+                    exit_positions()
+                    fresh_trade('CE')
+        if larger_trend == "UP" and (nifty_ohlc[5] in negative_indications or nifty_ohlc[4] in negative_indications):
+                if positions == '':
+                    fresh_trade('PE')
+                elif positions == 'PE':
+                    trend_continuation()
+                elif positions == 'CE':
+                    exit_positions()
+                    fresh_trade('PE')
+        elif positions != "":
             trend_continuation()
-        low_high()
+        low_high(nifty_ohlc[1], nifty_ohlc[2])
         while noted_time == processed_time:
-        #     if ord_update_count() > 0:
-        #         process_orders()
-        #     if positions != '':
-        #         latest_LTP = (kite.ltp('NFO:{}'.format(traded_symbol))).get('NFO:{}'.format(traded_symbol)).get('last_price')
-        #         # if latest_LTP > float(target_price):
-        #         #     position_stop_loss_ord_no = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NFO,
-        #         #                                      tradingsymbol=traded_symbol,
-        #         #                                      transaction_type=kite.TRANSACTION_TYPE_SELL,
-        #         #                                      quantity=position_quantity,
-        #         #                                      order_type=kite.ORDER_TYPE_MARKET,
-        #         #                                      product=kite.PRODUCT_MIS)
-        #         if latest_LTP <= stop_loss:
-        #
-        #             if position_target_order_status not in ('COMPLETE', 'REJETED'):
-        #                 print("stop loss hit: {}".format(position_order_status))
-        #                 kite.modify_order(variety="regular", order_id=position_target_order_no,
-        #                                   order_type=kite.ORDER_TYPE_MARKET)
-        #             time.sleep(2)
-        #         if ord_update_count() > 0:
-        #             process_orders()
             update_processed_time()
         trigger_thread_running = "NO"
     except exceptions.InputException as error:
@@ -631,61 +682,6 @@ def double_candle_pattern(open, high, low, close, open1, high1, low1, close1):
         return "Bearish Engulfing"
     else:
         return "None"
-
-
-def low_high():
-    global toy, current_low, current_high, current_low_loc, current_high_loc, previous_high, previous_low
-    try:
-        highs.append(toy[1])
-        lows.append(toy[2])
-        if previous_high is None:
-            if current_high is None:
-                current_high = toy[1]
-                current_high_loc = len(highs)
-            if current_high is not None and toy[1] > current_high:
-                current_high = toy[1]
-                current_high_loc = len(highs)
-            elif current_high is not None and toy[1] < current_high and len(highs) - current_high_loc >= 4:
-                previous_high = current_high
-                current_high = 0
-        elif previous_high is not None:
-            if current_high == 0:
-                if toy[1] >= max(highs[-3:]):
-                    current_high = toy[1]
-                    current_high_loc = len(highs)
-            elif current_high != 0:
-                if toy[1] >= current_high:
-                    current_high = toy[1]
-                    current_high_loc = len(highs)
-                if len(highs[current_high_loc:]) == 3:
-                    previous_high = current_high
-                    current_high = 0
-
-        if previous_low is None:
-            if current_low is None:
-                current_low = toy[2]
-                current_low_loc = len(lows)
-            if current_low is not None and toy[2] < current_low:
-                current_low = toy[2]
-                current_low_loc = len(lows)
-            elif current_low is not None and toy[2] > current_low and len(lows) - current_low_loc >= 4:
-                previous_low = current_low
-                current_low = 0
-        elif previous_low is not None:
-            if current_low == 0:
-                if toy[2] >= min(lows[-3:]):
-                    current_low = toy[2]
-                    current_low_loc = len(lows)
-            elif current_low != 0:
-                if toy[2] <= current_low:
-                    current_low = toy[2]
-                    current_low_loc = len(lows)
-                if len(lows[current_low_loc:]) == 3:
-                    previous_low = current_low
-                    current_low = 0
-        # print(highs, lows)
-    except Exception as e:
-        traceback.print_exc(e)
 
 
 def get_nifty_onlc():

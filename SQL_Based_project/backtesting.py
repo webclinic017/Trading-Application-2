@@ -42,6 +42,9 @@ current_high_loc = None
 previous_low = None
 current_low = None
 current_low_loc = None
+previous_highs_list = []
+previous_lows_list = []
+larger_trend = []
 
 positive_indications = ['Hammer', "Bullish Marubozu", "Dragonfly Doji", "Hanging Man Green", "Tweezer Bottom", "Bullish Engulfing"]
 negative_indications = ['Shooting Star', "Bearish Marubozu", "Gravestone Doji", "Inverted Hammer Red", "Tweezer Top", "Bearish Engulfing"]
@@ -50,10 +53,10 @@ nifty_ohlc = [0, 0, 0, 0, "Pattern", "Two Candle Pattern", "Three Candle Pattern
 nifty_ohlc_1 = [0, 0, 0, 0, "Pattern", "Two Candle Pattern", "Three Candle Pattern", "2MA", "Trend"]
 nifty_ohlc_2 = [0, 0, 0, 0, "Pattern", "Two Candle Pattern", "Three Candle Pattern", "3MA", "Trend"]
 
-from_date = '2022-06-02 09:15:00'
-to_date = '2022-06-02 15:30:00'
+from_date = '2022-06-03 09:15:00'
+to_date = '2022-06-03 15:30:00'
 duration = '3minute'
-date = datetime.date(2022, 6, 2)
+date = datetime.date(2022, 6, 3)
 
 historical_data = kite.historical_data(256265, from_date, to_date, duration)
 his_df = pd.DataFrame(historical_data)
@@ -150,56 +153,64 @@ def double_candle_pattern(open, high, low, close, open1, high1, low1, close1):
         return "None"
 
 
-def low_high():
-    global toy, current_low, current_high, current_low_loc, current_high_loc, previous_high, previous_low
+def low_high(high, low):
+    global toy, current_low, current_high, current_low_loc, current_high_loc, previous_high, previous_low, previous_highs_list, previous_lows_list
     try:
-        highs.append(toy[1])
-        lows.append(toy[2])
+        highs.append(high)
+        lows.append(low)
         if previous_high is None:
             if current_high is None:
-                current_high = toy[1]
+                current_high = high
                 current_high_loc = len(highs)
-            if current_high is not None and toy[1] > current_high:
-                current_high = toy[1]
+            if current_high is not None and high > current_high:
+                current_high = high
                 current_high_loc = len(highs)
-            elif current_high is not None and toy[1] < current_high and len(highs) - current_high_loc >= 4:
+            elif current_high is not None and high < current_high and len(highs) - current_high_loc >= 4:
                 previous_high = current_high
                 current_high = 0
+                previous_highs_list.append(previous_high)
+                print(f'previous high: {previous_high}')
         elif previous_high is not None:
             if current_high == 0:
-                if toy[1] >= max(highs[-3:]):
-                    current_high = toy[1]
+                if high >= max(highs[-3:]):
+                    current_high = high
                     current_high_loc = len(highs)
             elif current_high != 0:
-                if toy[1] >= current_high:
-                    current_high = toy[1]
+                if high >= current_high:
+                    current_high = high
                     current_high_loc = len(highs)
                 if len(highs[current_high_loc:]) == 3:
                     previous_high = current_high
                     current_high = 0
+                    previous_highs_list.append(previous_high)
+                    print(f'previous high: {previous_high}')
 
         if previous_low is None:
             if current_low is None:
-                current_low = toy[2]
+                current_low = low
                 current_low_loc = len(lows)
-            if current_low is not None and toy[2] < current_low:
-                current_low = toy[2]
+            if current_low is not None and low < current_low:
+                current_low = low
                 current_low_loc = len(lows)
-            elif current_low is not None and toy[2] > current_low and len(lows) - current_low_loc >= 4:
+            elif current_low is not None and low > current_low and len(lows) - current_low_loc >= 4:
                 previous_low = current_low
                 current_low = 0
+                previous_lows_list.append(previous_low)
+                print(f'previous low: {previous_low}')
         elif previous_low is not None:
             if current_low == 0:
-                if toy[2] >= min(lows[-3:]):
-                    current_low = toy[2]
+                if low >= min(lows[-3:]):
+                    current_low = low
                     current_low_loc = len(lows)
             elif current_low != 0:
-                if toy[2] <= current_low:
-                    current_low = toy[2]
+                if low <= current_low:
+                    current_low = low
                     current_low_loc = len(lows)
                 if len(lows[current_low_loc:]) == 3:
                     previous_low = current_low
                     current_low = 0
+                    previous_lows_list.append(previous_low)
+                    print(f'previous low: {previous_low}')
         # print(highs, lows)
     except Exception as e:
         traceback.print_exc(e)
@@ -239,10 +250,6 @@ for row in range(len(his_df)):
         # single_candle_pattern(row[1]['open'], row[1]['high'], row[1]['low'], row[1]['close'])
 
 # his_df = his_df.set_index("date").sort_index()
-
-
-
-
 
 def three_min_backtesting():
     global pos, no_of_fail_trades, no_of_success_trades, target_price, profit_amount, stop_loss, loss_amount, quantity
@@ -392,10 +399,9 @@ def single_min_backtesting():
     global pos, target_price, profit_amount, quantity, bp, sp, loss_amount, stop_loss, CE_ins_tkn
     try:
         for x in range(len(his_df)):
-            print(his_df.iloc[x,2], his_df.iloc[x,3])
-            # low_high()
             if x <= len(his_df)-5 and his_df.iloc[x, 6] != "Pattern" and previous_low is not None and previous_high is not None:
-                if his_df.iloc[x, 6] in positive_indications and ((his_df.iloc[x, 2] > previous_high) or (his_df.iloc[x, 2] > previous_low)) and ((his_df.iloc[x, 3] > previous_high) or (his_df.iloc[x, 3] > previous_low)):
+                if len(previous_lows_list) >= 2 and len(previous_highs_list) >= 1 and previous_lows_list[-2] < previous_lows_list[-1] and his_df.iloc[x, 4] > previous_highs_list[-1] and his_df.iloc[x, 4] > his_df.iloc[x, 1]:
+                # if his_df.iloc[x, 6] in positive_indications and ((his_df.iloc[x, 2] > previous_high) or (his_df.iloc[x, 2] > previous_low)) and ((his_df.iloc[x, 3] > previous_high) or (his_df.iloc[x, 3] > previous_low)):
                 # if (his_df.iloc[x, 6] in positive_indications and his_df.iloc[x-1, 6] in positive_indications) or his_df.iloc[x, 7] in positive_indications:
                     print(f'CE - Time: {his_df.iloc[x, 0],}, Pattern: {his_df.iloc[x, 6]}, Double Pattern: {his_df.iloc[x, 7]}')
                     '''
@@ -489,7 +495,9 @@ def single_min_backtesting():
                             target_price = 0
                             stop_loss = 0
                             '''
-                elif his_df.iloc[x, 6] in negative_indications and ((his_df.iloc[x, 2] > previous_high) or (his_df.iloc[x, 2] > previous_low)) and ((his_df.iloc[x, 3] > previous_high) or (his_df.iloc[x, 3] > previous_low)):
+
+                elif len(previous_highs_list) >= 2  and len(previous_lows_list) >= 1 and previous_highs_list[-2] < previous_highs_list[-1] and his_df.iloc[x, 4] < previous_lows_list[-1] and his_df.iloc[x, 4] < his_df.iloc[x, 1]:
+                # elif his_df.iloc[x, 6] in negative_indications and ((his_df.iloc[x, 2] > previous_high) or (his_df.iloc[x, 2] > previous_low)) and ((his_df.iloc[x, 3] > previous_high) or (his_df.iloc[x, 3] > previous_low)):
                 # elif (his_df.iloc[x, 6] in negative_indications and his_df.iloc[x-1, 6] in negative_indications) or his_df.iloc[x, 7] in negative_indications:
                     print(f'PE - Time: {his_df.iloc[x, 0],}, Pattern: {his_df.iloc[x, 6]}, Double Pattern: {his_df.iloc[x, 7]}')
                     '''
@@ -637,7 +645,7 @@ def single_min_backtesting():
                             target_price = 0
                             stop_loss = 0
                             '''
-
+            low_high(his_df.iloc[x, 2], his_df.iloc[x, 3])
     except Exception as e:
         traceback.print_exc(e)
 
