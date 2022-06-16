@@ -1,6 +1,15 @@
-temp_list = [1,2,5,4,2,3,6,8,6,4,4,9]
+import numpy as np
 
-print(temp_list[-5:-2])
-print(temp_list[7:11])
-print(temp_list[len(temp_list)-1])
-print(len(temp_list[12:]))
+temp_list = [100, 150, 185]
+
+avg = 10
+
+def distance_from_mean(level):
+    print(f'abs difference list: {[abs(level - y) < avg for y in temp_list]}')
+    print(f'sum: {np.sum([abs(level - y) < avg for y in temp_list])}')
+    print(np.sum([abs(level - y) < avg for y in temp_list]) == 0)
+    return np.sum([abs(level - y) < avg for y in temp_list]) == 0
+
+
+if distance_from_mean(105):
+    print(105)

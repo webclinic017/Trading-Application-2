@@ -100,9 +100,10 @@ PE_target_list = []
 
 CE_stop_loss_list = []
 PE_stop_loss_list = []
+last_5_closes = []
 
-positive_indications = ['Hammer', "Bullish Marubozu", "Dragonfly Doji", "Hanging Man Green", "Tweezer Bottom", "Bullish Engulfing"]
-negative_indications = ['Shooting Star', "Bearish Marubozu", "Gravestone Doji", "Inverted Hammer Red", "Tweezer Top", "Bearish Engulfing"]
+positive_indications = ['Hammer', "Bullish Marubozu", "Tweezer Bottom", "Bullish Engulfing", "Goutham Bullish", "Bullish Piercing"]
+negative_indications = ['Shooting Star', "Bearish Marubozu", "Tweezer Top", "Bearish Engulfing", "Goutham Bearish", "Bearish Piercing"]
 
 carry_forward = 0
 profit = {}
@@ -115,9 +116,10 @@ CE_symbol = ''
 CE_ins_tkn = 0
 PE_ins_tkn = 0
 PE_symbol = ''
-nifty_ohlc = [0, 0, 0, 0, "Pattern", "Two Candle Pattern", "Three Candle Pattern", "3MA", "Trend"]
-nifty_ohlc_1 = [0, 0, 0, 0, "Pattern", "Two Candle Pattern", "Three Candle Pattern", "3MA", "Trend"]
-nifty_ohlc_2 = [0, 0, 0, 0, "Pattern", "Two Candle Pattern", "Three Candle Pattern", "3MA", "Trend"]
+nifty_ohlc = [0, 0, 0, 0, "Pattern", "Two Candle Pattern", "Three Candle Pattern", "HL2", "Trend", "Max_Close", "Min_Close"]
+#             0, 1, 2, 3,     4    ,           5         ,           6           ,   7  ,     8  ,      9     ,      10
+nifty_ohlc_1 = [0, 0, 0, 0, "Pattern", "Two Candle Pattern", "Three Candle Pattern", "HL2", "Trend", "Max_Close", "Min_Close"]
+nifty_ohlc_2 = [0, 0, 0, 0, "Pattern", "Two Candle Pattern", "Three Candle Pattern", "HL2", "Trend", "Max_Close", "Min_Close"]
 nifty_ha_ohlc = [0, 0, 0, 0]
 start_time = datetime.time(9, 15, 00)
 # processed_time = datetime.time(9, 15, 00)
@@ -256,7 +258,7 @@ def low_high(high, low):
             larger_trend = 'UP'
         elif len(previous_lows_list) >= 1 and len(previous_highs_list) >= 2 and previous_highs_list[-2] > previous_highs_list[-1]:
             larger_trend = "DOWN"
-        candle_body_size.append(abs(toy[0]-toy[3]))
+        candle_body_size.append(abs(toy[1]-toy[2]))
         average_candle_size = sum(candle_body_size)/len(candle_body_size)
     except Exception as e:
         traceback.print_exc(e)
@@ -458,6 +460,9 @@ def process_orders():
         #     else:
         #         loss_amount += temp_profit
 
+    except TypeError as error:
+        print(error)
+        process_orders()
     except Exception as e:
         traceback.print_exc(e)
 
@@ -547,6 +552,7 @@ def fresh_trade(position_direction):
                                                              product=kite.PRODUCT_MIS, price=stop_loss - 0.05,
                                                              trigger_price=stop_loss)
         else:
+            print(kite.margins())
             print("not sufficient margin")
     except exceptions.InputException as error:
         trigger_thread_running = "NO"
@@ -599,28 +605,41 @@ def trend_continuation():
         traceback.print_exc(e)
 
 
+def buy_action():
+    if positions == '':
+        fresh_trade('CE')
+    elif positions == 'CE':
+        trend_continuation()
+    elif positions == 'PE':
+        exit_positions()
+        fresh_trade('CE')
+
+
+def sell_action():
+    if positions == '':
+        fresh_trade('PE')
+    elif positions == 'PE':
+        trend_continuation()
+    elif positions == 'CE':
+        exit_positions()
+        fresh_trade('PE')
+
+
 def options_trigger():
-    global larger_trend, positions, position_order_no, position_order_status, position_quantity, position_stop_loss_ord_no, target_price, nifty_ohlc, loss_amount, trigger_thread_running, noted_time, traded_symbol, stop_loss, position_target_order_no, position_target_order_status, nifty_ha_ohlc, target_price_2, nifty_ohlc_1
+    global previous_low, previous_high, larger_trend, positions, position_order_no, position_order_status, position_quantity, position_stop_loss_ord_no, target_price, nifty_ohlc, loss_amount, trigger_thread_running, noted_time, traded_symbol, stop_loss, position_target_order_no, position_target_order_status, nifty_ha_ohlc, target_price_2, nifty_ohlc_1
     try:
         while ord_update_count() > 0:
             process_orders()
-        if nifty_ohlc[4] != "Pattern" and larger_trend is not None:
-            if larger_trend == "DOWN" and (nifty_ohlc[5] in positive_indications or nifty_ohlc[4] in positive_indications):
-                if positions == '':
-                    fresh_trade('CE')
-                elif positions == 'CE':
-                    trend_continuation()
-                elif positions == 'PE':
-                    exit_positions()
-                    fresh_trade('CE')
-        if larger_trend == "UP" and (nifty_ohlc[5] in negative_indications or nifty_ohlc[4] in negative_indications):
-                if positions == '':
-                    fresh_trade('PE')
-                elif positions == 'PE':
-                    trend_continuation()
-                elif positions == 'CE':
-                    exit_positions()
-                    fresh_trade('PE')
+        if (nifty_ohlc[8] == "Up" and nifty_ohlc[4] in positive_indications) or (nifty_ohlc[8] == "Flat" and nifty_ohlc[4] in positive_indications and nifty_ohlc[3] > nifty_ohlc[9])\
+                or ((nifty_ohlc_1[8] == "Down" and nifty_ohlc[8] == "Down" or "Flat") and (nifty_ohlc_1[4] in positive_indications or nifty_ohlc_1[5] in positive_indications) and (nifty_ohlc[0] < nifty_ohlc[3])):
+            print("Situation to CALL")
+            buy_action()
+        elif (nifty_ohlc[8] == "Down" and nifty_ohlc[4] in negative_indications) or (
+                nifty_ohlc[8] == "Flat" and nifty_ohlc[4] in positive_indications and nifty_ohlc[3] < nifty_ohlc[10]) \
+                or ((nifty_ohlc_1[8] == "Up" and nifty_ohlc[8] == ("Up" or "Flat")) and (
+                nifty_ohlc_1[4] in negative_indications or nifty_ohlc_1[5] in negative_indications) and (nifty_ohlc[0] > nifty_ohlc[3])):
+            print("Situation to PUT")
+            sell_action()
         elif positions != "":
             trend_continuation()
         low_high(nifty_ohlc[1], nifty_ohlc[2])
@@ -672,20 +691,29 @@ def single_candle_pattern(open, high, low, close):
 
 
 def double_candle_pattern(open, high, low, close, open1, high1, low1, close1):
-    if close1<open1 and abs(close1 - open1)/(high1 - low1)>=0.7 and close<open and 0.3>abs(close - open)/(high - low)>=0.1 and abs(low / low1 - 1)<0.05 and abs(close - open)<2*(min(close, open) - low):
-        return "Tweezer Bottom"
-    elif close1>open1 and abs(close1-open1)/(high1-low1)>=0.7 and close>open and 0.3>abs(close-open)/(high-low)>=0.1 and abs(high/high1-1)<0.05 and abs(close1-open1)<2*(high1-max(close1,open1)):
-        return "Tweezer Top"
-    elif close1<open1 and 0.3>abs(close1-open1)/(high1-low1)>=0.1 and close>open and abs(close-open)/(high-low)>=0.7 and high1<close and low1>open:
+    global average_candle_size
+    if average_candle_size is not None and (close1 >= open) and (open1 <= close) and (close > open) and (
+            close1 < open1):
         return "Bullish Engulfing"
-    elif close1>open1 and 0.3>abs(close1-open1)/(high1-low1)>=0.1 and close<open and abs(close-open)/(high-low)>=0.7 and high1<open and low1>close:
+    elif average_candle_size is not None and (close1 <= open) and (open1 >= close) and (close < open) and (
+            close1 > open1):
         return "Bearish Engulfing"
+    elif average_candle_size is not None and (close1 < open1) and (
+            (open1 + close1) / 2 > open > close1) and close > open1:
+        return "Goutham Bullish"
+    elif average_candle_size is not None and (close1 > open1) and (
+            (open1 + close1) / 2 < open < close1) and close < open1:
+        return "Goutham Bearish"
+    elif open1 > close1 > open and close > (close1 + open1)/2 and open < close:
+        return "Bullish Piercing"
+    elif open1 < close1 < open and close < (close1 + open1)/2 and open > close:
+        return "Bearish Piercing"
     else:
         return "None"
 
 
 def get_nifty_onlc():
-    global nifty_ohlc, nifty_ohlc_1, nifty_ohlc_2, processed_time, duration, nifty_ha_ohlc, from_to_date, to_date, highs, current_high, current_high_loc, previous_high, current_low, previous_low, current_low_loc, toy
+    global last_5_closes, nifty_ohlc, nifty_ohlc_1, nifty_ohlc_2, processed_time, duration, nifty_ha_ohlc, from_to_date, to_date, highs, current_high, current_high_loc, previous_high, current_low, previous_low, current_low_loc, toy
     try:
         current_time = datetime.datetime.now()
         actual_time = current_time - datetime.timedelta(minutes=3)
@@ -700,18 +728,24 @@ def get_nifty_onlc():
                single_candle_pattern(temp_historical_data[0]['open'], temp_historical_data[0]['high'],
                                      temp_historical_data[0]['low'], temp_historical_data[0]['close']),
                double_candle_pattern(temp_historical_data[0]['open'], temp_historical_data[0]['high'],
-                                     temp_historical_data[0]['low'], temp_historical_data[0]['close'], nifty_ohlc[0], nifty_ohlc[1], nifty_ohlc[2],  nifty_ohlc[3]), 'Three Candle Pattern', '3MA', 'Trend']
+                                     temp_historical_data[0]['low'], temp_historical_data[0]['close'], nifty_ohlc[0], nifty_ohlc[1], nifty_ohlc[2],  nifty_ohlc[3]), 'Three Candle Pattern', 'HL2', 'Trend', 0, 0]
 
         nifty_ohlc = toy
-        if nifty_ohlc_2[3] != 0:
-            nifty_ohlc[7] = (nifty_ohlc[3] + nifty_ohlc_1[3] + nifty_ohlc_2[3]) / 3
-        if nifty_ohlc_2[7] != "3MA":
+        nifty_ohlc[7] = (nifty_ohlc[0] + nifty_ohlc[3])/2
+        if nifty_ohlc_2[7] != "HL2":
             if nifty_ohlc_2[7] > nifty_ohlc_1[7] > nifty_ohlc[7]:
                 nifty_ohlc[8] = "Down"
             elif nifty_ohlc_2[7] < nifty_ohlc_1[7] < nifty_ohlc[7]:
                 nifty_ohlc[8] = "Up"
             else:
                 nifty_ohlc[8] = "Flat"
+        last_5_closes.append(nifty_ohlc[3])
+        if len(last_5_closes) > 5:
+            last_5_closes.pop(0)
+            nifty_ohlc[9] = max(last_5_closes)
+            nifty_ohlc[10] = min(last_5_closes)
+        # Hieken ashi table which we can ignore
+        '''
         if nifty_ha_ohlc[0] == 0:
             # open
             nifty_ha_ohlc[0] = round((nifty_ohlc[0] + nifty_ohlc[3])/2, 4)
@@ -730,7 +764,8 @@ def get_nifty_onlc():
             nifty_ha_ohlc[1] = max(nifty_ohlc[1], nifty_ha_ohlc[0], nifty_ha_ohlc[3])
             # low
             nifty_ha_ohlc[2] = min(nifty_ohlc[2], nifty_ha_ohlc[0], nifty_ha_ohlc[3])
-        print("Nifty last minute - {}, Close: {}, Pattern: {}, MA: {}, Trend: {}".format(from_to_date, nifty_ohlc[3], nifty_ohlc[4], nifty_ohlc[7], nifty_ohlc[8]))
+            '''
+        print(f'Nifty last minute - {from_to_date}, Close: {nifty_ohlc[3]}, Pattern: {nifty_ohlc[4]}, Two Candle Pattern: {nifty_ohlc[5]}, Trend: {nifty_ohlc[8]}, Max_Close: {nifty_ohlc[9]}, Min_Close: {nifty_ohlc[10]}')
     except Exception as r:
         traceback.print_exc(r)
 
@@ -755,14 +790,14 @@ def trade():  # retrieve continuous ticks in JSON format
             get_nifty_onlc()
             if ord_update_count() > 0:
                 process_orders()
-            if datetime.time(9, 18, 00) < datetime.datetime.now().time() < datetime.time(15, 26, 00) and profit_amount/day_margin < 1:
+            if datetime.time(9, 18, 00) < datetime.datetime.now().time() < datetime.time(15, 26, 00) and profit_amount/day_margin < .2:
                 # update_processed_time()
                 if noted_time != processed_time:
                     noted_time = processed_time
                     if trigger_thread_running == "NO":
                         trigger_thread_running = "YES"
                         options_trigger()
-            elif profit_amount/day_margin >= 1:
+            elif profit_amount/day_margin >= .2:
                 print("target acheived")
                 break
             while noted_time == processed_time:
