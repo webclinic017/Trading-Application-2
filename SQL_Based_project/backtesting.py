@@ -50,11 +50,11 @@ previous_highs_list = []
 previous_lows_list = []
 larger_trend = None
 candle_body_size = []
-average_candle_size = None
+average_candle_size = 0
 levels = []
 last_5_closes = []
-resistance = None
-support = None
+resistance = 0
+support = 0
 
 transaction_list = []
 
@@ -581,74 +581,124 @@ def buy_action(x):
     except Exception as e:
         traceback.print_exc(e)
 
+'''
+1
+CE_condition = (nifty_ohlc_1[4] in positive_indications or nifty_ohlc_1[5] in positive_indications) and ((nifty_ohlc_1[2] < support) or (nifty_ohlc_1[2] < (support + average_candle_size)) or
+    ((nifty_ohlc_2[2] < support) or (nifty_ohlc_2[2] < (support + average_candle_size)))) and nifty_ohlc[0] < nifty_ohlc[3]
+PE_condition = ((resistance - support) > average_candle_size * 2) and((nifty_ohlc_1[4] in positive_indications or nifty_ohlc_1[5] in positive_indications) and ((nifty_ohlc_1[2] < support) or (nifty_ohlc_1[2] < (support + average_candle_size)) or
+    ((nifty_ohlc_2[2] < support) or (nifty_ohlc_2[2] < (support + average_candle_size))))) and nifty_ohlc[0] < nifty_ohlc[3]:
+2
+CE Condition - (nifty_ohlc_1[8] == 'Up' and (nifty_ohlc[4] in positive_indications or nifty_ohlc[5] in positive_indications)) or (nifty_ohlc_1[8] == 'Down' and ((nifty_ohlc_1[4] in positive_indications or nifty_ohlc_1[5] in positive_indications) and (nifty_ohlc[4] in positive_indications or nifty_ohlc[5] in positive_indications)))
+PE Condition - (nifty_ohlc_1[8] == 'Down' and (nifty_ohlc[4] in negative_indications or nifty_ohlc[5] in negative_indications)) or (nifty_ohlc_1[8] == 'Up' and ((nifty_ohlc_1[4] in negative_indications or nifty_ohlc_1[5] in negative_indications) and (nifty_ohlc[4] in negative_indications or nifty_ohlc[5] in negative_indications)))
+'''
 
-# print(his_df.to_string())
+
+def call_buy_condition():
+    if (nifty_ohlc_1[8] == 'Up' and (nifty_ohlc[4] in positive_indications or nifty_ohlc[5] in positive_indications)) or (nifty_ohlc_1[8] == 'Down' and ((nifty_ohlc_1[4] in positive_indications or nifty_ohlc_1[5] in positive_indications) and (nifty_ohlc[4] in positive_indications or nifty_ohlc[5] in positive_indications))):
+        return True
+
+
+def put_buy_condition():
+    if(nifty_ohlc_1[8] == 'Down' and (nifty_ohlc[4] in negative_indications or nifty_ohlc[5] in negative_indications)) or (nifty_ohlc_1[8] == 'Up' and ((nifty_ohlc_1[4] in negative_indications or nifty_ohlc_1[5] in negative_indications) and (nifty_ohlc[4] in negative_indications or nifty_ohlc[5] in negative_indications))):
+        return True
+
+
 def single_min_backtesting():
     global support, resistance, average_candle_size, pos, target_price, profit_amount, quantity, bp, sp, loss_amount, stop_loss, CE_ins_tkn, positive_indications, negative_indications, his_df
     try:
         for x in range(len(his_df)):
-            get_nifty_onlc(his_df.iloc[x, 0], his_df.iloc[x, 1], his_df.iloc[x, 2], his_df.iloc[x, 3], his_df.iloc[x, 4])
-            if (resistance and support) is not None:
-                if nifty_ohlc[3] > nifty_ohlc[0] and nifty_ohlc[3] > support > nifty_ohlc[2]:
-                    print(f'CE occured at : {his_df.iloc[x, 0]}')
-                    buy_action(x)
-                elif nifty_ohlc[3] < nifty_ohlc[0] and nifty_ohlc[3] < resistance < nifty_ohlc[2]:
-                    print(f'PE occured at : {his_df.iloc[x, 0]}')
-                    sell_action(x)
-                elif pos == 'CE':
-                    # if call_his_df.iloc[x + 1, 2] >= target_price:
-                    #     sp = target_price
-                    #     profit_amount += (sp - bp) * quantity
-                    #     print(
-                    #         "O Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
-                    #             his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
-                    #     print(
-                    #         "----------------------------------------------------------------------------------------------------------------------------------------------------")
-                    #     pos = ''
-                    #     bp = 0
-                    #     target_price = 0
-                    #     stop_loss = 0
-                    if call_his_df.iloc[x + 1, 3] <= stop_loss:
-                        sp = stop_loss
-                        trades_list[x+1]=sp
-                        transaction_list.append('CE SELL')
-                        profit_amount += (sp - bp) * quantity
-                        print(
-                            "P Time: {}, Buying Price: {}, Selling Price: {}, Stop Loss: {}, temp Profit: {}, Final Profit: {}".format(
-                                his_df.iloc[x, 0], bp, sp, stop_loss, (sp - bp) * quantity, profit_amount))
-                        print(
-                            "----------------------------------------------------------------------------------------------------------------------------------------------------")
-                        pos = ''
-                        bp = 0
-                        target_price = 0
-                        stop_loss = 0
+            if his_df.iloc[x, 0] < datetime.time(15, 27, 00):
+                get_nifty_onlc(his_df.iloc[x, 0], his_df.iloc[x, 1], his_df.iloc[x, 2], his_df.iloc[x, 3], his_df.iloc[x, 4])
+                if (resistance and support) != 0:
+                    if call_buy_condition():
+                        print(f'CE occured at : {his_df.iloc[x, 0]}')
+                        buy_action(x)
+                    elif put_buy_condition():
+                        print(f'PE occured at : {his_df.iloc[x, 0]}')
+                        sell_action(x)
+                    elif pos == 'CE':
+                        # if call_his_df.iloc[x + 1, 2] >= target_price:
+                        #     sp = target_price
+                        #     profit_amount += (sp - bp) * quantity
+                        #     print(
+                        #         "O Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
+                        #             his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
+                        #     print(
+                        #         "----------------------------------------------------------------------------------------------------------------------------------------------------")
+                        #     pos = ''
+                        #     bp = 0
+                        #     target_price = 0
+                        #     stop_loss = 0
+                        if call_his_df.iloc[x + 1, 3] <= stop_loss:
+                            sp = stop_loss
+                            trades_list[x+1]=sp
+                            transaction_list.append('CE SELL')
+                            profit_amount += (sp - bp) * quantity
+                            print(
+                                "P Time: {}, Buying Price: {}, Selling Price: {}, Stop Loss: {}, temp Profit: {}, Final Profit: {}".format(
+                                    his_df.iloc[x, 0], bp, sp, stop_loss, (sp - bp) * quantity, profit_amount))
+                            print(
+                                "----------------------------------------------------------------------------------------------------------------------------------------------------")
+                            pos = ''
+                            bp = 0
+                            target_price = 0
+                            stop_loss = 0
+                    elif pos == 'PE':
+                        # if put_his_df.iloc[x + 1, 2] >= target_price:
+                        #     sp = target_price
+                        #     profit_amount += (sp - bp) * quantity
+                        #     print(
+                        #         "Q Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
+                        #             his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
+                        #     print(
+                        #         "----------------------------------------------------------------------------------------------------------------------------------------------------")
+                        #     pos = ''
+                        #     bp = 0
+                        #     target_price = 0
+                        #     stop_loss = 0
+                        if put_his_df.iloc[x + 1, 3] <= stop_loss:
+                            sp = stop_loss
+                            trades_list[x+1] = sp
+                            transaction_list.append('PE SELL')
+                            profit_amount += (sp - bp) * quantity
+                            print(
+                                "R Time: {}, Buying Price: {}, Selling Price: {}, Stop Loss: {}, temp Profit: {}, Final Profit: {}".format(
+                                    his_df.iloc[x, 0], bp, sp, stop_loss, (sp - bp) * quantity, profit_amount))
+                            print(
+                                "----------------------------------------------------------------------------------------------------------------------------------------------------")
+                            pos = ''
+                            bp = 0
+                            target_price = 0
+                            stop_loss = 0
+            elif his_df.iloc[x, 0] >= datetime.time(15, 27, 00):
+                if pos == 'CE':
+                    sp = call_his_df.iloc[x, 3]
+                    trades_list[x-1] = sp
+                    transaction_list.append('CE SELL')
+                    profit_amount += (sp - bp) * quantity
+                    print(
+                        "P Time: {}, Buying Price: {}, Selling Price: {}, Stop Loss: {}, temp Profit: {}, Final Profit: {}".format(
+                            his_df.iloc[x, 0], bp, sp, stop_loss, (sp - bp) * quantity, profit_amount))
+                    print(
+                        "----------------------------------------------------------------------------------------------------------------------------------------------------")
+                    pos = ''
+                    bp = 0
+                    target_price = 0
+                    stop_loss = 0
                 elif pos == 'PE':
-                    # if put_his_df.iloc[x + 1, 2] >= target_price:
-                    #     sp = target_price
-                    #     profit_amount += (sp - bp) * quantity
-                    #     print(
-                    #         "Q Pattern: {}, Time: {}, Buying Price: {}, Selling Price: {}, temp Profit: {}, Final Profit: {}".format(his_df.iloc[x, 6],
-                    #             his_df.iloc[x, 0], bp, sp, (sp - bp) * quantity, profit_amount))
-                    #     print(
-                    #         "----------------------------------------------------------------------------------------------------------------------------------------------------")
-                    #     pos = ''
-                    #     bp = 0
-                    #     target_price = 0
-                    #     stop_loss = 0
-                    if put_his_df.iloc[x + 1, 3] <= stop_loss:
-                        sp = stop_loss
-                        trades_list[x+1] = sp
-                        transaction_list.append('PE SELL')
-                        profit_amount += (sp - bp) * quantity
-                        print(
-                            "R Time: {}, Buying Price: {}, Selling Price: {}, Stop Loss: {}, temp Profit: {}, Final Profit: {}".format(
-                                his_df.iloc[x, 0], bp, sp, stop_loss, (sp - bp) * quantity, profit_amount))
-                        print(
-                            "----------------------------------------------------------------------------------------------------------------------------------------------------")
-                        pos = ''
-                        bp = 0
-                        target_price = 0
-                        stop_loss = 0
+                    sp = put_his_df.iloc[x, 3]
+                    trades_list[x - 1] = sp
+                    transaction_list.append('PE SELL')
+                    profit_amount += (sp - bp) * quantity
+                    print(
+                        "R Time: {}, Buying Price: {}, Selling Price: {}, Stop Loss: {}, temp Profit: {}, Final Profit: {}".format(
+                            his_df.iloc[x, 0], bp, sp, stop_loss, (sp - bp) * quantity, profit_amount))
+                    print(
+                        "----------------------------------------------------------------------------------------------------------------------------------------------------")
+                    pos = ''
+                    bp = 0
+                    target_price = 0
+                    stop_loss = 0
             low_high(his_df.iloc[x, 2], his_df.iloc[x, 3])
             if len(levels) >= 2:
                 reisitance_and_support(nifty_ohlc[3])
@@ -664,5 +714,5 @@ single_min_backtesting()
 
 # print(sum(percentchange), no_of_success_trades, no_of_fail_trades)
 print("profit amount is {}, and the loss amount is {}".format(profit_amount, loss_amount))
-
+print(f'average candle size: {average_candle_size}')
 plot_with_trades()
