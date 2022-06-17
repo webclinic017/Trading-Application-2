@@ -1,7 +1,7 @@
 import numpy as np
 
 temp_list = [100, 150, 185]
-
+print(temp_list[-1])
 avg = 10
 
 def distance_from_mean(level):
