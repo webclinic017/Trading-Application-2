@@ -20,11 +20,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5b91aa79-807f-4e80-9fe3-b9e0b8461035" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/SQL_Based_project/instruments_list.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/Gen-Access-tkn.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/Gen-Access-tkn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/access-token.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/access-token.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/backtesting.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/backtesting.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/call_his_df.csv" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/call_his_df.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/historical_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/historical_data.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/nifty historical data" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/nifty historical data" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQL_Based_project/options_trading.py" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/options_trading.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQL_Based_project/put_his_df.csv" beforeDir="false" afterPath="$PROJECT_DIR$/SQL_Based_project/put_his_df.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -84,7 +88,7 @@
       <recent name="C:\Users\win10\PycharmProjects\Trading-Application" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.backtesting">
+  <component name="RunManager" selected="Python.options_trading">
     <configuration name="2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Trading-Application" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -213,11 +217,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.backtesting" />
+        <item itemvalue="Python.options_trading" />
         <item itemvalue="Python.Gen-Access-tkn" />
         <item itemvalue="Python.postback" />
+        <item itemvalue="Python.backtesting" />
         <item itemvalue="Python.2" />
-        <item itemvalue="Python.options_trading" />
       </list>
     </recent_temporary>
   </component>
@@ -231,13 +235,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1554405465942</updated>
-    </task>
-    <task id="LOCAL-00046" summary="adding sql">
-      <created>1602694683826</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1602694683826</updated>
     </task>
     <task id="LOCAL-00047" summary="first sql insert statement worked, need to add sql insert for every append.">
       <created>1602845504836</created>
@@ -575,7 +572,14 @@
       <option name="project" value="LOCAL" />
       <updated>1655464986610</updated>
     </task>
-    <option name="localTasksCounter" value="95" />
+    <task id="LOCAL-00095" summary="trying strategies">
+      <created>1655500299101</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1655500299101</updated>
+    </task>
+    <option name="localTasksCounter" value="96" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -592,7 +596,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Fixed the Renko calculating issue. Somehow the SME gets started to calculate after around 13 rows. Need to fix this issue, but before that need to modify trigger and add multiple threads for multiple stocks" />
     <MESSAGE value="atlast, code working for icici and making trades peacefully." />
     <MESSAGE value="moved the renko temp code back to avoid multiple entries" />
     <MESSAGE value="made a renko_temp in the trade portfolio within trd_portfolio, created multiple mysql in trd portfolio" />
@@ -617,48 +620,49 @@
     <MESSAGE value="created scripts for highs and lows, need to see on monday" />
     <MESSAGE value="added methods for highs and lows and resistance and support.&#10;&#10;now able to see graph as well.&#10;&#10;need to develop script for intraday trade" />
     <MESSAGE value="need to add text in MFL plots and need to start working on strategy." />
-    <option name="LAST_COMMIT_MESSAGE" value="need to add text in MFL plots and need to start working on strategy." />
+    <MESSAGE value="trying strategies" />
+    <option name="LAST_COMMIT_MESSAGE" value="trying strategies" />
   </component>
   <component name="WindowStateProjectService">
     <state x="1475" y="399" key="#xdebugger.evaluate" timestamp="1652900446047">
       <screen x="0" y="0" width="3440" height="1392" />
     </state>
     <state x="1475" y="399" key="#xdebugger.evaluate/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1652900446047" />
-    <state x="842" y="94" key="CommitChangelistDialog2" timestamp="1655464985819">
+    <state x="842" y="94" key="CommitChangelistDialog2" timestamp="1655500298615">
       <screen x="0" y="0" width="2752" height="1104" />
     </state>
-    <state x="842" y="94" key="CommitChangelistDialog2/0.0.2752.1104@0.0.2752.1104" timestamp="1655464985819" />
+    <state x="842" y="94" key="CommitChangelistDialog2/0.0.2752.1104@0.0.2752.1104" timestamp="1655500298615" />
     <state x="1052" y="118" key="CommitChangelistDialog2/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1652906082592" />
     <state x="1052" y="118" key="CommitChangelistDialog2/0.0.3440.1392@0.0.3440.1392" timestamp="1655384640315" />
-    <state width="2731" height="403" key="GridCell.Tab.0.bottom" timestamp="1655500222505">
+    <state width="2731" height="403" key="GridCell.Tab.0.bottom" timestamp="1655575056344">
       <screen x="0" y="0" width="2752" height="1104" />
     </state>
     <state width="1899" height="362" key="GridCell.Tab.0.bottom/0.0.1920.1032@0.0.1920.1032" timestamp="1652954346161" />
-    <state width="2731" height="403" key="GridCell.Tab.0.bottom/0.0.2752.1104@0.0.2752.1104" timestamp="1655500222505" />
+    <state width="2731" height="403" key="GridCell.Tab.0.bottom/0.0.2752.1104@0.0.2752.1104" timestamp="1655575056344" />
     <state width="1899" height="542" key="GridCell.Tab.0.bottom/0.0.3440.1392/-1920.144.1920.1032@-1920.144.1920.1032" timestamp="1650459241095" />
     <state width="3419" height="516" key="GridCell.Tab.0.bottom/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1653018541148" />
     <state width="3419" height="468" key="GridCell.Tab.0.bottom/0.0.3440.1392@0.0.3440.1392" timestamp="1655405155549" />
-    <state width="2731" height="403" key="GridCell.Tab.0.center" timestamp="1655500222505">
+    <state width="2731" height="403" key="GridCell.Tab.0.center" timestamp="1655575056344">
       <screen x="0" y="0" width="2752" height="1104" />
     </state>
     <state width="1899" height="362" key="GridCell.Tab.0.center/0.0.1920.1032@0.0.1920.1032" timestamp="1652954346161" />
-    <state width="2731" height="403" key="GridCell.Tab.0.center/0.0.2752.1104@0.0.2752.1104" timestamp="1655500222505" />
+    <state width="2731" height="403" key="GridCell.Tab.0.center/0.0.2752.1104@0.0.2752.1104" timestamp="1655575056344" />
     <state width="1899" height="542" key="GridCell.Tab.0.center/0.0.3440.1392/-1920.144.1920.1032@-1920.144.1920.1032" timestamp="1650459241095" />
     <state width="3419" height="516" key="GridCell.Tab.0.center/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1653018541148" />
     <state width="3419" height="468" key="GridCell.Tab.0.center/0.0.3440.1392@0.0.3440.1392" timestamp="1655405155549" />
-    <state width="2731" height="403" key="GridCell.Tab.0.left" timestamp="1655500222505">
+    <state width="2731" height="403" key="GridCell.Tab.0.left" timestamp="1655575056343">
       <screen x="0" y="0" width="2752" height="1104" />
     </state>
     <state width="1899" height="362" key="GridCell.Tab.0.left/0.0.1920.1032@0.0.1920.1032" timestamp="1652954346161" />
-    <state width="2731" height="403" key="GridCell.Tab.0.left/0.0.2752.1104@0.0.2752.1104" timestamp="1655500222505" />
+    <state width="2731" height="403" key="GridCell.Tab.0.left/0.0.2752.1104@0.0.2752.1104" timestamp="1655575056343" />
     <state width="1899" height="542" key="GridCell.Tab.0.left/0.0.3440.1392/-1920.144.1920.1032@-1920.144.1920.1032" timestamp="1650459241095" />
     <state width="3419" height="516" key="GridCell.Tab.0.left/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1653018541148" />
     <state width="3419" height="468" key="GridCell.Tab.0.left/0.0.3440.1392@0.0.3440.1392" timestamp="1655405155549" />
-    <state width="2731" height="403" key="GridCell.Tab.0.right" timestamp="1655500222505">
+    <state width="2731" height="403" key="GridCell.Tab.0.right" timestamp="1655575056344">
       <screen x="0" y="0" width="2752" height="1104" />
     </state>
     <state width="1899" height="362" key="GridCell.Tab.0.right/0.0.1920.1032@0.0.1920.1032" timestamp="1652954346161" />
-    <state width="2731" height="403" key="GridCell.Tab.0.right/0.0.2752.1104@0.0.2752.1104" timestamp="1655500222505" />
+    <state width="2731" height="403" key="GridCell.Tab.0.right/0.0.2752.1104@0.0.2752.1104" timestamp="1655575056344" />
     <state width="1899" height="542" key="GridCell.Tab.0.right/0.0.3440.1392/-1920.144.1920.1032@-1920.144.1920.1032" timestamp="1650459241095" />
     <state width="3419" height="516" key="GridCell.Tab.0.right/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1653018541148" />
     <state width="3419" height="468" key="GridCell.Tab.0.right/0.0.3440.1392@0.0.3440.1392" timestamp="1655405155549" />
@@ -691,10 +695,10 @@
     </state>
     <state x="368" y="341" key="SettingsEditor/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1652610868939" />
     <state x="368" y="341" key="SettingsEditor/0.0.3440.1392@0.0.3440.1392" timestamp="1655405125458" />
-    <state x="791" y="269" key="Vcs.Push.Dialog.v2" timestamp="1655464988537">
+    <state x="791" y="269" key="Vcs.Push.Dialog.v2" timestamp="1655500300551">
       <screen x="0" y="0" width="2752" height="1104" />
     </state>
-    <state x="791" y="269" key="Vcs.Push.Dialog.v2/0.0.2752.1104@0.0.2752.1104" timestamp="1655464988537" />
+    <state x="791" y="269" key="Vcs.Push.Dialog.v2/0.0.2752.1104@0.0.2752.1104" timestamp="1655500300551" />
     <state x="989" y="339" key="Vcs.Push.Dialog.v2/0.0.3440.1392/-1920.144.1920.1032@0.0.3440.1392" timestamp="1652906122375" />
     <state x="989" y="339" key="Vcs.Push.Dialog.v2/0.0.3440.1392@0.0.3440.1392" timestamp="1655384644170" />
     <state x="941" y="281" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1655407031250">

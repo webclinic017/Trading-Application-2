@@ -510,7 +510,7 @@ def fresh_trade(position_direction):
         else:
             traded_symbol = PE_symbol
         tradeable_quantity = quantity(position_direction)
-        if tradeable_quantity > 0:
+        if tradeable_quantity > 0 and profit_amount/day_margin < .05:
             position_order_no = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NFO,
                                                  tradingsymbol=traded_symbol, transaction_type=kite.TRANSACTION_TYPE_BUY,
                                                  quantity=tradeable_quantity,
@@ -630,14 +630,10 @@ def options_trigger():
     try:
         while ord_update_count() > 0:
             process_orders()
-        if (nifty_ohlc[8] == "Up" and nifty_ohlc[4] in positive_indications) or (nifty_ohlc[8] == "Flat" and nifty_ohlc[4] in positive_indications and nifty_ohlc[3] > nifty_ohlc[9])\
-                or ((nifty_ohlc_1[8] == "Down" and nifty_ohlc[8] == "Down" or "Flat") and (nifty_ohlc_1[4] in positive_indications or nifty_ohlc_1[5] in positive_indications) and (nifty_ohlc[0] < nifty_ohlc[3])):
+        if nifty_ohlc[4] in positive_indications or nifty_ohlc[5] in positive_indications:
             print("Situation to CALL")
             buy_action()
-        elif (nifty_ohlc[8] == "Down" and nifty_ohlc[4] in negative_indications) or (
-                nifty_ohlc[8] == "Flat" and nifty_ohlc[4] in positive_indications and nifty_ohlc[3] < nifty_ohlc[10]) \
-                or ((nifty_ohlc_1[8] == "Up" and nifty_ohlc[8] == ("Up" or "Flat")) and (
-                nifty_ohlc_1[4] in negative_indications or nifty_ohlc_1[5] in negative_indications) and (nifty_ohlc[0] > nifty_ohlc[3])):
+        elif nifty_ohlc[4] in negative_indications or nifty_ohlc[5] in negative_indications:
             print("Situation to PUT")
             sell_action()
         elif positions != "":
@@ -786,18 +782,20 @@ def trade():  # retrieve continuous ticks in JSON format
     global trigger_thread_running, noted_time, processed_time
     try:
         update_processed_time()
+        while datetime.datetime.now().time() < datetime.time(9, 18, 00):
+            pass
         while datetime.datetime.now().time() < datetime.time(15, 30, 00):
             get_nifty_onlc()
             if ord_update_count() > 0:
                 process_orders()
-            if datetime.time(9, 18, 00) < datetime.datetime.now().time() < datetime.time(15, 26, 00) and profit_amount/day_margin < .2:
+            if datetime.time(9, 18, 00) < datetime.datetime.now().time() < datetime.time(15, 26, 00) and profit_amount/day_margin < .05:
                 # update_processed_time()
                 if noted_time != processed_time:
                     noted_time = processed_time
                     if trigger_thread_running == "NO":
                         trigger_thread_running = "YES"
                         options_trigger()
-            elif profit_amount/day_margin >= .2:
+            elif profit_amount/day_margin >= .05:
                 print("target acheived")
                 break
             while noted_time == processed_time:
