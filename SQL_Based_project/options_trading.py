@@ -42,7 +42,7 @@ print(f"margin at the day start {day_margin}")
 
 date = datetime.datetime.today().date()
 
-trade_time = datetime.time(9, 15, 00)
+trade_time = datetime.time(9, 15, 00);
 processed_time = datetime.datetime.combine(date, trade_time)
 start_time = datetime.datetime.combine(date, trade_time)
 duration = '3minute'
@@ -426,6 +426,7 @@ def process_orders():
         my_cursor.execute("select * from order_updates limit 1")
         data = my_cursor.fetchone()
         mydb.commit()
+        print(data)
         # order_number = data[6]
         # price = data[4]
         position_quantity = data[5]
