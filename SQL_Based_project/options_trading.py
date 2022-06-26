@@ -326,13 +326,21 @@ def order_status(orderid):
 
 
 def stop_loss_order_status(orderid):
-    global position_order_status, position_buy_price, position_order_no, position_quantity, stop_loss_status
+    global profit_amount, loss_amount, positions, position_order_status, position_buy_price, position_order_no, position_quantity, stop_loss_status
     try:
         order_details = kite.order_history(orderid)
         for item in order_details:
             if item['status'] == "COMPLETE":
                 stop_loss_status = "COMPLETE"
+                positions = ''
                 position_order_status = ''
+                sell_price = item['average_price']
+                temp_profit = (sell_price - position_buy_price) * position_quantity
+                if loss_amount < 0 or temp_profit < 0:
+                    loss_amount += temp_profit
+                profit_amount += temp_profit
+                print("Sell Price: {}, Temp Profit: {}, Final Profit: {}".format(data[4], temp_profit, profit_amount))
+                print("-----------------------------------------------------------------------------------------------")
                 break
             elif item['status'] == "REJECTED":
                 position_order_status = "REJECTED"
@@ -511,7 +519,7 @@ def fresh_trade(position_direction):
         else:
             traded_symbol = PE_symbol
         tradeable_quantity = quantity(position_direction)
-        if tradeable_quantity > 0 and profit_amount/day_margin < .05:
+        if tradeable_quantity > 0 and profit_amount/day_margin < .2:
             position_order_no = kite.place_order(variety="regular", exchange=kite.EXCHANGE_NFO,
                                                  tradingsymbol=traded_symbol, transaction_type=kite.TRANSACTION_TYPE_BUY,
                                                  quantity=tradeable_quantity,
@@ -521,7 +529,6 @@ def fresh_trade(position_direction):
             while position_order_status not in ('COMPLETE', 'REJETED'):
                 order_status(position_order_no)
             if position_order_status == "COMPLETE":
-                process_orders()
                 positions = position_direction
                 print(
                     "Entry - Signal: {}, Quantity: {}, Instrument: {}".format(nifty_ohlc[4], position_quantity, traded_symbol))
@@ -571,8 +578,6 @@ def exit_positions():
         time.sleep(2)
         while stop_loss_status not in ('COMPLETE', 'REJETED'):
             stop_loss_order_status(position_stop_loss_ord_no)
-        if ord_update_count() > 0:
-            process_orders()
     except Exception as c:
         traceback.print_exc(c)
 
@@ -629,8 +634,8 @@ def sell_action():
 def options_trigger():
     global previous_low, previous_high, larger_trend, positions, position_order_no, position_order_status, position_quantity, position_stop_loss_ord_no, target_price, nifty_ohlc, loss_amount, trigger_thread_running, noted_time, traded_symbol, stop_loss, position_target_order_no, position_target_order_status, nifty_ha_ohlc, target_price_2, nifty_ohlc_1
     try:
-        while ord_update_count() > 0:
-            process_orders()
+        if positions != '':
+            stop_loss_order_status(position_stop_loss_ord_no)
         if nifty_ohlc[4] in positive_indications or nifty_ohlc[5] in positive_indications:
             print("Situation to CALL")
             buy_action()
@@ -780,23 +785,23 @@ def update_processed_time():
 
 
 def trade():  # retrieve continuous ticks in JSON format
-    global trigger_thread_running, noted_time, processed_time
+    global positions, trigger_thread_running, noted_time, processed_time
     try:
         update_processed_time()
         while datetime.datetime.now().time() < datetime.time(9, 18, 00):
             pass
         while datetime.datetime.now().time() < datetime.time(15, 30, 00):
             get_nifty_onlc()
-            if ord_update_count() > 0:
-                process_orders()
-            if datetime.time(9, 18, 00) < datetime.datetime.now().time() < datetime.time(15, 26, 00) and profit_amount/day_margin < .05:
+            if positions != '':
+                stop_loss_order_status(position_stop_loss_ord_no)
+            if datetime.time(9, 18, 00) < datetime.datetime.now().time() < datetime.time(15, 26, 00) and profit_amount/day_margin < .2:
                 # update_processed_time()
                 if noted_time != processed_time:
                     noted_time = processed_time
                     if trigger_thread_running == "NO":
                         trigger_thread_running = "YES"
                         options_trigger()
-            elif profit_amount/day_margin >= .05:
+            elif profit_amount/day_margin >= .2:
                 print("target acheived")
                 break
             while noted_time == processed_time:
