@@ -339,7 +339,7 @@ def stop_loss_order_status(orderid):
                 if loss_amount < 0 or temp_profit < 0:
                     loss_amount += temp_profit
                 profit_amount += temp_profit
-                print("Sell Price: {}, Temp Profit: {}, Final Profit: {}".format(data[4], temp_profit, profit_amount))
+                print("Sell Price: {}, Temp Profit: {}, Final Profit: {}".format(sell_price, temp_profit, profit_amount))
                 print("-----------------------------------------------------------------------------------------------")
                 break
             elif item['status'] == "REJECTED":
